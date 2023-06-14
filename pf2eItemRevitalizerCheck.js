@@ -166,6 +166,10 @@ if (changedData.length == 0) {
     // Create the formatted output in a table
     output = `
     <style>
+        .dialog {
+            width: auto !important;
+        }
+        
         .table-wrapper {
             display: table;
             width: 100%;
@@ -187,19 +191,19 @@ if (changedData.length == 0) {
         .table-cell {
             display: table-cell;
             padding: 5px;
-            /* Additional styles as per your requirement */
         }
     </style>  
     
-    <div class="table-wrapper"><div class="table">
-    <div class="table-header">
-    <div class="table-cell">Actor</div>
-    <div class="table-cell">Type</div>
-    <div class="table-cell">Name</div>
-    <div class="table-cell">Changed Property</div>
-    <div class="table-cell">Origin Item Link</div>
-    <div class="table-cell">Actor Item Link</div>
-    </div>
+    <div class="table-wrapper">
+        <div class="table">
+            <div class="table-header">
+                <div class="table-cell">Actor</div>
+                <div class="table-cell">Type</div>
+                <div class="table-cell">Name</div>
+                <div class="table-cell">Changed Property</div>
+                <div class="table-cell">Origin Item Link</div>
+                <div class="table-cell">Actor Item Link</div>
+            </div>
     `;
     
     for (const data of sortChangedItems(changedData)) {
@@ -222,18 +226,20 @@ if (changedData.length == 0) {
         .join(", ");
         
         output += `
-        <div class="table-row">
-            <div class="table-cell">${actorLink}</div>
-            <div class="table-cell">${data.actorItem.type}</div>
-            <div class="table-cell">${data.actorItem.name}</div>
-            <div class="table-cell">${comparativeData}</div>
-            <div class="table-cell">${originItemLink}</div>
-            <div class="table-cell">${actorItemLink}</div>
-        </div>
+            <div class="table-row">
+                <div class="table-cell">${actorLink}</div>
+                <div class="table-cell">${data.actorItem.type}</div>
+                <div class="table-cell">${data.actorItem.name}</div>
+                <div class="table-cell">${comparativeData}</div>
+                <div class="table-cell">${originItemLink}</div>
+                <div class="table-cell">${actorItemLink}</div>
+            </div>
         `;
     }
     
-    output += '</div></div>';
+    output += `
+        </div>
+    </div>`;
 }
 
 // Create the popup
@@ -253,16 +259,5 @@ const dialogOptions = {
 };
 
 const dialog = new Dialog(dialogOptions).render(true);
-
-/*
-I have no idea why this works ;)
-The dialog called from the prototype does not have an element property at all
-  but remiving this will cause the entire thing to fail
-*/
-dialogOptions.render = () => {
-    console.log(dialog)
-    throw Exception;
-    dialog.call(this, dialogOptions);
-};
 
 console.info(`Ending ${SCRIPT_NAME}`);
