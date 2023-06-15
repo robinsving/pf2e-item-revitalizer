@@ -1,9 +1,19 @@
-const SCRIPT_NAME = "Revitalizer Check for PF2E";
+
+/*
+// Load the language file based on the user's selected language
+const language = game.i18n.lang;
+
+const langFile = `modules/your-module/lang/${language}.json`; // Adjust the path as per your module's structure
+
+// Load the language file or fallback to default language strings
+const i18n = game.i18n.translations[language]?.COMPATIBILITY_CHECK || defaultLang.COMPATIBILITY_CHECK;
+*/
+const SCRIPT_NAME = "Revitalizer Check for PF2E"; // `${i18n.SCRIPT_NAME}`
 
 // Allowlist of properties to include in the clone
 const PF2E_PROPERTY_ALLOW_LIST = {
     baseItem: true,
-    categoty: true,
+    category: true,
     description: {
         gm: true,
         value: true,
@@ -23,6 +33,21 @@ const PF2E_PROPERTY_ITEMS = ["action", "ancestry", "armor", "background", "backp
 const PF2E_IGNORABLE_ITEM_UUIDS = [
     "Compendium.pf2e.equipment-srd.Y7UD64foDbDMV9sx" // Scroll, lvl 2
 ];
+
+// test if "has"-selector is enabled in browser
+function testHasSelector(){
+    //create three connected elements
+    var container = document.createElement("div");
+    var parent = document.createElement("div");
+    var child = document.createElement("div");
+    child.className = "wiggle";
+    
+    container.appendChild(parent);
+    parent.appendChild(child);
+    try {
+        return (container.querySelector("div:has(.wiggle)") !== null);
+    } catch(e) { return false; }
+}
 
 // Function to clone the allowed properties from an object
 function allowedPropertyClone(obj, allowList) {
@@ -125,6 +150,13 @@ function sortChangedItems(changedItems) {
 
 console.info(`Starting ${SCRIPT_NAME}`);
 
+// try to identify if the browser has support for "has" selectors
+let hasHasSelectorSupport = false;
+if (testHasSelector()) {
+    hasHasSelectorSupport = true;
+}
+console.debug(`Browser has 'Has'-selector support: ${hasHasSelectorSupport}`)
+
 // Create an array of objects to store change information
 const changedData = [];
 
@@ -163,46 +195,55 @@ if (changedData.length == 0) {
     const searchedActors = actors.map(actor => actor.name).join(', ');
     output = `<p>No changed items found for the following actors:<br>${searchedActors}</p>`;
 } else {
-    // Create the formatted output in a table
+    /**
+     * Create the formatted output in a table.
+     * 
+     * Note: Will use the "has"-selector if the browser supports it.
+     * Otherwise it will default to matching the "dialog" class
+     * This is notable when using e.g. Firefox, and not having the `layout.css.has-selector.enabled`
+     * 
+     * The problem here is that we need to make the dialog have auto width, or the content is hidden,
+     * but _if we can_ we want to avoid making changes to the entire DOM object's Dialogs.
+     **/
     output = `
     <style>
-        .dialog {
+    ${hasHasSelectorSupport ? ".dialog:has(.wiggle-table-wrapper)":".dialog"} {
             width: auto !important;
         }
         
-        .table-wrapper {
+        .wiggle-table-wrapper {
             display: table;
             width: 100%;
         }
         
-        .table {
+        .wiggle-table {
             display: table-row-group;
         }
         
-        .table-header {
+        .wiggle-table-header {
             display: table-row;
             font-weight: bold;
         }
         
-        .table-row {
+        .wiggle-table-row {
             display: table-row;
         }
         
-        .table-cell {
+        .wiggle-table-cell {
             display: table-cell;
             padding: 5px;
         }
     </style>  
     
-    <div class="table-wrapper">
-        <div class="table">
-            <div class="table-header">
-                <div class="table-cell">Actor</div>
-                <div class="table-cell">Type</div>
-                <div class="table-cell">Name</div>
-                <div class="table-cell">Changed Property</div>
-                <div class="table-cell">Origin Item Link</div>
-                <div class="table-cell">Actor Item Link</div>
+    <div class="wiggle-table-wrapper">
+        <div class="wiggle-table">
+            <div class="wiggle-table-header">
+                <div class="wiggle-table-cell">Actor</div>
+                <div class="wiggle-table-cell">Type</div>
+                <div class="wiggle-table-cell">Name</div>
+                <div class="wiggle-table-cell">Changed Property</div>
+                <div class="wiggle-table-cell">Origin Item Link</div>
+                <div class="wiggle-table-cell">Actor Item Link</div>
             </div>
     `;
     
@@ -226,13 +267,13 @@ if (changedData.length == 0) {
         .join(", ");
         
         output += `
-            <div class="table-row">
-                <div class="table-cell">${actorLink}</div>
-                <div class="table-cell">${data.actorItem.type}</div>
-                <div class="table-cell">${data.actorItem.name}</div>
-                <div class="table-cell">${comparativeData}</div>
-                <div class="table-cell">${originItemLink}</div>
-                <div class="table-cell">${actorItemLink}</div>
+            <div class="wiggle-table-row">
+                <div class="wiggle-table-cell">${actorLink}</div>
+                <div class="wiggle-table-cell">${data.actorItem.type}</div>
+                <div class="wiggle-table-cell">${data.actorItem.name}</div>
+                <div class="wiggle-table-cell">${comparativeData}</div>
+                <div class="wiggle-table-cell">${originItemLink}</div>
+                <div class="wiggle-table-cell">${actorItemLink}</div>
             </div>
         `;
     }
