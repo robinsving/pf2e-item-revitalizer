@@ -1,0 +1,12 @@
+{
+    "SCRIPT_NAME": "Revitalizer Check for PF2E",
+    "TITLE": "Compatibility Check",
+    "CLOSE_BUTTON": "Close",
+    "RESULTS": "Results",
+    "ACTOR": "Actor",
+    "TYPE": "Type",
+    "NAME": "Name",
+    "CHANGED_PROPERTY": "Changed Property",
+    "ORIGIN_ITEM": "Origin Item",
+    "ACTOR_ITEM": "Actor's Item"
+  }
