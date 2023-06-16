@@ -1,0 +1,22 @@
+.wiggle-table-wrapper {
+    display: table;
+    width: 100%;
+}
+
+.wiggle-table {
+    display: table-row-group;
+}
+
+.wiggle-table-header {
+    display: table-row;
+    font-weight: bold;
+}
+
+.wiggle-table-row {
+    display: table-row;
+}
+
+.wiggle-table-cell {
+    display: table-cell;
+    padding: 5px;
+}
