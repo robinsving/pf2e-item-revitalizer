@@ -1,4 +1,3 @@
-
 /*
 // Load the language file based on the user's selected language
 const language = game.i18n.lang;
@@ -8,12 +7,16 @@ const langFile = `modules/your-module/lang/${language}.json`; // Adjust the path
 // Load the language file or fallback to default language strings
 const i18n = game.i18n.translations[language]?.COMPATIBILITY_CHECK || defaultLang.COMPATIBILITY_CHECK;
 */
-const SCRIPT_NAME = "PF2e Item Revitalizer"; // `${i18n.SCRIPT_NAME}`
+const SCRIPT_NAME = "PF2e Item Revitalizer";
+const SCRIPT_ID = "PIR:";
+
+function debug (message) {
+    console.debug(`${SCRIPT_ID} ${message}`)
+}
 
 // Allowlist of properties to include in the clone
 const PF2E_PROPERTY_ALLOW_LIST = {
     baseItem: true,
-    category: true,
     description: {
         gm: true,
         value: true,
@@ -82,7 +85,7 @@ function createShallowClones(originItem, actorItem) {
 
 // Function to compare two items and find their differences
 function compareItems(originItem, actorItem) {
-    console.debug(`Parsing item ${actorItem.slug}`);
+        debug(`Parsing item ${actorItem.name}`);
     
     const clones = createShallowClones(originItem, actorItem);
     
@@ -93,23 +96,25 @@ function compareItems(originItem, actorItem) {
 function getDifferentiatingProperties(originItem, actorItem) {
     const differentProperties = [];
     
-    for (const key in actorItem) {
-        console.debug(`Looking at ${key}`);
-        
+    for (const key in actorItem) {        
         /**
          * Create the JSON strings, but replace style formatting, as that may adjust spaces in browsers
          * e.g. the differences of the following lines:
          *   <span style=\"float:right\">  ->   <span style=\"float: right;\">
-         *   UUID[Compendium.pf2e.actionspf2e.KAVf7AmRnbCAHrkT]{Attack of Opportunity} -> UUID[Compendium.pf2e.actionspf2e.KAVf7AmRnbCAHrkT]
+         *   @UUID[Compendium.pf2e.actionspf2e.KAVf7AmRnbCAHrkT]{Attack of Opportunity} -> @UUID[Compendium.pf2e.actionspf2e.KAVf7AmRnbCAHrkT]
+         *   @UUID[Compendium.pf2e.actionspf2e.KAVf7AmRnbCAHrkT]  -> @Compendium[pf2e.actionspf2e.KAVf7AmRnbCAHrkT]    -- Common with e.g. items from Adventure Paths
          */
-        const actorJson = JSON.stringify(actorItem[key]).replace(/style=\\".*\\"/).replace(/\{[^{}]*\}/);
-        const originJson = JSON.stringify(originItem[key]).replace(/style=\\".*\\"/).replace(/\{[^{}]*\}/);
+        const inlineStylePattern = /style=\\".*\\"/gm;
+        const uuidNamePattern = /\{[\s\w-':()]*\}/gm
+        const uuidCompendiumFix = "@UUID[Compendium."
+        const actorJson     = JSON.stringify(actorItem[key]).replaceAll(inlineStylePattern, "").replaceAll(uuidNamePattern, "").replaceAll(uuidCompendiumFix, "@Compendium[");
+        const originJson    = JSON.stringify(originItem[key]).replaceAll(inlineStylePattern, "").replaceAll(uuidNamePattern, "").replaceAll(uuidCompendiumFix, "@Compendium[");;
         
         // If we find differences in the property
         if (actorJson !== originJson) {
-            console.debug(`Found differences in ${key} for slug ${originItem.slug}:`);
-            console.debug(`Actor ${originItem.slug} states: ${actorJson}`);
-            console.debug(`Compendium ${originItem.slug} states: ${originJson}`);
+            debug(`Found differences in ${key} for slug ${originItem.slug}:`);
+            debug(`Actor ${originItem.slug} states: ${actorJson}`);
+            debug(`Compendium ${originItem.slug} states: ${originJson}`);
             differentProperties.push(key);
         }
     }
@@ -156,7 +161,7 @@ let hasHasSelectorSupport = false;
 if (testHasSelector()) {
     hasHasSelectorSupport = true;
 }
-console.debug(`Browser has 'Has'-selector support: ${hasHasSelectorSupport}`)
+debug(`Browser has 'Has'-selector support: ${hasHasSelectorSupport}`)
 
 // Create an array of objects to store change information
 const changedData = [];
@@ -166,11 +171,11 @@ const actors = canvas.tokens.placeables.filter((token) => token.actor).map((toke
 
 // Iterate over the actors
 for (const actor of actors) {
-    console.debug(`Parsing actor ${actor.name}`);
+    debug(`Parsing actor ${actor.name}`);
     
     // Iterate over the equipment
     for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && PF2E_PROPERTY_ITEMS.includes(item.type) && item.sourceId && item.sourceId !== null && !PF2E_IGNORABLE_ITEM_UUIDS.includes(item.sourceId))) {
-        //console.debug(actorItem);
+        //debug(actorItem);
         // Check if the item has been changed
         const originItem = await fromUuid(actorItem.sourceId);
         
@@ -179,7 +184,8 @@ for (const actor of actors) {
         }
         const getCompareData = compareItems(originItem, actorItem);
         
-        if (getCompareData.size > 0) {
+        // if we have a diff that is not just the slug (as that may differ on e.g. Eidolons' weapon choices)
+        if (getCompareData.size > 0 && !(getCompareData.has("slug") && getCompareData.size === 1)) {
             changedData.push({
                 actor: actor,
                 actorItem: actorItem,
