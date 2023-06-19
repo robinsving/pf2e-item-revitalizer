@@ -34,8 +34,28 @@ const PF2E_PROPERTY_ITEMS = ["action", "ancestry", "armor", "background", "backp
 
 // List of Items to ignore
 const PF2E_IGNORABLE_ITEM_UUIDS = [
-    "Compendium.pf2e.equipment-srd.UJWiN0K3jqVjxvKk", // Wand, lvl 2
-    "Compendium.pf2e.equipment-srd.Y7UD64foDbDMV9sx" // Scroll, lvl 2
+    "Compendium.pf2e.equipment-srd.UJWiN0K3jqVjxvKk", // Wand, lvl 1
+    "Compendium.pf2e.equipment-srd.vJZ49cgi8szuQXAD", // Wand, lvl 2
+    "Compendium.pf2e.equipment-srd.wrDmWkGxmwzYtfiA", // Wand, lvl 3
+    "Compendium.pf2e.equipment-srd.Sn7v9SsbEDMUIwrO", // Wand, lvl 4
+    "Compendium.pf2e.equipment-srd.5BF7zMnrPYzyigCs", // Wand, lvl 5
+    "Compendium.pf2e.equipment-srd.kiXh4SUWKr166ZeM", // Wand, lvl 6
+    "Compendium.pf2e.equipment-srd.nmXPj9zuMRQBNT60", // Wand, lvl 7
+    "Compendium.pf2e.equipment-srd.Qs8RgNH6thRPv2jt", // Wand, lvl 8
+    "Compendium.pf2e.equipment-srd.Fgv722039TVM5JTc", // Wand, lvl 9
+
+    "Compendium.pf2e.equipment-srd.RjuupS9xyXDLgyIr", // Scroll, lvl 1
+    "Compendium.pf2e.equipment-srd.Y7UD64foDbDMV9sx", // Scroll, lvl 2
+    "Compendium.pf2e.equipment-srd.ZmefGBXGJF3CFDbn", // Scroll, lvl 3
+    "Compendium.pf2e.equipment-srd.QSQZJ5BC3DeHv153", // Scroll, lvl 4
+    "Compendium.pf2e.equipment-srd.tjLvRWklAylFhBHQ", // Scroll, lvl 5
+    "Compendium.pf2e.equipment-srd.4sGIy77COooxhQuC", // Scroll, lvl 6
+    "Compendium.pf2e.equipment-srd.fomEZZ4MxVVK3uVu", // Scroll, lvl 7
+    "Compendium.pf2e.equipment-srd.iPki3yuoucnj7bIt", // Scroll, lvl 8
+    "Compendium.pf2e.equipment-srd.cFHomF3tty8Wi1e5", // Scroll, lvl 9
+    "Compendium.pf2e.equipment-srd.o1XIHJ4MJyroAHfF", // Scroll, lvl 10
+
+    "Compendium.pf2e.equipment-srd.tLa4bewBhyqzi6Ow" // Cantrip deck
 ];
 
 // test if "has"-selector is enabled in browser
@@ -122,6 +142,16 @@ function getDifferentiatingProperties(originItem, actorItem) {
     return differentProperties;
 }
 
+function createAdditionalNotes(changedItems) {
+    console.log(changedItems.originItem.sourceId)
+    const actorSourceId = changedItems.actorItem.sourceId;
+    let notes = "";
+    if (actorSourceId.includes("bestiary-ability-glossary-srd") || actorSourceId.includes("bestiary-family-ability-glossary"))
+        notes = notes.concat("Bestiary abilities has known issues");
+    
+    return notes;
+}
+
 // Function to sort the changed items based on actor name, type, and name
 function sortChangedItems(changedItems) {
     const sortedItems = [...changedItems];
@@ -198,8 +228,7 @@ for (const actor of actors) {
 let output = "";
 // Check if any changed items are found
 if (changedData.length == 0) {
-    console.log(actors)
-    const searchedActors = actors.map(actor => actor.name).join(', ');
+    const searchedActors = actors.map(actor => actor.name).join(', ') || "none";
     output = `<h2>✅ No changed items found</h2><p>Searched through the following actors:<br>${searchedActors}</p>`;
 } else {
 
@@ -250,8 +279,9 @@ if (changedData.length == 0) {
                 <div class="wiggle-table-cell">Type</div>
                 <div class="wiggle-table-cell">Name</div>
                 <div class="wiggle-table-cell">Changed Property</div>
-                <div class="wiggle-table-cell">Origin Item Link</div>
                 <div class="wiggle-table-cell">Actor Item Link</div>
+                <div class="wiggle-table-cell">Origin Item Link</div>
+                <div class="wiggle-table-cell">Notes</div>
             </div>
     `;
     
@@ -266,6 +296,8 @@ if (changedData.length == 0) {
         const actorLink = `<div>${await TextEditor.enrichHTML(data.actor.link, enrichOption)}</div>`;
         const originItemLink = `<div>${await TextEditor.enrichHTML(data.originItem.link, enrichOption)}</div>`;
         const actorItemLink = `<div>${await TextEditor.enrichHTML(data.actorItem.link, enrichOption)}</div>`;
+
+        const notes = createAdditionalNotes(data);
         
         // Format properties with bold for matches in item.comparativeData
         const comparativeData = [...data.comparativeData].map((prop) => {
@@ -280,8 +312,9 @@ if (changedData.length == 0) {
                 <div class="wiggle-table-cell">${data.actorItem.type}</div>
                 <div class="wiggle-table-cell">${data.actorItem.name}</div>
                 <div class="wiggle-table-cell">${comparativeData}</div>
-                <div class="wiggle-table-cell">${originItemLink}</div>
                 <div class="wiggle-table-cell">${actorItemLink}</div>
+                <div class="wiggle-table-cell">${originItemLink}</div>
+                <div class="wiggle-table-cell">${notes}</div>
             </div>
         `;
     }
