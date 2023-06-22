@@ -32,7 +32,7 @@ jobs:
         files: 'module.json'
       env:
         manifest: https://github.com/${{github.repository}}/releases/latest/download/module.json
-        download: https://github.com/${{github.repository}}/releases/latest/download/module.zip
+        download: https://github.com/${{github.repository}}/releases/latest/download/pir-release.zip
 
     # Update the 'latest' release
     - name: Create Release
@@ -56,7 +56,7 @@ jobs:
         files: 'module.json'
       env:
         manifest: https://github.com/${{github.repository}}/releases/download/${{steps.get-version.outputs.version}}/module.json
-        download: https://github.com/${{github.repository}}/releases/download/${{steps.get-version.outputs.version}}/module.zip
+        download: https://github.com/${{github.repository}}/releases/download/${{steps.get-version.outputs.version}}/pir-release.zip
     
     # Create a release for this specific version
     - name: Create Release
