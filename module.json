@@ -2,10 +2,8 @@
     "id": "pf2e-item-revitalizer",
     "title": "PF2e Item Revitalizer",
     "description": "A module for checking obsolesense between Companion and Actor Items.",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "authors": [{"name": "Robin Sving", "email":"robin.sving@gmail.com", "discord":"@.wigglemaster"}],
-    "minimumCoreVersion": "0.8.6",
-    "compatibleCoreVersion": "9",
     "compatibility": {
         "minimum": "10",
         "verified": "11"
@@ -25,5 +23,8 @@
     ],
     "url": "https://github.com/robinsving/pf2e-item-revitalizer",
     "manifest": "",
-    "download": ""
+    "download": "",
+    "bugs": "https://github.com/robinsving/pf2e-item-revitalizer/issues",
+    "readme": "https://raw.githubusercontent.com/robinsving/pf2e-item-revitalizer/main/README.md",
+    "changelog": "https://github.com/robinsving/pf2e-item-revitalizer/releases"
 }
