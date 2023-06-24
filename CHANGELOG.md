@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+Adding Scene Control button
+Revitalizer class added, with embedded HTML
+
 ## 0.6.1
 Adjustments to the publisher script
 

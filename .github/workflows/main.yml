@@ -1,22 +1,22 @@
 name: Module CI/CD
 
-on: 
+on:
   push:
     branches:
       - main
 
-jobs: 
+jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      
+
     steps:
     - uses: actions/checkout@v2
 
     # create a zip file with all files required by the module to add to the release
     - name: Zip Files
-      run: zip -r ./pir-release.zip ./src ./styles ./lang ./module.json
+      run: zip -r ./pir-release.zip ./dist/*
 
     # Get the version from 'module.json'
     - name: Get Version
@@ -57,7 +57,7 @@ jobs:
       env:
         manifest: https://github.com/${{github.repository}}/releases/download/${{steps.get-version.outputs.version}}/module.json
         download: https://github.com/${{github.repository}}/releases/download/${{steps.get-version.outputs.version}}/pir-release.zip
-    
+
     # Create a release for this specific version
     - name: Create Release
       id: create_version_release

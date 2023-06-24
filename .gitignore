@@ -1,1 +1,4 @@
 pir-release.zip
+node_module
+package-lock.json
+dist
