@@ -12,21 +12,37 @@ $(document).ready(() => {
         revitalizer.loadTemplate();
     });
 
-    Hooks.on('getSceneControlButtons', (scene) => {
+    Hooks.on('getSceneControlButtons', (control) => {
         console.log(`${SCRIPT_ID} | Add hook on getSceneControlButtons`);
 
         if (game.settings.get(SCRIPT_ID, 'forGmOnly') && !game.user.isGM)
             return;
 
-        const control = scene.find((c) => c.name === 'token');
-        control.tools.push({
-            name: SCRIPT_ID,
-            title: `Run ${SCRIPT_NAME}`,
+        //const control = scene.find((c) => c.name === 'token');
+        // Add a new Scene Control Button group
+        control.push({
+            name: SCRIPT_ID+"-group",
+            title: `${SCRIPT_NAME}`,
             icon: 'fas fa-solid fa-code-fork',
-            toggle: false,
-            onClick: () => {
-                revitalizer.runCalculation(); 
-            }
+            activeTool: '',
+            layer: 'controls',
+            tools: [{
+                name: SCRIPT_ID+"-all",
+                title: `Run for all Actors`,
+                icon: 'fas fa-solid fa-users-medical',
+                toggle: false,
+                onClick: () => {
+                    revitalizer.run(true); 
+                }
+            }, {
+                name: SCRIPT_ID+"-pc",
+                title: `Run for all characters`,
+                icon: 'fas fa-solid fa-users',
+                toggle: false,
+                onClick: () => {
+                    revitalizer.run(false); 
+                }
+            }]
         });
     });
 

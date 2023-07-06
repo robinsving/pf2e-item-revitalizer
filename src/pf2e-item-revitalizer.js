@@ -1,5 +1,7 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
 
+// TODO make this into a class: RevitalizerCalculator
+
 function debug(message) {
     console.debug(`${SCRIPT_ID}: ${message}`)
 }
@@ -30,28 +32,28 @@ const PF2E_PROPERTY_ITEMS = ["action", "ancestry", "armor", "background", "backp
 // List of Items to ignore
 // TODO: register list to settings/storage, and allow user to add their own things to this list
 const PF2E_IGNORABLE_ITEM_UUIDS = [
-    "Compendium.pf2e.equipment-srd.UJWiN0K3jqVjxvKk", // Wand, lvl 1
-    "Compendium.pf2e.equipment-srd.vJZ49cgi8szuQXAD", // Wand, lvl 2
-    "Compendium.pf2e.equipment-srd.wrDmWkGxmwzYtfiA", // Wand, lvl 3
-    "Compendium.pf2e.equipment-srd.Sn7v9SsbEDMUIwrO", // Wand, lvl 4
-    "Compendium.pf2e.equipment-srd.5BF7zMnrPYzyigCs", // Wand, lvl 5
-    "Compendium.pf2e.equipment-srd.kiXh4SUWKr166ZeM", // Wand, lvl 6
-    "Compendium.pf2e.equipment-srd.nmXPj9zuMRQBNT60", // Wand, lvl 7
-    "Compendium.pf2e.equipment-srd.Qs8RgNH6thRPv2jt", // Wand, lvl 8
-    "Compendium.pf2e.equipment-srd.Fgv722039TVM5JTc", // Wand, lvl 9
+    "Compendium.pf2e.equipment-srd.Item.UJWiN0K3jqVjxvKk", // Wand, lvl 1
+    "Compendium.pf2e.equipment-srd.Item.vJZ49cgi8szuQXAD", // Wand, lvl 2
+    "Compendium.pf2e.equipment-srd.Item.wrDmWkGxmwzYtfiA", // Wand, lvl 3
+    "Compendium.pf2e.equipment-srd.Item.Sn7v9SsbEDMUIwrO", // Wand, lvl 4
+    "Compendium.pf2e.equipment-srd.Item.5BF7zMnrPYzyigCs", // Wand, lvl 5
+    "Compendium.pf2e.equipment-srd.Item.kiXh4SUWKr166ZeM", // Wand, lvl 6
+    "Compendium.pf2e.equipment-srd.Item.nmXPj9zuMRQBNT60", // Wand, lvl 7
+    "Compendium.pf2e.equipment-srd.Item.Qs8RgNH6thRPv2jt", // Wand, lvl 8
+    "Compendium.pf2e.equipment-srd.Item.Fgv722039TVM5JTc", // Wand, lvl 9
+    
+    "Compendium.pf2e.equipment-srd.Item.RjuupS9xyXDLgyIr", // Scroll, lvl 1
+    "Compendium.pf2e.equipment-srd.Item.Y7UD64foDbDMV9sx", // Scroll, lvl 2
+    "Compendium.pf2e.equipment-srd.Item.ZmefGBXGJF3CFDbn", // Scroll, lvl 3
+    "Compendium.pf2e.equipment-srd.Item.QSQZJ5BC3DeHv153", // Scroll, lvl 4
+    "Compendium.pf2e.equipment-srd.Item.tjLvRWklAylFhBHQ", // Scroll, lvl 5
+    "Compendium.pf2e.equipment-srd.Item.4sGIy77COooxhQuC", // Scroll, lvl 6
+    "Compendium.pf2e.equipment-srd.Item.fomEZZ4MxVVK3uVu", // Scroll, lvl 7
+    "Compendium.pf2e.equipment-srd.Item.iPki3yuoucnj7bIt", // Scroll, lvl 8
+    "Compendium.pf2e.equipment-srd.Item.cFHomF3tty8Wi1e5", // Scroll, lvl 9
+    "Compendium.pf2e.equipment-srd.Item.o1XIHJ4MJyroAHfF", // Scroll, lvl 10
 
-    "Compendium.pf2e.equipment-srd.RjuupS9xyXDLgyIr", // Scroll, lvl 1
-    "Compendium.pf2e.equipment-srd.Y7UD64foDbDMV9sx", // Scroll, lvl 2
-    "Compendium.pf2e.equipment-srd.ZmefGBXGJF3CFDbn", // Scroll, lvl 3
-    "Compendium.pf2e.equipment-srd.QSQZJ5BC3DeHv153", // Scroll, lvl 4
-    "Compendium.pf2e.equipment-srd.tjLvRWklAylFhBHQ", // Scroll, lvl 5
-    "Compendium.pf2e.equipment-srd.4sGIy77COooxhQuC", // Scroll, lvl 6
-    "Compendium.pf2e.equipment-srd.fomEZZ4MxVVK3uVu", // Scroll, lvl 7
-    "Compendium.pf2e.equipment-srd.iPki3yuoucnj7bIt", // Scroll, lvl 8
-    "Compendium.pf2e.equipment-srd.cFHomF3tty8Wi1e5", // Scroll, lvl 9
-    "Compendium.pf2e.equipment-srd.o1XIHJ4MJyroAHfF", // Scroll, lvl 10
-
-    "Compendium.pf2e.equipment-srd.tLa4bewBhyqzi6Ow" // Cantrip deck
+    "Compendium.pf2e.equipment-srd.Item.tLa4bewBhyqzi6Ow" // Cantrip deck
 ];
 
 // Function to clone the allowed properties from an object
@@ -128,7 +130,7 @@ function createAdditionalNotes(changedItems) {
     const actorSourceId = changedItems.actorItem.sourceId;
     let notes = "";
     if (actorSourceId.includes("bestiary-ability-glossary-srd") || actorSourceId.includes("bestiary-family-ability-glossary"))
-    notes = notes.concat("Bestiary abilities has known issues");
+    notes = notes.concat("Bestiary abilities have known issues");
 
     return notes;
 }
@@ -165,7 +167,7 @@ function sortChangedItems(changedItems) {
     return sortedItems;
 }
 
-function waitForElementToBeRendered(id) {
+export function waitForElementToBeRendered(id) {
     return new Promise(resolve => {
         if (document.getElementById(id)) {
             return resolve(document.getElementById(id));
@@ -188,23 +190,14 @@ function waitForElementToBeRendered(id) {
 /**
 *     SCRIPT STARTS HERE
 */
-export async function runPIR() {
+export async function runPIR(actors) {
     info(`Starting ${SCRIPT_NAME}`);
-
-    let hasHasSelectorSupport = game.settings.get(SCRIPT_ID, 'useBrowserWorkaround');
-
-    debug(`Browser has 'Has'-selector support: ${hasHasSelectorSupport}`)
 
     // Wait for the pir-container to be rendered as we will want to modify this later
     let pirContainerElement = await waitForElementToBeRendered("pir-container");
 
     // Create an array of objects to store change information
     const changedData = [];
-
-    // TODO: Allow GMs to iterate over every actor, but players should only get access
-    //   to their owned actor(s)
-    // Get all available actors
-    const actors = canvas.tokens.placeables.filter((token) => token.actor).map((token) => token.actor);
 
     // Iterate over the actors
     for (const actor of actors) {
@@ -213,20 +206,21 @@ export async function runPIR() {
             pirContainerElement.innerText += ` ${actor.name} `
 
         // Iterate over the equipment
-        for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && PF2E_PROPERTY_ITEMS.includes(item.type) && item.sourceId && item.sourceId !== null && !PF2E_IGNORABLE_ITEM_UUIDS.includes(item.sourceId))) {
+        for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && PF2E_PROPERTY_ITEMS.includes(item.type) && item.sourceId && item.sourceId !== null)) {
 
             // Check if the item has been changed
             const originItem = await fromUuid(actorItem.sourceId);
 
-            // if the original UUID didn't exists, it was either a creation from the player
+            // If the original UUID didn't exists, it was either a creation from the player
             //   or the UUID has been changed by the PF2e creators.
-            if (originItem === null) {
+            // If the Item should be ignored, ignore it.
+            if (originItem === null || PF2E_IGNORABLE_ITEM_UUIDS.includes(originItem.sourceId)) {
                 continue;
             }
 
             const getCompareData = compareItems(originItem, actorItem);
 
-            // if we have a diff that is not just the slug (as that may differ on e.g. Eidolons' weapon choices)
+            // If we have a diff that is not just the slug (as that may differ on e.g. Eidolons' weapon choices)
             if (getCompareData.size > 0 && !(getCompareData.has("slug") && getCompareData.size === 1)) {
                 changedData.push({
                     actor: actor,
@@ -257,24 +251,29 @@ export async function runPIR() {
         * The problem here is that we need to make the dialog have auto width, or the content is hidden,
         * but _if we can_ we want to avoid making changes to the entire DOM object's Dialogs.
         **/
+        let hasHasSelectorSupport = game.settings.get(SCRIPT_ID, 'useBrowserWorkaround');
+        debug(`Browser has 'Has'-selector support: ${hasHasSelectorSupport}`);
         output = `
         <style>
         ${hasHasSelectorSupport ? ".dialog:has(.wiggle-table-wrapper)":".dialog"} {
             width: auto !important;
         }
-        </style>
+        </style>`;
 
+
+        // Generate the results-table
+        output += `
         <div class="wiggle-table-wrapper">
         <div class="wiggle-table">
-        <div class="wiggle-table-header">
-        <div class="wiggle-table-cell">Actor</div>
-        <div class="wiggle-table-cell">Type</div>
-        <div class="wiggle-table-cell">Name</div>
-        <div class="wiggle-table-cell">Changed Property</div>
-        <div class="wiggle-table-cell">Actor Item Link</div>
-        <div class="wiggle-table-cell">Origin Item Link</div>
-        <div class="wiggle-table-cell">Notes</div>
-        </div>
+            <div class="wiggle-table-header">
+            <div class="wiggle-table-cell">Actor</div>
+            <div class="wiggle-table-cell">Type</div>
+            <div class="wiggle-table-cell">Name</div>
+            <div class="wiggle-table-cell">Changed Property</div>
+            <div class="wiggle-table-cell">Actor Item Link</div>
+            <div class="wiggle-table-cell">Origin Item Link</div>
+            <div class="wiggle-table-cell">Notes</div>
+            </div>
         `;
 
         for (const data of sortChangedItems(changedData)) {
@@ -314,9 +313,9 @@ export async function runPIR() {
     }
 
     // TODO: Should we remove the other dialog?
-    //if (pirContainerElement)
+    if (pirContainerElement)
     //    pirContainerElement.innerHtml = "";
-    //    pirContainerElement.parentElement.nextElementSibling.firstElementChild.click()
+        pirContainerElement.parentElement.nextElementSibling.firstElementChild.click()
 
     // Create the popup
     const popupHeader = `<h1>Compatibility Check Results</h1>`;

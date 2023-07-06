@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+Adding Scene Control Group
+Separation of All Actors and Character tokens
+
 ## 0.7.0
 Adding Scene Control button
 Revitalizer class added, with embedded HTML
