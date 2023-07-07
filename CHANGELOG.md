@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.0
+Adding different handling for GMs and Users
+Adding multiple selections for GMs
+
 ## 0.8.0
 Adding Scene Control Group
 Separation of All Actors and Character tokens

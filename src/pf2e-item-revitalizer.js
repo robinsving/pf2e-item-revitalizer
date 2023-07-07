@@ -2,12 +2,31 @@ import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
 
 // TODO make this into a class: RevitalizerCalculator
 
-function debug(message) {
+export function debug(message) {
     console.debug(`${SCRIPT_ID}: ${message}`)
 }
 
-function info(message) {
+export function info(message) {
     console.info(`${SCRIPT_ID}: ${message}`)
+}
+
+ // test if "has"-selector is enabled in browser
+function testHasSelector(){
+    //create three connected elements
+    var container = document.createElement("div");
+    var parent = document.createElement("div");
+    var child = document.createElement("div");
+    child.className = "wiggle";
+    
+    container.appendChild(parent);
+    parent.appendChild(child);
+    try {
+        return (container.querySelector("div:has(.wiggle)") !== null);
+    } catch(e) {
+        return false;
+    } finally {
+        parent.remove();
+    }
 }
 
 // Allowlist of properties to include in the clone
@@ -126,11 +145,11 @@ function getDifferentiatingProperties(originItem, actorItem) {
 }
 
 function createAdditionalNotes(changedItems) {
-    console.log(changedItems.originItem.sourceId)
     const actorSourceId = changedItems.actorItem.sourceId;
     let notes = "";
+    
     if (actorSourceId.includes("bestiary-ability-glossary-srd") || actorSourceId.includes("bestiary-family-ability-glossary"))
-    notes = notes.concat("Bestiary abilities have known issues");
+        notes = notes.concat("Bestiary abilities have known issues");
 
     return notes;
 }
@@ -251,7 +270,7 @@ export async function runPIR(actors) {
         * The problem here is that we need to make the dialog have auto width, or the content is hidden,
         * but _if we can_ we want to avoid making changes to the entire DOM object's Dialogs.
         **/
-        let hasHasSelectorSupport = game.settings.get(SCRIPT_ID, 'useBrowserWorkaround');
+        let hasHasSelectorSupport = testHasSelector();
         debug(`Browser has 'Has'-selector support: ${hasHasSelectorSupport}`);
         output = `
         <style>
@@ -312,9 +331,8 @@ export async function runPIR(actors) {
         </div>`;
     }
 
-    // TODO: Should we remove the other dialog?
+    // Remove the pir-container dialog
     if (pirContainerElement)
-    //    pirContainerElement.innerHtml = "";
         pirContainerElement.parentElement.nextElementSibling.firstElementChild.click()
 
     // Create the popup
@@ -336,5 +354,5 @@ export async function runPIR(actors) {
     // Render the Dialog
     new Dialog(dialogOptions).render(true);
 
-    info(`Ending ${SCRIPT_NAME}`);
+    info(`Ending calculation of ${SCRIPT_NAME}`);
 }

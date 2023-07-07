@@ -1,24 +1,66 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
-
+import { info, debug } from "../src/pf2e-item-revitalizer";
 import { Revitalizer } from "./Revitalizer";
+
+const ActorSelection = {
+    All: () => true,
+    Characters: (token) => token.type == "character",
+    PlayerOwned: (token) => token.ownership.hasOwnProperty(game.userId)
+};
 
 $(document).ready(() => {
     let revitalizer = new Revitalizer();
 
     Hooks.once("init", () => {
-        console.log(`${SCRIPT_ID} | Initializing ${SCRIPT_ID}`);
+        info(`Initializing ${SCRIPT_NAME}`);
         CONFIG.supportedLanguages['en'] = 'English';
 
         revitalizer.loadTemplate();
     });
 
     Hooks.on('getSceneControlButtons', (control) => {
-        console.log(`${SCRIPT_ID} | Add hook on getSceneControlButtons`);
+        info("Add hook on getSceneControlButtons");
+        let tools = [];
 
-        if (game.settings.get(SCRIPT_ID, 'forGmOnly') && !game.user.isGM)
-            return;
+        // If a user is allowed to run for their characters
+        if (!game.user.isGM) {
+            if (game.settings.get(SCRIPT_ID, 'forGmOnly')) {
+                debug("User is not permitted to see anything")
+                return;
+            }
+                
+            debug("User is permitted to see owned characters")
+            
+            tools.push({
+                name: SCRIPT_ID+"-user",
+                title: `Run for all Actors`,
+                icon: 'fas fa-solid fa-users-viewfinder',
+                toggle: false,
+                onClick: () => {
+                    revitalizer.run(ActorSelection.PlayerOwned); 
+                }
+            })
+        } else {
+            debug("GM is permitted to see everything")
+            tools.push({
+                name: SCRIPT_ID+"-all",
+                title: `Run for all Actors`,
+                icon: 'fas fa-solid fa-users-medical',
+                toggle: false,
+                onClick: () => {
+                    revitalizer.run(ActorSelection.All); 
+                }
+            }, {
+                name: SCRIPT_ID+"-characters",
+                title: `Run for all characters`,
+                icon: 'fas fa-solid fa-users',
+                toggle: false,
+                onClick: () => {
+                    revitalizer.run(ActorSelection.Characters); 
+                }
+            });
+        }
 
-        //const control = scene.find((c) => c.name === 'token');
         // Add a new Scene Control Button group
         control.push({
             name: SCRIPT_ID+"-group",
@@ -26,44 +68,9 @@ $(document).ready(() => {
             icon: 'fas fa-solid fa-code-fork',
             activeTool: '',
             layer: 'controls',
-            tools: [{
-                name: SCRIPT_ID+"-all",
-                title: `Run for all Actors`,
-                icon: 'fas fa-solid fa-users-medical',
-                toggle: false,
-                onClick: () => {
-                    revitalizer.run(true); 
-                }
-            }, {
-                name: SCRIPT_ID+"-pc",
-                title: `Run for all characters`,
-                icon: 'fas fa-solid fa-users',
-                toggle: false,
-                onClick: () => {
-                    revitalizer.run(false); 
-                }
-            }]
+            tools: tools
         });
     });
-
-    // test if "has"-selector is enabled in browser
-    function testHasSelector(){
-        //create three connected elements
-        var container = document.createElement("div");
-        var parent = document.createElement("div");
-        var child = document.createElement("div");
-        child.className = "wiggle";
-        
-        container.appendChild(parent);
-        parent.appendChild(child);
-        try {
-            return (container.querySelector("div:has(.wiggle)") !== null);
-        } catch(e) {
-            return false;
-        } finally {
-            parent.remove();
-        }
-    }
 
     /**
      * Define settings.
@@ -76,16 +83,6 @@ $(document).ready(() => {
             scope: 'world',
             config: true,
             default: true,
-            type: Boolean
-        });
-
-        // Allow user setting of the has-selector workaround
-        game.settings.register(SCRIPT_ID, 'useBrowserWorkaround', {
-            name: game.i18n.localize("PIR.settings.useBrowserWorkaround.name"),
-            hint: game.i18n.localize("PIR.settings.useBrowserWorkaround.hint"),
-            scope: 'world',
-            config: false,
-            default: testHasSelector(),
             type: Boolean
         });
     });

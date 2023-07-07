@@ -1,5 +1,6 @@
 import { runPIR, waitForElementToBeRendered } from "../src/pf2e-item-revitalizer.js";
-import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
+import { info, debug } from "../src/pf2e-item-revitalizer";
+import { title as SCRIPT_NAME } from "../module.json";
 
 export class Revitalizer {
     dialog = undefined;
@@ -11,13 +12,14 @@ export class Revitalizer {
         <header>
             <h1>Compatibility Check Results</h1>
         </header>
-        Loading actors, and looking at their respective data...
         <div class="loader"></div>
+        Loading actors, and looking at their respective data...
+        <br>
     </section>`;
     }
 
     async renderPirContainerElement() {
-        console.log(`${SCRIPT_ID} | Toggling display`);
+        info(`Toggling display`);
 
         this.dialog = await new Dialog({
             title: SCRIPT_NAME,
@@ -25,30 +27,26 @@ export class Revitalizer {
             buttons: {
                 ok: {
                     icon: '<i class="fas fa-times"></i>',
-                    label: "Done",
+                    label: "Close",
                 },
             },
         }).render(true);
     }
 
-    async runCalculation(runForAll) {
-        let pirContainerElement = await waitForElementToBeRendered("pir-container");
-
+    getActorsFromSelection(actorSelection) {
+        debug(`Filtering using ${actorSelection}`)
         // Get all available actors
-        let actors = canvas.tokens.placeables.filter((token) => token.actor).map((token) => token.actor);
-        if (!runForAll)
-            // Get only PCs
-            actors = actors.filter((token) => token.type == "character");
-
-        // TODO check token ownership
+        let actors = canvas.tokens.placeables
+            .filter(token => token.actor).map(token => token.actor)  // Filter out actors
+            .filter(actorSelection);                                 // Filter out according to selection, e.g. ownership
 
         // TODO add checklist for GM to select from available tokens
-
-        return await runPIR(actors)
+        return actors;
     }
 
-    async run(runForAll) {
+    async run(actorSelection) {
         await this.renderPirContainerElement()
-        return await this.runCalculation(runForAll);
+        let actors = this.getActorsFromSelection(actorSelection);
+        return await runPIR(actors);
     }
 }
