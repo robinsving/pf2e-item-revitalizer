@@ -1,9 +1,11 @@
-import { runPIR, waitForElementToBeRendered } from "../src/pf2e-item-revitalizer.js";
-import { info, debug } from "../src/pf2e-item-revitalizer";
+import { RevitalizerCalculator } from "./RevitalizerCalculator.js";
+import { info, debug } from "./RevitalizerUtilities.js";
 import { title as SCRIPT_NAME } from "../module.json";
 import dialogHtml from "../templates/dialog.html?raw";
 
 export class Revitalizer {
+
+    revitalizerCalculator = new RevitalizerCalculator();
 
     async renderPirContainerElement() {
         info(`Toggling display`);
@@ -34,6 +36,8 @@ export class Revitalizer {
     async run(actorSelection) {
         await this.renderPirContainerElement()
         let actors = this.getActorsFromSelection(actorSelection);
-        return await runPIR(actors);
+        
+        return await this.revitalizerCalculator.runPIR(actors)
+        //return await RevitalizerCalculator.runPIR(actors);
     }
 }

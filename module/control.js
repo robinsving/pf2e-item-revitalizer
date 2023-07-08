@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
-import { info, debug } from "../src/pf2e-item-revitalizer";
+import { info, debug } from "./RevitalizerUtilities.js";
 import { Revitalizer } from "./Revitalizer";
 
 // Settings
