@@ -21,7 +21,6 @@ export default defineConfig({
             targets: [
                 { src: "./module.json", dest: "dist" },
                 { src: "./styles", dest: "dist" },
-                { src: "./templates", dest: "dist" },
                 { src: "./lang", dest: "dist" },
             ],
             hook: "writeBundle",

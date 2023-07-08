@@ -274,7 +274,7 @@ export async function runPIR(actors) {
         debug(`Browser has 'Has'-selector support: ${hasHasSelectorSupport}`);
         output = `
         <style>
-        ${hasHasSelectorSupport ? ".dialog:has(.wiggle-table-wrapper)":".dialog"} {
+        ${hasHasSelectorSupport ? ".dialog:has(.pir-table-wrapper)":".dialog"} {
             width: auto !important;
         }
         </style>`;
@@ -282,16 +282,16 @@ export async function runPIR(actors) {
 
         // Generate the results-table
         output += `
-        <div class="wiggle-table-wrapper">
-        <div class="wiggle-table">
-            <div class="wiggle-table-header">
-            <div class="wiggle-table-cell">Actor</div>
-            <div class="wiggle-table-cell">Type</div>
-            <div class="wiggle-table-cell">Name</div>
-            <div class="wiggle-table-cell">Changed Property</div>
-            <div class="wiggle-table-cell">Actor Item Link</div>
-            <div class="wiggle-table-cell">Origin Item Link</div>
-            <div class="wiggle-table-cell">Notes</div>
+        <div class="pir-table-wrapper">
+        <div class="pir-table">
+            <div class="pir-table-header">
+            <div class="pir-table-cell">Actor</div>
+            <div class="pir-table-cell">Type</div>
+            <div class="pir-table-cell">Name</div>
+            <div class="pir-table-cell">Changed Property</div>
+            <div class="pir-table-cell">Actor Item Link</div>
+            <div class="pir-table-cell">Origin Item Link</div>
+            <div class="pir-table-cell">Notes</div>
             </div>
         `;
 
@@ -314,14 +314,14 @@ export async function runPIR(actors) {
             }).join(", ");
 
             output += `
-            <div class="wiggle-table-row">
-            <div class="wiggle-table-cell">${actorLink}</div>
-            <div class="wiggle-table-cell">${data.actorItem.type}</div>
-            <div class="wiggle-table-cell">${data.actorItem.name}</div>
-            <div class="wiggle-table-cell">${comparativeData}</div>
-            <div class="wiggle-table-cell">${actorItemLink}</div>
-            <div class="wiggle-table-cell">${originItemLink}</div>
-            <div class="wiggle-table-cell">${notes}</div>
+            <div class="pir-table-row">
+            <div class="pir-table-cell">${actorLink}</div>
+            <div class="pir-table-cell">${data.actorItem.type}</div>
+            <div class="pir-table-cell">${data.actorItem.name}</div>
+            <div class="pir-table-cell">${comparativeData}</div>
+            <div class="pir-table-cell">${actorItemLink}</div>
+            <div class="pir-table-cell">${originItemLink}</div>
+            <div class="pir-table-cell">${notes}</div>
             </div>
             `;
         }
