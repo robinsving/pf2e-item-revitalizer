@@ -2,6 +2,12 @@ import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
 import { info, debug } from "../src/pf2e-item-revitalizer";
 import { Revitalizer } from "./Revitalizer";
 
+// Settings
+const settings = {
+    gm: "forGmOnly"
+}
+
+// Enum with filtering methods
 const ActorSelection = {
     All: () => true,
     Characters: (token) => token.type == "character",
@@ -20,15 +26,17 @@ $(document).ready(() => {
 
     Hooks.on('getSceneControlButtons', (control) => {
         info("Add hook on getSceneControlButtons");
+        
         let tools = [];
 
-        // If a user is allowed to run for their characters
+        // Determine which buttons should be visible to user
         if (!game.user.isGM) {
-            if (game.settings.get(SCRIPT_ID, 'forGmOnly')) {
+            if (game.settings.get(SCRIPT_ID, settings.gm)) {
                 debug("User is not permitted to see anything")
+                // Don't display anything
                 return;
             }
-                
+
             debug("User is permitted to see owned characters")
             
             tools.push({
@@ -77,7 +85,7 @@ $(document).ready(() => {
      */
     Hooks.on('init', () => {
         // Hide the control button.
-        game.settings.register(SCRIPT_ID, 'forGmOnly', {
+        game.settings.register(SCRIPT_ID, settings.gm, {
             name: game.i18n.localize("PIR.settings.gm.name"),
             hint: game.i18n.localize("PIR.settings.gm.hint"),
             scope: 'world',
