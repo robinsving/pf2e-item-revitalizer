@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.0
+Rewritten to use classes
+Better handling of templates
+
 ## 0.9.0
 Adding different handling for GMs and Users
 Adding multiple selections for GMs
