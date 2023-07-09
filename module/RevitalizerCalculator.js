@@ -1,7 +1,6 @@
 import { title as SCRIPT_NAME } from "../module.json";
-import { info, debug } from "./RevitalizerUtilities.js";
+import { info, debug, getAutoStyleSnippet } from "./RevitalizerUtilities.js";
 
-// TODO make this into a class: RevitalizerCalculator
 export class RevitalizerCalculator {
     constructor() {}
 
@@ -51,26 +50,6 @@ export class RevitalizerCalculator {
         "Compendium.pf2e.equipment-srd.Item.tLa4bewBhyqzi6Ow" // Cantrip deck
     ];
 
-    // Function to test if CSS "has"-selector is enabled in browser
-    #testHasSelector(){
-        //create three connected elements
-        let container = document.createElement("div");
-        let parent = document.createElement("div");
-        let child = document.createElement("div");
-        child.className = "pir-test-class";
-        
-        container.appendChild(parent);
-        parent.appendChild(child);
-        try {
-            // see if we can select "parent"
-            return (container.querySelector(`div:has(.${child.className})`) !== null);
-        } catch(e) {
-            return false;
-        } finally {
-            container.remove();
-        }
-    }
-
     // Function to clone the allowed properties from an object
     #allowedPropertyClone(obj, allowList) {
         return Object.keys(allowList).reduce((allowObj, key) => {
@@ -101,7 +80,7 @@ export class RevitalizerCalculator {
         return clones;
     }
 
-    // Function to get the properties that are different between two items
+    // Function to get the properties that differ between two Items
     #getDifferentiatingProperties(originItem, actorItem) {
         const differentProperties = [];
 
@@ -117,10 +96,15 @@ export class RevitalizerCalculator {
             const uuidNamePattern = /\{[\s\w-':()]*\}/gm;
             const uuidCompendiumFix = "@UUID[Compendium.";
 
-            const actorJson     = JSON.stringify(actorItem[key])
-                .replaceAll(inlineStylePattern, "").replaceAll(uuidNamePattern, "").replaceAll(uuidCompendiumFix, "@Compendium[");
-            const originJson    = JSON.stringify(originItem[key])
-                .replaceAll(inlineStylePattern, "").replaceAll(uuidNamePattern, "").replaceAll(uuidCompendiumFix, "@Compendium[");
+            const actorJson  = JSON.stringify(actorItem[key])
+                .replaceAll(inlineStylePattern, "")
+                .replaceAll(uuidNamePattern, "")
+                .replaceAll(uuidCompendiumFix, "@Compendium[");
+
+            const originJson = JSON.stringify(originItem[key])
+                .replaceAll(inlineStylePattern, "")
+                .replaceAll(uuidNamePattern, "")
+                .replaceAll(uuidCompendiumFix, "@Compendium[");
 
             // If we find differences in the property
             if (actorJson !== originJson) {
@@ -185,40 +169,15 @@ export class RevitalizerCalculator {
         return sortedItems;
     }
 
-    waitForElementToBeRendered(id) {
-        return new Promise(resolve => {
-            if (document.getElementById(id)) {
-                return resolve(document.getElementById(id));
-            }
-
-            const observer = new MutationObserver((mutations) => {
-                if (document.getElementById(id)) {
-                    resolve(document.getElementById(id));
-                    observer.disconnect();
-                }
-            });
-
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-        });
-    }
-
     async runPIR(actors) {
         info(`Starting ${SCRIPT_NAME}`);
-
-        // Wait for the pir-container to be rendered as we will want to modify this later
-        let pirContainerElement = await this.waitForElementToBeRendered("pir-container");
 
         // Create an array of objects to store change information
         const changedData = [];
 
         // Iterate over the actors
         for (const actor of actors) {
-            debug(`Parsing actor ${actor.name}`);
-            if (pirContainerElement)
-                pirContainerElement.innerText += ` ${actor.name} `
+            ui.notifications.info(`Parsing actor ${actor.name}`);
 
             // Iterate over the equipment
             for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && this.PF2E_PROPERTY_ITEMS.includes(item.type) && item.sourceId && item.sourceId !== null)) {
@@ -247,6 +206,8 @@ export class RevitalizerCalculator {
             }
         }
 
+        ui.notifications.info(`Parsing complete. Rendering results`);
+
         // Generate output
         let output = "";
 
@@ -256,28 +217,12 @@ export class RevitalizerCalculator {
             output = `<h2>✅ No changed items found</h2><p>Searched through the following actors:<br>${searchedActors}</p>`;
         } else {
 
-            /**
-            * Create the formatted output in a table.
-            *
-            * Note: Will use the "has"-selector if the browser supports it.
-            * Otherwise it will default to matching the "dialog" class
-            * This is notable when using e.g. Firefox, and not having the `layout.css.has-selector.enabled`
-            *
-            * The problem here is that we need to make the dialog have auto width, or the content is hidden,
-            * but _if we can_ we want to avoid making changes to the entire DOM object's Dialogs.
-            **/
-            let hasHasSelectorSupport = this.#testHasSelector();
-            debug(`Browser has 'Has'-selector support: ${hasHasSelectorSupport}`);
-            output = `
-            <style>
-            ${hasHasSelectorSupport ? ".dialog:has(.pir-table-wrapper)":".dialog"} {
-                width: auto !important;
-            }
-            </style>`;
+            // Fetch style changes to handle Dialog element style issues
+            output = getAutoStyleSnippet();
 
             // Generate the results-table and header
             output += `
-            <div class="pir-table-wrapper">
+            <div id="pir-container">
                 <div class="pir-table">
                     <div class="pir-table-header">
                     <div class="pir-table-cell">Actor</div>
@@ -325,10 +270,6 @@ export class RevitalizerCalculator {
             </div>
         </div>`;
         }
-
-        // Remove the pir-container dialog
-        if (pirContainerElement)
-            pirContainerElement.parentElement.nextElementSibling.firstElementChild.click()
 
         // Create the popup
         const popupHeader = `<h1>Compatibility Check Results</h1>`;

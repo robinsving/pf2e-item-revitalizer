@@ -5,9 +5,9 @@
                 "name": "Show module to all users",
                 "hint": "Turn off to have module only be visible to GMs"
             },
-            "useBrowserWorkaround": {
-                "name": "Use 'has'-selector browser workaround",
-                "hint": " has detected whether your browser is not allowing for the 'has' CSS-selector. This setting determines if it should be used."
+            "debug": {
+                "name": "Print debug to console log",
+                "hint": ""
             }
         },
         "script": {

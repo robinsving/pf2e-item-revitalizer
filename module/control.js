@@ -1,11 +1,6 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
-import { info, debug } from "./RevitalizerUtilities.js";
+import { info, debug, settings } from "./RevitalizerUtilities.js";
 import { Revitalizer } from "./Revitalizer";
-
-// Settings
-const settings = {
-    gm: "forGmOnly"
-}
 
 // Enum with filtering methods
 const ActorSelection = {
@@ -20,8 +15,6 @@ $(document).ready(() => {
     Hooks.once("init", () => {
         info(`Initializing ${SCRIPT_NAME}`);
         CONFIG.supportedLanguages['en'] = 'English';
-
-        revitalizer.loadTemplate();
     });
 
     Hooks.on('getSceneControlButtons', (control) => {
@@ -41,30 +34,30 @@ $(document).ready(() => {
             
             tools.push({
                 name: SCRIPT_ID+"-user",
-                title: `Run for all Actors`,
+                title: `Run for owned Actors in scene`,
                 icon: 'fas fa-solid fa-users-viewfinder',
                 toggle: false,
                 onClick: () => {
-                    revitalizer.run(ActorSelection.PlayerOwned); 
+                    revitalizer.start(ActorSelection.PlayerOwned); 
                 }
             })
         } else {
             debug("GM is permitted to see everything")
             tools.push({
                 name: SCRIPT_ID+"-all",
-                title: `Run for all Actors`,
+                title: `Run for all Actors in scene`,
                 icon: 'fas fa-solid fa-users-medical',
                 toggle: false,
                 onClick: () => {
-                    revitalizer.run(ActorSelection.All); 
+                    revitalizer.start(ActorSelection.All); 
                 }
             }, {
                 name: SCRIPT_ID+"-characters",
-                title: `Run for all characters`,
+                title: `Run for all Characters in scene`,
                 icon: 'fas fa-solid fa-users',
                 toggle: false,
                 onClick: () => {
-                    revitalizer.run(ActorSelection.Characters); 
+                    revitalizer.start(ActorSelection.Characters); 
                 }
             });
         }
@@ -86,11 +79,21 @@ $(document).ready(() => {
     Hooks.on('init', () => {
         // Hide the control button.
         game.settings.register(SCRIPT_ID, settings.gm, {
-            name: game.i18n.localize("PIR.settings.gm.name"),
-            hint: game.i18n.localize("PIR.settings.gm.hint"),
+            name: "Show module to all users", //game.i18n.localize("PIR.settings.gm.name"),
+            hint: "Turn off to have module only be visible to GMs", //game.i18n.localize("PIR.settings.gm.hint"),
             scope: 'world',
             config: true,
             default: true,
+            type: Boolean
+        });
+
+        // Print out debug to console.
+        game.settings.register(SCRIPT_ID, settings.debug, {
+            name: "Enable Debug", //game.i18n.localize("PIR.settings.debug.name"),
+            hint: "Print debug to console log", //game.i18n.localize("PIR.settings.debug.hint"),
+            scope: 'world',
+            config: true,
+            default: false,
             type: Boolean
         });
     });

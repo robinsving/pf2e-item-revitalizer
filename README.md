@@ -5,7 +5,7 @@ It compares certain properties of the items and identifies any differences or ch
 
 ## Installation
 
-Add `https://github.com/robinsving/pf2e-item-revitalizer/releases/download/latest/module.json` into Foundry VTT
+Add `https://raw.githubusercontent.com/robinsving/pf2e-item-revitalizer/main/module.json` into Foundry VTT
 
 ## Usage
 

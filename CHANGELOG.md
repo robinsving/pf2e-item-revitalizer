@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11.0
+Adding checkboxes for actor selection
+Debug settings
+Scrapped loading dialog in favor of ui-notifications
+
 ## 0.10.0
 Rewritten to use classes
 Better handling of templates
