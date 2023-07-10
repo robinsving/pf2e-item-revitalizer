@@ -79,8 +79,8 @@ $(document).ready(() => {
     Hooks.on('init', () => {
         // Hide the control button.
         game.settings.register(SCRIPT_ID, settings.gm, {
-            name: "Show module to all users", //game.i18n.localize("PIR.settings.gm.name"),
-            hint: "Turn off to have module only be visible to GMs", //game.i18n.localize("PIR.settings.gm.hint"),
+            name: "GM only", //game.i18n.localize("PIR.settings.gm.name"),
+            hint: "If turned off, users will be able to run for their owned characters", //game.i18n.localize("PIR.settings.gm.hint"),
             scope: 'world',
             config: true,
             default: true,
