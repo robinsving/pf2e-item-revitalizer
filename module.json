@@ -35,5 +35,5 @@
     "download": "https://github.com/robinsving/pf2e-item-revitalizer/releases/latest/download/pir-release.zip",
     "bugs": "https://github.com/robinsving/pf2e-item-revitalizer/issues",
     "readme": "https://raw.githubusercontent.com/robinsving/pf2e-item-revitalizer/main/README.md",
-    "changelog": "https://github.com/robinsving/pf2e-item-revitalizer/releases"
+    "changelog": "https://raw.githubusercontent.com/robinsving/pf2e-item-revitalizer/main/CHANGELOG.md"
 }

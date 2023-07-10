@@ -1,6 +1,6 @@
 # pf2e-item-revitalizer
-Module for handling Item obsolesence after system updates
-his module performs a compatibility check between Items in the PF2e Compendium and the corresponding items (copies) on the Actors in your game.
+Module for handling Item obsolesence after PF2e system updates
+This module performs a compatibility check between Items in the PF2e Compendium and the corresponding items (copies) on the Actors in your game.
 It compares certain properties of the items and identifies any differences or changes.
 
 ## Installation
