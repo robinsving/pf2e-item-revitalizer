@@ -107,6 +107,12 @@ export class Revitalizer {
     }
 
     async start(actorSelection) {
+        // Don't start if running
+        if (document.getElementById("pir-container-body")) {
+            popup(`Selection already ongoing`);
+            return;
+        }
+        
         let actors = this.#getActorsFromSelection(actorSelection);
 
         if (!actors.length) {
