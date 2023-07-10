@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0
+Bigfix: prevent multiple selections as once
+Adjusted wording in Settings
+
 ## 0.11.0
 Adding checkboxes for actor selection
 Debug settings
