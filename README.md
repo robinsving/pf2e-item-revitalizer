@@ -12,12 +12,21 @@ Add `https://raw.githubusercontent.com/robinsving/pf2e-item-revitalizer/main/mod
 1. Open your game in Foundry VTT.
 2. Navigate to the desired scene where you want to perform the compatibility check.
 3. Click the PIR icon (fork) in the Scene Control Buttons and select Run PIR
+4. Select available Actors from the list
+
+https://github.com/robinsving/pf2e-item-revitalizer/assets/3072502/f29a9951-07cc-44e8-aad9-6d863e8f3df9
 
 ## Features
 
+### Item comparisons
 - Performs a comparison of items between the Items added to the Actors in your game with the PF2e Compendium versions
 - Highlights any properties that differ between the Items
 - Provides links to easily access the Compendium and Actor Items for further inspection
+
+### Non-GM mode
+- Token ownership limitations
+
+https://github.com/robinsving/pf2e-item-revitalizer/assets/3072502/70d72dc8-3853-416e-a4e9-8674a46656c9
 
 ## Compatibility
 
