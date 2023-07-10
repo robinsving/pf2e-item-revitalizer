@@ -1,5 +1,5 @@
 import { title as SCRIPT_NAME } from "../module.json";
-import { info, debug, getAutoStyleSnippet } from "./RevitalizerUtilities.js";
+import { popup, info, debug, getAutoStyleSnippet } from "./RevitalizerUtilities.js";
 
 export class RevitalizerCalculator {
     constructor() {}
@@ -177,7 +177,7 @@ export class RevitalizerCalculator {
 
         // Iterate over the actors
         for (const actor of actors) {
-            ui.notifications.info(`Parsing actor ${actor.name}`);
+            popup(`Parsing actor ${actor.name}`);
 
             // Iterate over the equipment
             for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && this.PF2E_PROPERTY_ITEMS.includes(item.type) && item.sourceId && item.sourceId !== null)) {
@@ -206,7 +206,7 @@ export class RevitalizerCalculator {
             }
         }
 
-        ui.notifications.info(`Parsing complete. Rendering results`);
+        popup(`Parsing complete. Rendering results`);
 
         // Generate output
         let output = "";

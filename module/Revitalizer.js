@@ -1,5 +1,5 @@
 import { RevitalizerCalculator } from "./RevitalizerCalculator.js";
-import { debug, getAutoStyleSnippet } from "./RevitalizerUtilities.js";
+import { popup, debug, getAutoStyleSnippet } from "./RevitalizerUtilities.js";
 import { title as SCRIPT_NAME } from "../module.json";
 import selectionDialogHtml from "../templates/selection-dialog.html?raw";
 
@@ -36,7 +36,7 @@ export class Revitalizer {
         // Get the dialog
         let pirSelectionElement = await this.#waitForElementToBeRendered("pir-container-body");
 
-        // Retrieve all checkboxes
+        // Retrieve all checked checkboxes
         const checkboxes = pirSelectionElement.querySelectorAll("input[type='checkbox']:checked");
 
         // Retrieve all the actor IDs
@@ -108,8 +108,9 @@ export class Revitalizer {
 
     async start(actorSelection) {
         let actors = this.#getActorsFromSelection(actorSelection);
+
         if (!actors.length) {
-            ui.notifications.info(`No actors found matching selection`);
+            popup(`No actors found matching selection`);
             return;
         }
         

@@ -1,18 +1,22 @@
-import { id as SCRIPT_ID } from "../module.json";
-export { getAutoStyleSnippet, debug, info, settings };
+import { id as SCRIPT_ID, title } from "../module.json";
+export { getAutoStyleSnippet, debug, info, settings, popup };
 
 const settings = {
     gm: "forGmOnly",
     debug: "debugMode"
 }
 
+function popup(message) {
+    ui.notifications.info(`${title}: ${message}`);
+}
+
 function debug(message) {
     if (game.settings.get(SCRIPT_ID, settings.debug))
-        console.debug(`${SCRIPT_ID}: ${message}`);
+        console.debug(`${title}: ${message}`);
 }
 
 function info(message) {
-    console.info(`${SCRIPT_ID}: ${message}`);
+    console.info(`${title}: ${message}`);
 }
 
 // Function to test if CSS "has"-selector is enabled in browser
