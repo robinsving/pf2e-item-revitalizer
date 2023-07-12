@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.0
+Adding Rules handling
+
 ## 1.0.0
 Bigfix: prevent multiple selections as once
 Adjusted wording in Settings

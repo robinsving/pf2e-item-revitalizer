@@ -12,10 +12,17 @@ export class RevitalizerCalculator {
             value: true,
         },
         slug: true,
-        rules: true,
+        rules: {
+            key: true,
+            uuid: true,
+            allowDuplicate: true,
+            selector: true,
+            text: true,
+            predicate: true
+        },
         traits: {
             rarity: true,
-            value: true,
+            //value: true,
         },
     };
 
@@ -55,6 +62,8 @@ export class RevitalizerCalculator {
         return Object.keys(allowList).reduce((allowObj, key) => {
             if (!obj.hasOwnProperty(key)) {
                 // Exclude properties not present in the object
+            } else if (Array.isArray(obj[key])) {
+                allowObj[key] = obj[key].map((i) => this.#allowedPropertyClone(i, allowList[key]));
             } else if (typeof obj[key] === "object") {
                 allowObj[key] = this.#allowedPropertyClone(obj[key], allowList[key]);
             } else {
@@ -114,6 +123,7 @@ export class RevitalizerCalculator {
                 differentProperties.push(key);
             }
         }
+
 
         return differentProperties;
     }
