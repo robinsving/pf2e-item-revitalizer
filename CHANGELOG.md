@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+Reducing false positive: PF2e devs rewrote Item references from e.g.
+@Compendium[pf2e.spell-effects.lyLMiauxIVUM3oF1] -> @Compendium[pf2e.spell-effects.Item.lyLMiauxIVUM3oF1]
+As long as the Items are the same, this module should ignore it
+
 ## 1.1.0
 Adding Rules handling
 

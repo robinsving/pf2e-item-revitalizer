@@ -100,20 +100,24 @@ export class RevitalizerCalculator {
             *   <span style=\"float:right\">  ->   <span style=\"float: right;\">
             *   @UUID[Compendium.pf2e.actionspf2e.KAVf7AmRnbCAHrkT]{Attack of Opportunity} -> @UUID[Compendium.pf2e.actionspf2e.KAVf7AmRnbCAHrkT]
             *   @UUID[Compendium.pf2e.actionspf2e.KAVf7AmRnbCAHrkT]  -> @Compendium[pf2e.actionspf2e.KAVf7AmRnbCAHrkT]    -- Common with e.g. items from Adventure Paths
+            *   @UUID[Compendium.pf2e.actionspf2e.KAVf7AmRnbCAHrkT]  -> @Compendium[pf2e.actionspf2e.Item.KAVf7AmRnbCAHrkT]    -- A renaming recently done by the PF2e devs
             */
             const inlineStylePattern = /style=\\".*\\"/gm;
             const uuidNamePattern = /\{[\s\w-':()]*\}/gm;
             const uuidCompendiumFix = "@UUID[Compendium.";
+            const uuidItemFix = ".Item.";
 
             const actorJson  = JSON.stringify(actorItem[key])
                 .replaceAll(inlineStylePattern, "")
                 .replaceAll(uuidNamePattern, "")
-                .replaceAll(uuidCompendiumFix, "@Compendium[");
+                .replaceAll(uuidCompendiumFix, "@Compendium[")
+                .replaceAll(uuidItemFix, ".");
 
             const originJson = JSON.stringify(originItem[key])
                 .replaceAll(inlineStylePattern, "")
                 .replaceAll(uuidNamePattern, "")
-                .replaceAll(uuidCompendiumFix, "@Compendium[");
+                .replaceAll(uuidCompendiumFix, "@Compendium[")
+                .replaceAll(uuidItemFix, ".");
 
             // If we find differences in the property
             if (actorJson !== originJson) {
