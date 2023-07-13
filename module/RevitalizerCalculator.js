@@ -18,7 +18,27 @@ export class RevitalizerCalculator {
             allowDuplicate: true,
             selector: true,
             text: true,
-            predicate: true
+            predicate: true,
+            //flag: false,      // flag changes upon adding it in the characted sheet
+
+            // ChoiceSet
+            choices: true,
+            prompt: true,
+            //selection: false, // selection cannot be used, as that changes upon adding (selecting) it in the characted sheet
+            definition: true,
+            label: true,
+            //value: false,     // value sets to false from nothing upon adding
+
+            // Strike
+            category: true,
+            damage: {
+                base: {
+                    damageType: true,
+                    dice: true,
+                    die: true
+                }
+            },
+            otherTags: true
         },
         traits: {
             rarity: true,
