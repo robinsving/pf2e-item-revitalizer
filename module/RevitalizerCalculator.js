@@ -15,7 +15,7 @@ export class RevitalizerCalculator {
         rules: {
             key: true,
             uuid: true,
-            allowDuplicate: true,
+            //allowDuplicate: false, // changes on being added into character sheet?
             selector: true,
             text: true,
             predicate: true,
@@ -38,7 +38,26 @@ export class RevitalizerCalculator {
                     die: true
                 }
             },
-            otherTags: true
+            otherTags: true,
+
+            // ActiveEffect-like
+            mode: true,
+            path: true,
+
+            // Crafting Entry
+            craftableItems: true,
+            isAlchemical: true,
+            isDailyPrep:true,
+            maxItemLevel: true,
+
+            // Aura
+            effects: {
+                affects: true,
+                events: true,
+                uuid: true,
+            },
+            radius: true,
+            traits: true,
         },
         traits: {
             rarity: true,
