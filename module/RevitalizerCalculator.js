@@ -1,5 +1,5 @@
-import { title as SCRIPT_NAME } from "../module.json";
-import { popup, info, debug, getAutoStyleSnippet } from "./RevitalizerUtilities.js";
+import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
+import { popup, info, debug, settings, getAutoStyleSnippet } from "./RevitalizerUtilities.js";
 
 export class RevitalizerCalculator {
     constructor() {}
@@ -63,7 +63,10 @@ export class RevitalizerCalculator {
             if (!obj.hasOwnProperty(key)) {
                 // Exclude properties not present in the object
             } else if (Array.isArray(obj[key])) {
-                allowObj[key] = obj[key].map((i) => this.#allowedPropertyClone(i, allowList[key]));
+                if (game.settings.get(SCRIPT_ID, settings.rulesElementArrayLengthOnly))
+                    allowObj[key] = obj[key].length;
+                else 
+                    allowObj[key] = obj[key].map((i) => this.#allowedPropertyClone(i, allowList[key]));
             } else if (typeof obj[key] === "object") {
                 allowObj[key] = this.#allowedPropertyClone(obj[key], allowList[key]);
             } else {

@@ -3,7 +3,8 @@ export { getAutoStyleSnippet, debug, info, settings, popup };
 
 const settings = {
     gm: "forGmOnly",
-    debug: "debugMode"
+    debug: "debugMode",
+    rulesElementArrayLengthOnly: "useArrayLength",
 }
 
 function popup(message) {
