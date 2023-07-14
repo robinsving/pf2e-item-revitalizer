@@ -1,69 +1,9 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
 import { popup, info, debug, settings, getAutoStyleSnippet } from "./RevitalizerUtilities.js";
+import { PF2E_PROPERTY_ALLOW_LIST, PF2E_PROPERTY_ALLOW_LIST_BASE } from "./RevitalizerSignificantProperties.js";
 
 export class RevitalizerCalculator {
     constructor() {}
-
-    // Allowlist of properties to include in the clone
-    PF2E_PROPERTY_ALLOW_LIST = {
-        baseItem: true,
-        description: {
-            gm: true,
-            value: true,
-        },
-        slug: true,
-        rules: {
-            key: true,
-            uuid: true,
-            //allowDuplicate: false, // changes on being added into character sheet?
-            selector: true,
-            text: true,
-            predicate: true,
-            //flag: false,      // flag changes upon adding it in the characted sheet
-
-            // ChoiceSet
-            choices: true,
-            prompt: true,
-            //selection: false, // selection cannot be used, as that changes upon adding (selecting) it in the characted sheet
-            definition: true,
-            label: true,
-            //value: false,     // value sets to false from nothing upon adding
-
-            // Strike
-            category: true,
-            damage: {
-                base: {
-                    damageType: true,
-                    dice: true,
-                    die: true
-                }
-            },
-            otherTags: true,
-
-            // ActiveEffect-like
-            mode: true,
-            path: true,
-
-            // Crafting Entry
-            craftableItems: true,
-            isAlchemical: true,
-            isDailyPrep:true,
-            maxItemLevel: true,
-
-            // Aura
-            effects: {
-                affects: true,
-                events: true,
-                uuid: true,
-            },
-            radius: true,
-            traits: true,
-        },
-        traits: {
-            rarity: true,
-            //value: true,
-        },
-    };
 
     // List of Items to locate
     // TODO: register list to settings/storage, and allow user to select what to allow
@@ -105,7 +45,7 @@ export class RevitalizerCalculator {
                 if (game.settings.get(SCRIPT_ID, settings.rulesElementArrayLengthOnly))
                     allowObj[key] = obj[key].length;
                 else 
-                    allowObj[key] = obj[key].map((i) => this.#allowedPropertyClone(i, allowList[key]));
+                    allowObj[key] = obj[key].map((i) => typeof i === "object" ? this.#allowedPropertyClone(i, allowList[key]) : i);
             } else if (typeof obj[key] === "object") {
                 allowObj[key] = this.#allowedPropertyClone(obj[key], allowList[key]);
             } else {
@@ -118,14 +58,21 @@ export class RevitalizerCalculator {
 
     // Function to include only allowed properties in the cloned items
     #createShallowClones(originItem, actorItem) {
+        const type = actorItem.type;
         // Clone the items
         const clones = {
             origin: duplicate(originItem).system,
             actor: duplicate(actorItem).system,
         };
+        info(JSON.stringify(actorItem));
 
         for (let [key, value] of Object.entries(clones)) {
-            clones[key] = this.#allowedPropertyClone(value, this.PF2E_PROPERTY_ALLOW_LIST);
+            if (PF2E_PROPERTY_ALLOW_LIST.hasOwnProperty(type)) {
+                clones[key] = this.#allowedPropertyClone(value, PF2E_PROPERTY_ALLOW_LIST[type]);
+            } else {
+                info(`${type} is not yet a properly handled Item type, defaulting to base class`);
+                clones[key] = this.#allowedPropertyClone(value, PF2E_PROPERTY_ALLOW_LIST_BASE);
+            }
         }
 
         return clones;
@@ -148,6 +95,9 @@ export class RevitalizerCalculator {
             const uuidNamePattern = /\{[\s\w-':()]*\}/gm;
             const uuidCompendiumFix = "@UUID[Compendium.";
             const uuidItemFix = ".Item.";
+
+            debug(originItem.slug);
+            debug(key);
 
             const actorJson  = JSON.stringify(actorItem[key])
                 .replaceAll(inlineStylePattern, "")
