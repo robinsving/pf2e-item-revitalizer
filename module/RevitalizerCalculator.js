@@ -192,7 +192,8 @@ export class RevitalizerCalculator {
             // Iterate over the equipment
             for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && this.PF2E_PROPERTY_ITEMS.includes(item.type) && item.sourceId && item.sourceId !== null)) {
                 // ignore infused items
-                if (this.#getNestedProperty(actorItem, "system.traits.value").includes("infused")) {
+                let traits = this.#getNestedProperty(actorItem, "system.traits.value")
+                if (traits && traits.includes("infused")) {
                     continue;
                 }
 
