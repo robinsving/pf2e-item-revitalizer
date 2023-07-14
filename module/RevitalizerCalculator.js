@@ -1,6 +1,6 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
 import { popup, info, debug, settings, getAutoStyleSnippet } from "./RevitalizerUtilities.js";
-import { PF2E_PROPERTY_ALLOW_LIST, PF2E_PROPERTY_ALLOW_LIST_BASE } from "./RevitalizerSignificantProperties.js";
+import { PF2E_PROPERTY_ALLOW_LIST, PF2E_PROPERTY_ALLOW_LIST_BASE, IGNORABLE_PROPERTIES } from "./RevitalizerSignificantProperties.js";
 
 export class RevitalizerCalculator {
     constructor() {}
@@ -41,6 +41,9 @@ export class RevitalizerCalculator {
         return Object.keys(allowList).reduce((allowObj, key) => {
             if (!obj.hasOwnProperty(key)) {
                 // Exclude properties not present in the object
+            } else if (IGNORABLE_PROPERTIES.includes(key)){
+                // Specific handling
+                allowObj[key] = obj[key];
             } else if (Array.isArray(obj[key])) {
                 if (game.settings.get(SCRIPT_ID, settings.rulesElementArrayLengthOnly))
                     allowObj[key] = obj[key].length;

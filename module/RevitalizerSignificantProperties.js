@@ -1,47 +1,10 @@
 export { PF2E_PROPERTY_ALLOW_LIST, PF2E_PROPERTY_ALLOW_LIST_BASE };
+export { IGNORABLE_PROPERTIES };
 
-// Predicate basics. Since I don't want to have separate logic just for this one
-const predicateTrue = {
-    and: true,
-    or: true,
-    not: true,
-    nand: true,
-    nor: true,
-    lt: true,
-    lte: true,
-    gt: true,
-    gte: true,
-};
-
-const predicate = {
-    and: {
-        ...predicateTrue
-    },
-    or: {
-        ...predicateTrue
-    },
-    not: {
-        ...predicateTrue
-    },
-    nand: {
-        ...predicateTrue
-    },
-    nor: {
-        ...predicateTrue
-    },
-    lt: {
-        ...predicateTrue
-    },
-    lte: {
-        ...predicateTrue
-    },
-    gt: {
-        ...predicateTrue
-    },
-    gte: {
-        ...predicateTrue
-    },
-};
+const IGNORABLE_PROPERTIES = [
+    "predicate",
+    //"rules",
+];
 
 const ruleTypeChoiceSet = {
     // ChoiceSet
@@ -123,9 +86,7 @@ const ruleTypeRollOption = {
 
 const ruleTypeDamageDie = {
     //DamageDice
-    predicate: {
-        ...predicateTrue,
-    },
+    predicate: true,
     label: true,
     category: true,
     damageType: true,
@@ -213,35 +174,7 @@ const ruleTypeValuesCombined = {
 
 const ruleTypeFlatModifier = {
     ability: true,
-    predicate: {
-        and: {
-            ...predicate
-        },
-        or: {
-            ...predicate
-        },
-        not: {
-            ...predicate
-        },
-            nand: {
-            ...predicate
-        },
-        nor: {
-            ...predicate
-        },
-        lt: {
-            ...predicate
-        },
-        lte: {
-            ...predicate
-        },
-        gt: {
-            ...predicate
-        },
-        gte: {
-            ...predicate
-        },
-    },
+    //predicate: true,
     damageType: true,
     damageCategory: true,
     selector: true,
