@@ -175,6 +175,15 @@ export class RevitalizerCalculator {
         return sortedItems;
     }
 
+    #getNestedProperty(obj, path) {
+        try {
+          const value = path.split('.').reduce((acc, key) => acc[key], obj);
+          return value !== undefined ? value : null;
+        } catch (error) {
+          return null;
+        }
+      }
+
     async runPIR(actors) {
         info(`Starting ${SCRIPT_NAME}`);
 
@@ -187,6 +196,10 @@ export class RevitalizerCalculator {
 
             // Iterate over the equipment
             for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && this.PF2E_PROPERTY_ITEMS.includes(item.type) && item.sourceId && item.sourceId !== null)) {
+                // ignore infused items
+                if (this.#getNestedProperty(actorItem, "system.traits.value").includes("infused")) {
+                    continue;
+                }
 
                 // Check if the item has been changed
                 const originItem = await fromUuid(actorItem.sourceId);
