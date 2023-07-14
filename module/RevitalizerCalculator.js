@@ -39,7 +39,7 @@ export class RevitalizerCalculator {
     // Function to clone the allowed properties from an object
     #allowedPropertyClone(obj, allowList) {
         return Object.keys(allowList).reduce((allowObj, key) => {
-            if (!obj.hasOwnProperty(key)) {
+            if (!obj || !obj.hasOwnProperty(key)) {
                 // Exclude properties not present in the object
             } else if (IGNORABLE_PROPERTIES.includes(key)){
                 // Specific handling
@@ -104,6 +104,16 @@ export class RevitalizerCalculator {
                 .replaceAll(uuidCompendiumFix, "@Compendium[")
                 .replaceAll(uuidItemFix, ".");
 
+                
+            // Since we are looking for things in Actor Item, the corresponding data may not even exist in Origin (anymore)
+            if (!originItem[key]) {
+                debug(`Found differences in ${key} for slug ${originItem.slug}:`);
+                debug(`Actor ${originItem.slug} states: ${actorJson}`);
+                debug(`Compendium ${originItem.slug} does not exist`);
+                differentProperties.push(key);
+                continue;
+            }
+            
             const originJson = JSON.stringify(originItem[key])
                 .replaceAll(inlineStylePattern, "")
                 .replaceAll(uuidNamePattern, "")

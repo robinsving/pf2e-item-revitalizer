@@ -3,6 +3,8 @@ export { IGNORABLE_PROPERTIES };
 
 const IGNORABLE_PROPERTIES = [
     "predicate",
+    "value",
+    "overlays",
     //"rules",
 ];
 
@@ -138,40 +140,6 @@ const ruleElementRollTwice = {
     keep: true,
 };
 
-// all combined values, as they will override each other using JS spread
-const ruleTypeValuesCombined = {
-    value: {
-        // TokenLight
-        animation: {
-            intensity: true,
-            speed: true,
-            type: true,
-        },
-        bright: true,
-        color: true,
-        dim: true,
-        shadows: true,
-        luminosity: true,
-        gradual: true,
-        contrast: true,
-        saturation: true,
-        coloration: true,
-        angle: true,
-        alpha: true,
-        // Common brackets
-        brackets: {
-            end: true,
-            start: true,
-            value: true,
-        },
-        greater: true,
-        lesser: true,
-        label: true,
-        predicate: true,
-        value: true,
-    }
-};
-
 const ruleTypeFlatModifier = {
     ability: true,
     //predicate: true,
@@ -209,8 +177,6 @@ const PF2E_PROPERTY_ALLOW_LIST_BASE = {
         ...ruleElementTokenImage,
         ...ruleElementActorTrait,
         ...ruleElementRollTwice,
-
-        ...ruleTypeValuesCombined,
     },
     traits: {
         rarity: true,
@@ -235,7 +201,6 @@ const baseEquipment = {
         "value": true,
         "max": true,
     },
-    "hardness": true,
     "weight": {
         "value": true,
     },
@@ -392,6 +357,7 @@ const PF2E_PROPERTY_ALLOW_LIST = {
 
     armor: {
         ...baseEquipment,
+        "hardness": true,
         "armor": {
             "value": true,
         },
@@ -543,6 +509,7 @@ const PF2E_PROPERTY_ALLOW_LIST = {
         "ability": {
             "value": true,
         },
+        "overlays": true,
         "heightening": {
             // "levels": skipping this, as this may be too advanced for this little script
             "type": true,
@@ -566,7 +533,6 @@ const PF2E_PROPERTY_ALLOW_LIST = {
         "trigger": {
             "value": true,
         },
-        "deathNote": true,
         "weapon": {
             "value": true,
         }
