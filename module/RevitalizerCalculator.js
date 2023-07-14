@@ -7,7 +7,7 @@ export class RevitalizerCalculator {
 
     // List of Items to locate
     // TODO: register list to settings/storage, and allow user to select what to allow
-    PF2E_PROPERTY_ITEMS = ["action", "ancestry", "armor", "background", "backpack", "book", "class", "condition", "consumable", "deity", "effect", "equipment", "feat", "heritage", "kit", "spell", "spellcastingEntry", "treasure", "weapon"];
+    PF2E_PROPERTY_ITEMS = ["action", "ancestry", "armor", "background", "backpack", "class", "consumable", "deity", "equipment", "feat", "heritage", "spell", "treasure", "weapon"];
 
     // List of Items to ignore
     // TODO: register list to settings/storage, and allow user to add their own things to this list
@@ -64,7 +64,6 @@ export class RevitalizerCalculator {
             origin: duplicate(originItem).system,
             actor: duplicate(actorItem).system,
         };
-        info(JSON.stringify(actorItem));
 
         for (let [key, value] of Object.entries(clones)) {
             if (PF2E_PROPERTY_ALLOW_LIST.hasOwnProperty(type)) {
@@ -96,9 +95,6 @@ export class RevitalizerCalculator {
             const uuidCompendiumFix = "@UUID[Compendium.";
             const uuidItemFix = ".Item.";
 
-            debug(originItem.slug);
-            debug(key);
-
             const actorJson  = JSON.stringify(actorItem[key])
                 .replaceAll(inlineStylePattern, "")
                 .replaceAll(uuidNamePattern, "")
@@ -119,7 +115,6 @@ export class RevitalizerCalculator {
                 differentProperties.push(key);
             }
         }
-
 
         return differentProperties;
     }
@@ -182,7 +177,7 @@ export class RevitalizerCalculator {
         } catch (error) {
           return null;
         }
-      }
+    }
 
     async runPIR(actors) {
         info(`Starting ${SCRIPT_NAME}`);

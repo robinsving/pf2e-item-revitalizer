@@ -1,72 +1,5 @@
 export { PF2E_PROPERTY_ALLOW_LIST, PF2E_PROPERTY_ALLOW_LIST_BASE };
 
-const ruleTypeChoiceSet = {
-    // ChoiceSet
-    choices: true,
-    prompt: true,
-    //selection: false, // selection cannot be used, as that changes upon adding (selecting) it in the characted sheet
-    definition: true,
-    label: true,
-    //value: false,     // value sets to false from nothing upon adding
-};
-
-const ruleTypeStrike = {
-    // Strike
-    category: true,
-    damage: {
-        base: {
-            damageType: true,
-            dice: true,
-            die: true
-        }
-    },
-    otherTags: true,
-};
-
-const ruleTypeCraftingEntry = {
-    // Crafting Entry
-    craftableItems: true,
-    isAlchemical: true,
-    isDailyPrep:true,
-    maxItemLevel: true,
-}
-
-const ruleTypeActiveEffect = {
-    // ActiveEffect-like
-    mode: true,
-    path: true,
-};
-
-const ruleTypeAura = {
-    // Aura
-    effects: {
-        affects: true,
-        events: true,
-        uuid: true,
-    },
-    radius: true,
-    traits: true,
-}
-
-const ruleTypeGrantItem = {
-    uuid: true,
-    //grantedId: true,              // skipping this as it only seems to cause false positives
-};
-
-const ruleTypeRollOption = {
-    domain: true,
-    option: true,
-    toggleable: true,
-    //value: true
-};
-
-const ruleTypeDamageDie = {
-    "category": true,
-    "damageType": true,
-    "diceNumber": true,
-    "dieSize": true,
-}
-
 // Predicate basics. Since I don't want to have separate logic just for this one
 const predicateTrue = {
     and: true,
@@ -78,7 +11,7 @@ const predicateTrue = {
     lte: true,
     gt: true,
     gte: true,
-}
+};
 
 const predicate = {
     and: {
@@ -108,7 +41,175 @@ const predicate = {
     gte: {
         ...predicateTrue
     },
-}
+};
+
+const ruleTypeChoiceSet = {
+    // ChoiceSet
+    choices: {
+        label: true,
+        value: true,
+        predicate: true,
+    },
+    prompt: true,
+    definition: true,
+    label: true,
+    rollOption: true,
+};
+
+const ruleTypeStrike = {
+    // Strike
+    category: true,
+    damage: {
+        base: {
+            damageType: true,
+            dice: true,
+            die: true
+        }
+    },
+    otherTags: true,
+    group: true,
+    label: true,
+    traits: true,
+};
+
+const ruleTypeCraftingEntry = {
+    // Crafting Entry
+    craftableItems: true,
+    isAlchemical: true,
+    isDailyPrep:true,
+    maxItemLevel: true,
+};
+
+const ruleTypeActiveEffect = {
+    // ActiveEffect-like
+    mode: true,
+    path: true,
+    phase: true,
+};
+
+const ruleTypeAura = {
+    // Aura
+    effects: {
+        affects: true,
+        events: true,
+        includesSelf: true,
+        uuid: true,
+    },
+    radius: true,
+    traits: true,
+};
+
+const ruleTypeGrantItem = {
+    alterations: {
+        mode: true,
+        property: true,
+        value: true,
+    },
+    onDeleteActions: {
+        grantee: true,
+    },
+    uuid: true,
+};
+
+const ruleTypeRollOption = {
+    domain: true,
+    option: true,
+    toggleable: true,
+    suboptions: {
+        label: true,
+        value: true,
+    },
+};
+
+const ruleTypeDamageDie = {
+    //DamageDice
+    predicate: {
+        ...predicateTrue,
+    },
+    label: true,
+    category: true,
+    damageType: true,
+    diceNumber: true,
+    dieSize: true,
+    override: {
+        damageType: true,
+        dieSize: true,
+        upgrade: true,
+    }
+};
+
+const ruleTypeIWR = {
+    exceptions: true,
+    mode: true,
+    type: true,
+};
+
+const ruleTypeNote = {
+    title: true,
+    text: true,
+};
+
+const ruleTypeSense = {
+    acuity: true,
+};
+
+const ruleTypeAdjustModifier = {
+    relabel: true,
+};
+
+const ruleTypeCriticalSpecialization = {
+    alternate: true,
+};
+
+const ruleTypeSubstituteRoll = {
+    suppress: true,
+};
+
+const ruleElementTokenImage = {
+    scale: true,
+};
+
+const ruleElementActorTrait = {
+    add: true,
+};
+
+const ruleElementRollTwice = {
+    keep: true,
+};
+
+// all combined values, as they will override each other using JS spread
+const ruleTypeValuesCombined = {
+    value: {
+        // TokenLight
+        animation: {
+            intensity: true,
+            speed: true,
+            type: true,
+        },
+        bright: true,
+        color: true,
+        dim: true,
+        shadows: true,
+        luminosity: true,
+        gradual: true,
+        contrast: true,
+        saturation: true,
+        coloration: true,
+        angle: true,
+        alpha: true,
+        // Common brackets
+        brackets: {
+            end: true,
+            start: true,
+            value: true,
+        },
+        greater: true,
+        lesser: true,
+        label: true,
+        predicate: true,
+        value: true,
+    }
+};
 
 const ruleTypeFlatModifier = {
     ability: true,
@@ -140,7 +241,9 @@ const ruleTypeFlatModifier = {
         gte: {
             ...predicate
         },
-    }, 
+    },
+    damageType: true,
+    damageCategory: true,
     selector: true,
     type: true,
 };
@@ -155,12 +258,6 @@ const PF2E_PROPERTY_ALLOW_LIST_BASE = {
     key: true,
     slug: true,
     rules: {
-
-        //allowDuplicate: false, // changes on being added into character sheet?
-        text: true,
-        predicate: true,
-        //flag: false,      // flag changes upon adding it in the characted sheet
-
         ...ruleTypeChoiceSet,
         ...ruleTypeStrike,
         ...ruleTypeActiveEffect,
@@ -170,6 +267,17 @@ const PF2E_PROPERTY_ALLOW_LIST_BASE = {
         ...ruleTypeRollOption,
         ...ruleTypeDamageDie,
         ...ruleTypeFlatModifier,
+        ...ruleTypeIWR,
+        ...ruleTypeNote,
+        ...ruleTypeSense,
+        ...ruleTypeAdjustModifier,
+        ...ruleTypeCriticalSpecialization,
+        ...ruleTypeSubstituteRoll,
+        ...ruleElementTokenImage,
+        ...ruleElementActorTrait,
+        ...ruleElementRollTwice,
+
+        ...ruleTypeValuesCombined,
     },
     traits: {
         rarity: true,
@@ -209,15 +317,10 @@ const baseEquipment = {
             "pp": true,
         }
     },
-    "equipped": {
-        "carryType": true,
-        "invested": true,
-    },
     "stackGroup": true,
     "negateBulk": {
         "value": true,
     },
-    "containerId": true,
     "preciousMaterial": {
         "value": true,
     },
@@ -225,19 +328,6 @@ const baseEquipment = {
         "value": true,
     },
     "size": true,
-    "identification": {
-        "status": true,
-        "unidentified": {
-            "name": true,
-            "img":true,
-            "data": {
-                "description": {
-                    "value": true,
-                }
-            }
-        },
-        //"misidentified": {}
-    },
     "usage": {
         "value": true,
     }
@@ -251,6 +341,34 @@ const PF2E_PROPERTY_ALLOW_LIST = {
         size: true,
         reach: true,
         speed: true,
+    },
+    
+    heritage: {
+        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+        // Heritage
+        ancestry: {
+            name: true,
+            uuid: true,
+            slug: true,
+        }
+    },
+
+    background: {
+        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+        // Background
+        "boosts": {
+            0: {
+                value: true,
+            },
+            1: {
+                value: true,
+            }
+        },
+        "items": true,
+        "trainedLore": true,
+        "trainedSkills": {
+            "value": true,
+        }
     },
 
     class: {
@@ -281,37 +399,6 @@ const PF2E_PROPERTY_ALLOW_LIST = {
             light: true,
             medium: true,
             heavy: true,
-        },
-    },
-
-    feat: {
-        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
-        // feats
-        // level: false,        // level differs due to level of feats being bound to the lowest applicable value, e.g. Resolve is level 7, but some classes gets it at level 11
-        actions: {
-            value: true,
-        },
-        prerequisites: {
-            value: true,
-        },
-        actionType: {
-            value: true,
-        },
-        requirements: {
-            value: true,
-        },
-        trigger: {
-            value: true,
-        },
-        deathNote: true,
-        weapon: {
-            value: true,
-        },
-        //location: true,
-        category: true,
-        traits: {
-            value: true,
-            rarity: true,
         },
     },
 
@@ -351,7 +438,6 @@ const PF2E_PROPERTY_ALLOW_LIST = {
             "die": true,
             "damageType": true,
             "persistent": true,
-            "value": true,
         },
         "bonusDamage": {
             "value": true,
@@ -366,46 +452,190 @@ const PF2E_PROPERTY_ALLOW_LIST = {
         "MAP": {
             "value": true,
         },
-        "potencyRune": {
-            "value": true,
-        },
-        "strikingRune": {
-            "value": true,
-        },
         "specific": {
             "value": true,
         },
-        "propertyRune1": {
-            "value": true,
-        },
-        "propertyRune2": {
-            "value": true,
-        },
-        "propertyRune3": {
-            "value": true,
-        },
-        "propertyRune4": {
-            "value": true,
-        },
-        // "selectedAmmoId": "8q9cHSzMfzNKCWya"
     },
 
-    //TODO equipment
     armor: {
-        ...baseEquipment
+        ...baseEquipment,
+        "armor": {
+            "value": true,
+        },
+        "category": true,
+        "group": true,
+        "strength": {
+            "value": true,
+        },
+        "dex": {
+            "value": true,
+        },
+        "check": {
+            "value": true,
+        },
+        "speed": {
+            "value": true,
+        },
     },
+
     backpack: {
-        ...baseEquipment
+        ...baseEquipment,
+        "bulkCapacity": {
+            "value": true,
+        },
+        "stowing": true,
     },
-    book: {
-        ...baseEquipment
-    },
-    kit: {
-        ...baseEquipment
-    },
+
     treasure: {
         ...baseEquipment
     },
-};
 
-// "action", "background", "condition", "deity", "effect", "heritage", "spell", "spellcastingEntry"
+    feat: {
+        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+        // feats
+        // level: false,        // level differs due to level of feats being bound to the lowest applicable value, e.g. Resolve is level 7, but some classes gets it at level 11
+        actions: {
+            value: true,
+        },
+        prerequisites: {
+            value: true,
+        },
+        actionType: {
+            value: true,
+        },
+        requirements: {
+            value: true,
+        },
+        trigger: {
+            value: true,
+        },
+        deathNote: true,
+        weapon: {
+            value: true,
+        },
+        //location: true,
+        category: true,
+        traits: {
+            value: true,
+            rarity: true,
+        },
+    },
+
+    deity: {
+        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+        alignment: {
+            own: true,
+            follower: true,
+        },
+        domains: {
+            primary: true,
+            alternate: true,
+        },
+        font: true,
+        ability: true,
+        skill: true,
+        weapons: true,
+        spells: {
+            1: true,
+            2: true,
+            3: true,
+            4: true,
+            5: true,
+            6: true,
+            7: true,
+            8: true,
+            9: true,
+        }
+    },
+
+    spell: {
+        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+        "level": {
+            "value": true,
+        },
+        "spellType": {
+            "value": true,
+        },
+        "category": {
+            "value": true,
+        },
+        "traditions": {
+            "value": true,
+            "custom": true,
+        },
+        "school": {
+            "value": true,
+        },
+        "components": {
+            "focus": true,
+            "material": true,
+            "somatic": true,
+            "verbal": true,
+        },
+        "materials": {
+            "value": true,
+        },
+        "target": {
+            "value": true,
+        },
+        "range": {
+            "value": true,
+        },
+        "area": {
+            "type": true,
+            "value": true,
+        },
+        "time": {
+            "value": true,
+        },
+        "duration": {
+            "value": true,
+        },
+        "damage": {
+            "value": true,
+        },
+        "save": {
+            "value": true,
+            "basic": true,
+        },
+        "sustained": {
+            "value": true,
+        },
+        "cost": {
+            "value": true,
+        },
+        "hasCounteractCheck": {
+            "value": true,
+        },
+        "ability": {
+            "value": true,
+        },
+        "heightening": {
+            // "levels": skipping this, as this may be too advanced for this little script
+            "type": true,
+        },
+        "prepared": {
+            "value": true,
+        }
+    },
+
+    action: {
+        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+        "actionType": {
+            "value": true,
+        },
+        "actions": {
+            "value": true,
+        },
+        "requirements": {
+            "value": true,
+        },
+        "trigger": {
+            "value": true,
+        },
+        "deathNote": true,
+        "weapon": {
+            "value": true,
+        }
+    }
+};
