@@ -1,5 +1,7 @@
 import { id as SCRIPT_ID, title } from "../module.json";
-export { getAutoStyleSnippet, debug, info, settings, popup };
+export { getAutoStyleSnippet, debug, info, settings, popup, selectionTemplate };
+
+const selectionTemplate = `modules/${SCRIPT_ID}/templates/selection-dialog.html`;
 
 const settings = {
     gm: "forGmOnly",

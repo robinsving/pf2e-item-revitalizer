@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
-import { info, debug, settings } from "./RevitalizerUtilities.js";
+import { info, debug, settings, selectionTemplate } from "./RevitalizerUtilities.js";
 import { Revitalizer } from "./Revitalizer";
 
 // Enum with filtering methods
@@ -14,6 +14,7 @@ $(document).ready(() => {
 
     Hooks.once("init", () => {
         info(`Initializing ${SCRIPT_NAME}`);
+        loadTemplates([selectionTemplate]);
         CONFIG.supportedLanguages['en'] = 'English';
     });
 

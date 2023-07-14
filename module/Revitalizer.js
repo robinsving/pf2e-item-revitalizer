@@ -1,7 +1,6 @@
 import { RevitalizerCalculator } from "./RevitalizerCalculator.js";
-import { popup, debug, getAutoStyleSnippet } from "./RevitalizerUtilities.js";
+import { popup, debug, selectionTemplate } from "./RevitalizerUtilities.js";
 import { title as SCRIPT_NAME } from "../module.json";
-import selectionDialogHtml from "../templates/selection-dialog.html?raw";
 
 export class Revitalizer {
 
@@ -68,9 +67,20 @@ export class Revitalizer {
     async #renderPirContainerElementForSelection(actors) {
         debug(`Toggling display of ${actors.length} actors`);
 
+        let pirSelectionElement = document.createElement("div")
+        // Create checkboxes for each actor in the list
+        actors.forEach((actor) => {
+            const checkbox = this.#createCheckbox(actor);
+
+            pirSelectionElement.appendChild(checkbox);
+            pirSelectionElement.appendChild(document.createElement("br")); // Add a line break element
+        });
+
+        const rendered_html = await renderTemplate(selectionTemplate, {body: pirSelectionElement.innerHTML});
+
         await new Dialog({
             title: SCRIPT_NAME,
-            content: getAutoStyleSnippet() + selectionDialogHtml,
+            content: rendered_html,
             buttons: {
                 ok: {
                     icon: '<i class="fas fa-selection"></i>',
@@ -83,16 +93,6 @@ export class Revitalizer {
                 },
             },
         }).render(true);
-
-        let pirSelectionElement = await this.#waitForElementToBeRendered("pir-container-body");
-
-        // Create checkboxes for each actor in the list
-        actors.forEach((actor) => {
-            const checkbox = this.#createCheckbox(actor);
-
-            pirSelectionElement.appendChild(checkbox);
-            pirSelectionElement.appendChild(document.createElement("br")); // Add a line break element
-        });
     }
 
     // Filter out Actors (based on selection from Scene Control button pressed)

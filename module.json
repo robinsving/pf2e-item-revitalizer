@@ -15,6 +15,9 @@
         "styles/table.css",
         "styles/loader.css"
     ],
+    "templates": [
+        "templates/selection-dialog.html"
+    ],
     "languages": [
         {
             "lang": "en",
