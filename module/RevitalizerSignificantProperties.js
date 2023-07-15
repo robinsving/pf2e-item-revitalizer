@@ -305,7 +305,6 @@ const PF2E_PROPERTY_ALLOW_LIST = {
             "value": true,
         },
         "charges": {
-            "value": true,
             "max": true,
         },
         "consume": {
