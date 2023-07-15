@@ -15,7 +15,8 @@
         "styles/table.css"
     ],
     "templates": [
-        "templates/selection-dialog.html"
+        "templates/selection-dialog.html",
+        "templates/results-dialog.html"
     ],
     "languages": [
         {

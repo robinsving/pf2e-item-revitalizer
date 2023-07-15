@@ -1,0 +1,29 @@
+<div id="pir-container">
+    <section id="pir-results-header">
+        <h1>Compatibility Check Results</h1>
+    </section>
+    <section id="pir-results-body">
+        <div class="pir-table">
+            <div class="pir-table-header">
+                <div class="pir-table-cell">Actor</div>
+                <div class="pir-table-cell">Type</div>
+                <div class="pir-table-cell">Name</div>
+                <div class="pir-table-cell">Changed Property</div>
+                <div class="pir-table-cell">Actor Item Link</div>
+                <div class="pir-table-cell">Origin Item Link</div>
+                <div class="pir-table-cell">Notes</div>
+            </div>
+
+        {{#each items}}
+            <div class="pir-table-row">
+                <div class="pir-table-cell">{{{this.actorLink}}}</div>
+                <div class="pir-table-cell">{{this.type}}</div>
+                <div class="pir-table-cell">{{this.name}}</div>
+                <div class="pir-table-cell">{{{this.comparativeData}}}</div>
+                <div class="pir-table-cell">{{{this.actorItemLink}}}</div>
+                <div class="pir-table-cell">{{{this.originItemLink}}}</div>
+                <div class="pir-table-cell">{{this.notes}}</div>
+            </div>
+        {{/each}}
+        </div>
+    </section>

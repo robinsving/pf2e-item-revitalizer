@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
-import { popup, info, debug, settings, getAutoStyleSnippet } from "./RevitalizerUtilities.js";
+import { popup, info, debug, settings, getAutoStyleSnippet, resultsTemplate } from "./RevitalizerUtilities.js";
 import { PF2E_PROPERTY_ALLOW_LIST, PF2E_PROPERTY_ALLOW_LIST_BASE, IGNORABLE_PROPERTIES } from "./RevitalizerSignificantProperties.js";
 
 export class RevitalizerCalculator {
@@ -258,82 +258,44 @@ export class RevitalizerCalculator {
             const searchedActors = actors.map(actor => actor.name).join(', ') || "none";
             output = `<h2>✅ No changed items found</h2><p>Searched through the following actors:<br>${searchedActors}</p>`;
         } else {
-
+            const enrichOption = {
+                async: true
+            };
+            
             // Fetch style changes to handle Dialog element style issues
             output = getAutoStyleSnippet();
 
-            // Generate the results-table and header
-            output += `
-            <div id="pir-container">
-                <div class="pir-table">
-                    <div class="pir-table-header">
-                    <div class="pir-table-cell">Actor</div>
-                    <div class="pir-table-cell">Type</div>
-                    <div class="pir-table-cell">Name</div>
-                    <div class="pir-table-cell">Changed Property</div>
-                    <div class="pir-table-cell">Actor Item Link</div>
-                    <div class="pir-table-cell">Origin Item Link</div>
-                    <div class="pir-table-cell">Notes</div>
-                </div>
-            `;
+            const results = [];
 
             for (const data of this.#sortChangedItems(changedData)) {
-                const enrichOption = {
-                    async: true
-                };
-
-                // Create a link to the actor and items
-                const actorLink = `<div>${await TextEditor.enrichHTML(data.actor.link, enrichOption)}</div>`;
-                const originItemLink = `<div>${await TextEditor.enrichHTML(data.originItem.link, enrichOption)}</div>`;
-                const actorItemLink = `<div>${await TextEditor.enrichHTML(data.actorItem.link, enrichOption)}</div>`;
-
-                const notes = this.#extrapolateNotes(data);
-
-                // Format properties with bold for matches in item.comparativeData
-                const comparativeData = [...data.comparativeData].map((prop) => {
-
-                    const isImportantReference = ["description", "rules", "save", "damage", "heightening", "overlays"].includes(prop);
-
-                    return isImportantReference ? `<strong>${prop}</strong>` : prop;
-                }).join(", ");
-
-                output += `
-                <div class="pir-table-row">
-                    <div class="pir-table-cell">${actorLink}</div>
-                    <div class="pir-table-cell">${data.actorItem.type}</div>
-                    <div class="pir-table-cell">${data.actorItem.name}</div>
-                    <div class="pir-table-cell">${comparativeData}</div>
-                    <div class="pir-table-cell">${actorItemLink}</div>
-                    <div class="pir-table-cell">${originItemLink}</div>
-                    <div class="pir-table-cell">${notes}</div>
-                </div>
-                `;
+                results.push({
+                    actorLink: await TextEditor.enrichHTML(data.actor.link, enrichOption),
+                    type: data.actorItem.type,
+                    name: data.actorItem.name,
+                    comparativeData: [...data.comparativeData].map((prop) => {
+                        return ["description", "rules", "save", "damage", "heightening", "overlays"].includes(prop) ? `<strong>${prop}</strong>` : prop;
+                    }).join(", "),
+                    actorItemLink: await TextEditor.enrichHTML(data.actorItem.link, enrichOption),
+                    originItemLink: await TextEditor.enrichHTML(data.originItem.link, enrichOption),
+                    notes: this.#extrapolateNotes(data),
+                });
             }
 
-            output += `
-            </div>
-        </div>`;
+            output += await renderTemplate(resultsTemplate, { items: results });
         }
 
-        // Create the popup
-        const popupHeader = `<h1>Compatibility Check Results</h1>`;
-
-        // Display the popup with HTML content
-        const dialogOptions = {
-            title: 'Compatibility Check',
-            content: `${popupHeader}${output}`,
+        await new Dialog({
+            title: SCRIPT_NAME,
+            content: output,
             buttons: {
                 ok: {
-                    label: 'Close',
-                    icon: '<i class="fas fa-check"></i>',
+                    icon: '<i class="fas fa-selection"></i>',
+                    label: "Done",
                 },
             },
             default: 'ok',
-        };
-
-        // Render the Dialog
-        new Dialog(dialogOptions).render(true);
-
+        }).render(true);
+        
         info(`Ending calculation of ${SCRIPT_NAME}`);
     }
 }
