@@ -101,7 +101,7 @@ $(document).ready(() => {
         // Use Array Length for RE discovery.
         game.settings.register(SCRIPT_ID, settings.rulesElementArrayLengthOnly, {
             name: "Simplified Rule Element discovery",
-            hint: "Perform RE comparisons using array length. This gives fewer false positives, but also misses more true positives",
+            hint: "Faster run. Performs RE comparisons using array length. This gives fewer false positives, but also misses more true positives",
             scope: 'world',
             config: true,
             default: false,
