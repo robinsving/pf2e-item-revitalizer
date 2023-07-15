@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0
+Rule Elements: ActiveEffect, Crafting, Aura
+Using Template files for Dialog HTML renders (less error prone)
+Ignore Infused Items
+Separate shallow clone logic per Item type (weapon has "level", but feat doesn't)
+
 ## 1.3.0
 New setting: use RE array length
 New Rule Elements: Strike, ChoiceSet
