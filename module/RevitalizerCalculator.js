@@ -68,6 +68,9 @@ export class RevitalizerCalculator {
             actor: duplicate(actorItem).system,
         };
 
+        //debug(JSON.stringify(clones.actor));
+        //debug(JSON.stringify(clones.origin));
+
         for (let [key, value] of Object.entries(clones)) {
             if (PF2E_PROPERTY_ALLOW_LIST.hasOwnProperty(type)) {
                 clones[key] = this.#allowedPropertyClone(value, PF2E_PROPERTY_ALLOW_LIST[type]);
@@ -84,6 +87,17 @@ export class RevitalizerCalculator {
     #getDifferentiatingProperties(originItem, actorItem) {
         const differentProperties = [];
 
+        // Sort the JSON stringify ordering so that the properties does not matter
+        const sorter = (key, value) =>
+            value instanceof Object && !(value instanceof Array) ? 
+                Object.keys(value)
+                .sort()
+                .reduce((sorted, key) => {
+                    sorted[key] = value[key];
+                    return sorted 
+                }, {}) :
+                value;
+
         for (const key in actorItem) {
             /**
             * Create the JSON strings, but replace style formatting, as that may adjust spaces in browsers
@@ -94,11 +108,11 @@ export class RevitalizerCalculator {
             *   @UUID[Compendium.pf2e.actionspf2e.KAVf7AmRnbCAHrkT]  -> @Compendium[pf2e.actionspf2e.Item.KAVf7AmRnbCAHrkT]    -- A renaming recently done by the PF2e devs
             */
             const inlineStylePattern = /style=\\".*\\"/gm;
-            const uuidNamePattern = /\{[\s\w-':()]*\}/gm;
+            const uuidNamePattern = /\{[\s\w-':()]+\}/gm;
             const uuidCompendiumFix = "@UUID[Compendium.";
             const uuidItemFix = ".Item.";
 
-            const actorJson  = JSON.stringify(actorItem[key])
+            const actorJson  = JSON.stringify(actorItem[key], sorter)
                 .replaceAll(inlineStylePattern, "")
                 .replaceAll(uuidNamePattern, "")
                 .replaceAll(uuidCompendiumFix, "@Compendium[")
@@ -108,13 +122,13 @@ export class RevitalizerCalculator {
             // Since we are looking for things in Actor Item, the corresponding data may not even exist in Origin (anymore)
             if (!originItem[key]) {
                 debug(`Found differences in ${key} for slug ${originItem.slug}:`);
-                debug(`Actor ${originItem.slug} states: ${actorJson}`);
-                debug(`Compendium ${originItem.slug} does not exist`);
+                debug(`Actor's ${originItem.slug} (${key}) is: ${actorJson}`);
+                debug(`Compendium's ${originItem.slug} (${key}) does not exist`);
                 differentProperties.push(key);
                 continue;
             }
             
-            const originJson = JSON.stringify(originItem[key])
+            const originJson = JSON.stringify(originItem[key], sorter)
                 .replaceAll(inlineStylePattern, "")
                 .replaceAll(uuidNamePattern, "")
                 .replaceAll(uuidCompendiumFix, "@Compendium[")
@@ -123,8 +137,8 @@ export class RevitalizerCalculator {
             // If we find differences in the property
             if (actorJson !== originJson) {
                 debug(`Found differences in ${key} for slug ${originItem.slug}:`);
-                debug(`Actor ${originItem.slug} states: ${actorJson}`);
-                debug(`Compendium ${originItem.slug} states: ${originJson}`);
+                debug(`Actor's ${originItem.slug} (${key}) is: ${actorJson}`);
+                debug(`Compendium's ${originItem.slug} (${key}) is: ${originJson}`);
                 differentProperties.push(key);
             }
         }
@@ -277,7 +291,9 @@ export class RevitalizerCalculator {
 
                 // Format properties with bold for matches in item.comparativeData
                 const comparativeData = [...data.comparativeData].map((prop) => {
-                    const isImportantReference = ["description", "rules"].includes(prop);
+
+                    const isImportantReference = ["description", "rules", "save", "damage", "heightening", "overlays"].includes(prop);
+
                     return isImportantReference ? `<strong>${prop}</strong>` : prop;
                 }).join(", ");
 
