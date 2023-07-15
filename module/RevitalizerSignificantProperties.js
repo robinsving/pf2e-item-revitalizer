@@ -5,6 +5,7 @@ const IGNORABLE_PROPERTIES = [
     "predicate",
     "value",
     "overlays",
+    "heightening",
     //"rules",
 ];
 
@@ -219,12 +220,6 @@ const baseEquipment = {
     "negateBulk": {
         "value": true,
     },
-    "preciousMaterial": {
-        "value": true,
-    },
-    "preciousMaterialGrade": {
-        "value": true,
-    },
     "size": true,
     "usage": {
         "value": true,
@@ -357,7 +352,6 @@ const PF2E_PROPERTY_ALLOW_LIST = {
 
     armor: {
         ...baseEquipment,
-        "hardness": true,
         "armor": {
             "value": true,
         },
