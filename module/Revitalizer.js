@@ -53,7 +53,7 @@ export class Revitalizer {
     #createCheckbox(actor) {
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.checked = true; // Set the checkbox as checked by default
+        checkbox.defaultChecked = true; // Set the checkbox as checked by default
         checkbox.value = actor.id;
         checkbox.name = 'actors';
     
@@ -120,6 +120,7 @@ export class Revitalizer {
             return;
         }
         
+        // Start the selection Dialog
         await this.#renderPirContainerElementForSelection(actors)
     }
 }

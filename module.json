@@ -12,8 +12,7 @@
         "module/entry-control.js"
     ],
     "styles": [
-        "styles/table.css",
-        "styles/loader.css"
+        "styles/table.css"
     ],
     "templates": [
         "templates/selection-dialog.html"
