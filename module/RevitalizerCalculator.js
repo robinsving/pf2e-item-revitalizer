@@ -88,7 +88,7 @@ export class RevitalizerCalculator {
         const differentProperties = [];
 
         // Sort the JSON stringify ordering so that the properties does not matter
-        const sorter = (key, value) =>
+        const sorter = (_key, value) =>
             value instanceof Object && !(value instanceof Array) ? 
                 Object.keys(value)
                 .sort()
@@ -111,12 +111,14 @@ export class RevitalizerCalculator {
             const uuidNamePattern = /\{[\s\w-':()]+\}/gm;
             const uuidCompendiumFix = "@UUID[Compendium.";
             const uuidItemFix = ".Item.";
+            const nullFix = ":null";
 
             const actorJson  = JSON.stringify(actorItem[key], sorter)
                 .replaceAll(inlineStylePattern, "")
                 .replaceAll(uuidNamePattern, "")
                 .replaceAll(uuidCompendiumFix, "@Compendium[")
-                .replaceAll(uuidItemFix, ".");
+                .replaceAll(uuidItemFix, ".")
+                .replaceAll(nullFix, ":\"\"");
 
                 
             // Since we are looking for things in Actor Item, the corresponding data may not even exist in Origin (anymore)
@@ -132,7 +134,8 @@ export class RevitalizerCalculator {
                 .replaceAll(inlineStylePattern, "")
                 .replaceAll(uuidNamePattern, "")
                 .replaceAll(uuidCompendiumFix, "@Compendium[")
-                .replaceAll(uuidItemFix, ".");
+                .replaceAll(uuidItemFix, ".")
+                .replaceAll(nullFix, ":\"\"");
 
             // If we find differences in the property
             if (actorJson !== originJson) {
