@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.5.0
+Remove false positives from default values
+
 ## 1.4.0
 Rule Elements: ActiveEffect, Crafting, Aura
 Using Template files for Dialog HTML renders (less error prone)
