@@ -126,7 +126,11 @@ export class RevitalizerCalculator {
                 debug(`Found differences in ${key} for slug ${originItem.slug}:`);
                 debug(`Actor's ${originItem.slug} (${key}) is: ${actorJson}`);
                 debug(`Compendium's ${originItem.slug} (${key}) does not exist`);
-                differentProperties.push(key);
+                // sometimes Foundry adds default values
+                if (actorItem[key] !== null && actorItem[key] !== 0)
+                    differentProperties.push(key);
+                else
+                    debug(`Ignored due to no value set (null, 0)`)
                 continue;
             }
             

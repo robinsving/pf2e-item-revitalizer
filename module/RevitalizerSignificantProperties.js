@@ -199,7 +199,6 @@ const baseEquipment = {
     "baseItem": true,
     "hp": {
         "brokenThreshold": true,
-        "value": true,
         "max": true,
     },
     "weight": {
@@ -374,8 +373,7 @@ const PF2E_PROPERTY_ALLOW_LIST = {
         ...baseEquipment,
         "bulkCapacity": {
             "value": true,
-        },
-        "stowing": true,
+        }
     },
 
     treasure: {
