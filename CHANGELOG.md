@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.5.x
+Testing Foundry VTT module handling capabilities
+
 ## 1.5.0
 Remove false positives from default values
 
