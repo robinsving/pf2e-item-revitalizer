@@ -55,7 +55,7 @@ export class Revitalizer {
         checkbox.type = 'checkbox';
         checkbox.defaultChecked = true; // Set the checkbox as checked by default
         checkbox.value = actor.id;
-        checkbox.name = 'actors';
+        checkbox.name = 'pir-actors';
     
         const label = document.createElement('label');
         label.appendChild(checkbox);

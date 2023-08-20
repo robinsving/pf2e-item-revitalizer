@@ -1,6 +1,7 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
 import { info, debug, settings, selectionTemplate, resultsTemplate } from "./RevitalizerUtilities.js";
 import { Revitalizer } from "./Revitalizer";
+import "./RevitalizerCallbacks";
 
 // Enum with filtering methods
 const ActorSelection = {
