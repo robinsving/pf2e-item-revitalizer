@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.0
+Adding "Toggle all" for faster actor selection
+Adding simple handling for User ignore list
+
 ## 1.5.x
 Testing Foundry VTT module handling capabilities
 

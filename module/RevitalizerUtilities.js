@@ -1,13 +1,14 @@
 import { id as SCRIPT_ID, title } from "../module.json";
 export { getAutoStyleSnippet, debug, info, settings, popup, selectionTemplate, resultsTemplate };
 
-const selectionTemplate = `modules/${SCRIPT_ID}/templates/selection-dialog.html`;
-const resultsTemplate   = `modules/${SCRIPT_ID}/templates/results-dialog.html`;
+const selectionTemplate = `modules/${SCRIPT_ID}/templates/selection-dialog.hbs`;
+const resultsTemplate   = `modules/${SCRIPT_ID}/templates/results-dialog.hbs`;
 
 const settings = {
     gm: "forGmOnly",
     debug: "debugMode",
     rulesElementArrayLengthOnly: "useArrayLength",
+    userIgnoreList: "userIgnoreList",
 }
 
 function popup(message) {

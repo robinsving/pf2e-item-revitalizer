@@ -82,7 +82,7 @@ $(document).ready(() => {
         // Hide the control button.
         game.settings.register(SCRIPT_ID, settings.gm, {
             name: "GM only", //game.i18n.localize("PIR.settings.gm.name"),
-            hint: "If turned off, users will be able to run for their owned characters", //game.i18n.localize("PIR.settings.gm.hint"),
+            hint: "If turned off, users will be able to run for their owned characters",
             scope: 'world',
             config: true,
             default: true,
@@ -107,6 +107,15 @@ $(document).ready(() => {
             config: true,
             default: false,
             type: Boolean
+        });
+
+        game.settings.register(SCRIPT_ID, settings.userIgnoreList, {
+            name: "Ignored Actor Items",
+            hint: "User-expanded ignore list, comma-separated",
+            scope: 'world',
+            config: true,
+            default: [],
+            type: Array
         });
     });
 });

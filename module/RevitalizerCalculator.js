@@ -10,7 +10,7 @@ export class RevitalizerCalculator {
     PF2E_PROPERTY_ITEMS = ["action", "ancestry", "armor", "background", "backpack", "class", "consumable", "deity", "equipment", "feat", "heritage", "spell", "treasure", "weapon"];
 
     // List of Items to ignore
-    // TODO: register list to settings/storage, and allow user to add their own things to this list
+    // TODO: register list to settings/storage
     PF2E_IGNORABLE_ITEM_UUIDS = [
         "Compendium.pf2e.equipment-srd.Item.UJWiN0K3jqVjxvKk", // Wand, lvl 1
         "Compendium.pf2e.equipment-srd.Item.vJZ49cgi8szuQXAD", // Wand, lvl 2
@@ -225,18 +225,26 @@ export class RevitalizerCalculator {
 
             // Iterate over the equipment
             for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && this.PF2E_PROPERTY_ITEMS.includes(item.type) && item.sourceId && item.sourceId !== null)) {
-                // ignore infused items
+                // Sanity check: ignore items in ignore list
+                var ignoreList = game.settings.get(SCRIPT_ID, settings.userIgnoreList);
+                if (ignoreList.includes(actorItem.uuid)) {
+                    debug(`Ignoring item ${actorItem.slug} due to settings ignore list`)
+                    continue;
+                }
+
+                // Sanity check: ignore infused items
                 let traits = this.#getNestedProperty(actorItem, "system.traits.value")
                 if (traits && traits.includes("infused")) {
+                    debug(`Ignoring item ${actorItem.slug} due to infused trait`)
                     continue;
                 }
 
                 // Check if the item has been changed
                 const originItem = await fromUuid(actorItem.sourceId);
 
-                // If the original UUID didn't exists, it was either a creation from the player
+                // Sanity check: If the original UUID didn't exists, it was either a creation from the player
                 //   or the UUID has been changed by the PF2e creators.
-                // If the Item should be ignored, ignore it.
+                // Sanity check: If the Item should be ignored, ignore it.
                 if (originItem === null || this.PF2E_IGNORABLE_ITEM_UUIDS.includes(originItem.sourceId)) {
                     continue;
                 }
@@ -285,6 +293,7 @@ export class RevitalizerCalculator {
                     actorItemLink: await TextEditor.enrichHTML(data.actorItem.link, enrichOption),
                     originItemLink: await TextEditor.enrichHTML(data.originItem.link, enrichOption),
                     notes: this.#extrapolateNotes(data),
+                    uuid: data.actorItem.uuid,
                 });
             }
 
