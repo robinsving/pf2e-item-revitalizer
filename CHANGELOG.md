@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.0
+Adding "Revitalize" button to reset listed keys from Compendium Item (use at own discression)
+Actor selection now in alphabetical order
+
 ## 1.6.0
 Adding "Toggle all" for faster actor selection
 Adding simple handling for User ignore list
