@@ -100,14 +100,15 @@ export class Revitalizer {
         debug(`Filtering using ${actorSelection}`)
         // Get all available actors
         let actors = canvas.tokens.placeables
-            .filter(token => token.actor).map(token => token.actor)  // Filter out actors
-            .filter(actorSelection);                                 // Filter out according to selection, e.g. ownership
+            .filter(token => token.actor).map(token => token.actor) // Filter out actors
+            .filter(actorSelection)                                 // Filter out according to selection, e.g. ownership
+            .sort((a, b) => (a.name > b.name) ? 1 : -1)             // Sort by actor name
 
         return actors;
     }
 
     async start(actorSelection) {
-        // Don't start if running
+        // Don't start if already running
         if (document.getElementById("pir-container-body")) {
             popup(`Selection already ongoing`);
             return;

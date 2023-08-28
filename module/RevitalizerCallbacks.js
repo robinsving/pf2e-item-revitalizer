@@ -8,13 +8,12 @@ window.removeRow = async function (element) {
 
 // A function to store Actor Item UUID to Settings
 window.hide = async function (UUID) {
-    var currentIgnoreList = await game.settings.get(id, settings.userIgnoreList.id);
+    var currentIgnoreList = new Set(await game.settings.get(id, settings.userIgnoreList.id).filter(a=>a));
+    // Add to list, unless it exists
+    currentIgnoreList.add(UUID);
 
-    // Add to settings, unless exist
-    if (!currentIgnoreList.includes(UUID)) {
-        game.settings.set(id, settings.userIgnoreList.id, currentIgnoreList.concat(UUID).filter((item) => item));
-        popup(`${UUID} added to ignore list`);
-    }
+    // Save to settings
+    game.settings.set(id, settings.userIgnoreList.id, [...currentIgnoreList]);
     return true;
 };
 
