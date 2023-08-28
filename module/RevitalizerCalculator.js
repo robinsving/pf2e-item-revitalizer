@@ -3,14 +3,12 @@ import { popup, info, debug, settings, getAutoStyleSnippet, resultsTemplate } fr
 import { PF2E_PROPERTY_ALLOW_LIST, PF2E_PROPERTY_ALLOW_LIST_BASE, IGNORABLE_PROPERTIES } from "./RevitalizerSignificantProperties.js";
 
 export class RevitalizerCalculator {
-    constructor() {}
+    constructor() { }
 
     // List of Items to locate
-    // TODO: register list to settings/storage, and allow user to select what to allow
     PF2E_PROPERTY_ITEMS = ["action", "ancestry", "armor", "background", "backpack", "class", "consumable", "deity", "equipment", "feat", "heritage", "spell", "treasure", "weapon"];
 
     // List of Items to ignore
-    // TODO: register list to settings/storage
     PF2E_IGNORABLE_ITEM_UUIDS = [
         "Compendium.pf2e.equipment-srd.Item.UJWiN0K3jqVjxvKk", // Wand, lvl 1
         "Compendium.pf2e.equipment-srd.Item.vJZ49cgi8szuQXAD", // Wand, lvl 2
@@ -21,7 +19,7 @@ export class RevitalizerCalculator {
         "Compendium.pf2e.equipment-srd.Item.nmXPj9zuMRQBNT60", // Wand, lvl 7
         "Compendium.pf2e.equipment-srd.Item.Qs8RgNH6thRPv2jt", // Wand, lvl 8
         "Compendium.pf2e.equipment-srd.Item.Fgv722039TVM5JTc", // Wand, lvl 9
-        
+
         "Compendium.pf2e.equipment-srd.Item.RjuupS9xyXDLgyIr", // Scroll, lvl 1
         "Compendium.pf2e.equipment-srd.Item.Y7UD64foDbDMV9sx", // Scroll, lvl 2
         "Compendium.pf2e.equipment-srd.Item.ZmefGBXGJF3CFDbn", // Scroll, lvl 3
@@ -41,13 +39,13 @@ export class RevitalizerCalculator {
         return Object.keys(allowList).reduce((allowObj, key) => {
             if (!obj || !obj.hasOwnProperty(key)) {
                 // Exclude properties not present in the object
-            } else if (IGNORABLE_PROPERTIES.includes(key)){
+            } else if (IGNORABLE_PROPERTIES.includes(key)) {
                 // Specific handling
                 allowObj[key] = obj[key];
             } else if (Array.isArray(obj[key])) {
-                if (game.settings.get(SCRIPT_ID, settings.rulesElementArrayLengthOnly))
+                if (game.settings.get(SCRIPT_ID, settings.rulesElementArrayLengthOnly.id))
                     allowObj[key] = obj[key].length;
-                else 
+                else
                     allowObj[key] = obj[key].map((i) => typeof i === "object" ? this.#allowedPropertyClone(i, allowList[key]) : i);
             } else if (typeof obj[key] === "object") {
                 allowObj[key] = this.#allowedPropertyClone(obj[key], allowList[key]);
@@ -89,15 +87,16 @@ export class RevitalizerCalculator {
 
         // Sort the JSON stringify ordering so that the properties does not matter
         const sorter = (_key, value) =>
-            value instanceof Object && !(value instanceof Array) ? 
+            value instanceof Object && !(value instanceof Array) ?
                 Object.keys(value)
-                .sort()
-                .reduce((sorted, key) => {
-                    sorted[key] = value[key];
-                    return sorted 
-                }, {}) :
+                    .sort()
+                    .reduce((sorted, key) => {
+                        sorted[key] = value[key];
+                        return sorted
+                    }, {}) :
                 value;
 
+        //TODO: This will miss some properties on the Comependium Item. Especially if the Acrot item is too old.
         for (const key in actorItem) {
             /**
             * Create the JSON strings, but replace style formatting, as that may adjust spaces in browsers
@@ -113,27 +112,27 @@ export class RevitalizerCalculator {
             const uuidItemFix = ".Item.";
             const nullFix = ":null";
 
-            const actorJson  = JSON.stringify(actorItem[key], sorter)
+            const actorJson = JSON.stringify(actorItem[key], sorter)
                 .replaceAll(inlineStylePattern, "")
                 .replaceAll(uuidNamePattern, "")
                 .replaceAll(uuidCompendiumFix, "@Compendium[")
                 .replaceAll(uuidItemFix, ".")
                 .replaceAll(nullFix, ":\"\"");
 
-                
+
             // Since we are looking for things in Actor Item, the corresponding data may not even exist in Origin (anymore)
             if (!originItem[key]) {
                 debug(`Found differences in ${key} for slug ${originItem.slug}:`);
                 debug(`Actor's ${originItem.slug} (${key}) is: ${actorJson}`);
                 debug(`Compendium's ${originItem.slug} (${key}) does not exist`);
                 // sometimes Foundry adds default values
-                if (actorItem[key] !== null && actorItem[key] !== 0)
+                if (actorItem[key] !== null && actorItem[key] !== 0 && actorItem[key] !== false)
                     differentProperties.push(key);
                 else
                     debug(`Ignored due to no value set (null, 0)`)
                 continue;
             }
-            
+
             const originJson = JSON.stringify(originItem[key], sorter)
                 .replaceAll(inlineStylePattern, "")
                 .replaceAll(uuidNamePattern, "")
@@ -165,7 +164,7 @@ export class RevitalizerCalculator {
     #extrapolateNotes(changedItems) {
         const actorSourceId = changedItems.actorItem.sourceId;
         let notes = "";
-        
+
         if (actorSourceId.includes("bestiary-ability-glossary-srd") || actorSourceId.includes("bestiary-family-ability-glossary"))
             notes = notes.concat("Bestiary abilities have known issues");
 
@@ -206,10 +205,10 @@ export class RevitalizerCalculator {
 
     #getNestedProperty(obj, path) {
         try {
-          const value = path.split('.').reduce((acc, key) => acc[key], obj);
-          return value !== undefined ? value : null;
+            const value = path.split('.').reduce((acc, key) => acc[key], obj);
+            return value !== undefined ? value : null;
         } catch (error) {
-          return null;
+            return null;
         }
     }
 
@@ -221,12 +220,12 @@ export class RevitalizerCalculator {
 
         // Iterate over the actors
         for (const actor of actors) {
-            popup(`Parsing actor ${actor.name}`);
+            popup(`Parsing actor ${actor.name} (${actor.items.size} Items)`);
 
             // Iterate over the equipment
             for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && this.PF2E_PROPERTY_ITEMS.includes(item.type) && item.sourceId && item.sourceId !== null)) {
                 // Sanity check: ignore items in ignore list
-                var ignoreList = game.settings.get(SCRIPT_ID, settings.userIgnoreList);
+                var ignoreList = game.settings.get(SCRIPT_ID, settings.userIgnoreList.id);
                 if (ignoreList.includes(actorItem.uuid)) {
                     debug(`Ignoring item ${actorItem.slug} due to settings ignore list`)
                     continue;
@@ -276,27 +275,36 @@ export class RevitalizerCalculator {
             const enrichOption = {
                 async: true
             };
-            
+
             // Fetch style changes to handle Dialog element style issues
             output = getAutoStyleSnippet();
 
             const results = [];
 
+            let isRevitalizableGame = game.settings.get(SCRIPT_ID, settings.revitalize.id);
             for (const data of this.#sortChangedItems(changedData)) {
+                let isRevitalizable;
+                try {
+                    isRevitalizable = isRevitalizableGame && data.actorItem.actor.type == "character";
+                } catch {
+                    isRevitalizable = false;
+                }
+
                 results.push({
                     actorLink: await TextEditor.enrichHTML(data.actor.link, enrichOption),
                     type: data.actorItem.type,
                     name: data.actorItem.name,
-                    comparativeData: [...data.comparativeData].map((prop) => {
+                    comparativeDataText: [...data.comparativeData].map((prop) => {
                         return ["description", "rules", "save", "damage", "heightening", "overlays"].includes(prop) ? `<strong>${prop}</strong>` : prop;
                     }).join(", "),
+                    comparativeData: [...data.comparativeData].join(", "),
                     actorItemLink: await TextEditor.enrichHTML(data.actorItem.link, enrichOption),
                     originItemLink: await TextEditor.enrichHTML(data.originItem.link, enrichOption),
                     notes: this.#extrapolateNotes(data),
                     uuid: data.actorItem.uuid,
+                    isRevitalizable: isRevitalizable,
                 });
             }
-
             output += await renderTemplate(resultsTemplate, { items: results });
         }
 
@@ -311,7 +319,7 @@ export class RevitalizerCalculator {
             },
             default: 'ok',
         }).render(true);
-        
+
         info(`Ending calculation of ${SCRIPT_NAME}`);
     }
 }

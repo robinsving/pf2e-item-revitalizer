@@ -1,0 +1,12 @@
+.pir-button-holder {
+    display: flex !important;
+ }
+
+.pir-button {
+    display: inline-block;
+    min-width: 27px;
+ }
+
+.pir-button-disabled {
+    background-color: darkgrey;
+}

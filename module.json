@@ -12,6 +12,7 @@
         "module/entry-control.js"
     ],
     "styles": [
+        "styles/buttons.css",
         "styles/table.css"
     ],
     "templates": [

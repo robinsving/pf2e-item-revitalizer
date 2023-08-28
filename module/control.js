@@ -26,7 +26,7 @@ $(document).ready(() => {
 
         // Determine which buttons should be visible to user
         if (!game.user.isGM) {
-            if (game.settings.get(SCRIPT_ID, settings.gm)) {
+            if (game.settings.get(SCRIPT_ID, settings.gm.id)) {
                 debug("User is not permitted to see anything")
                 // Don't display anything
                 return;
@@ -68,7 +68,7 @@ $(document).ready(() => {
         control.push({
             name: SCRIPT_ID+"-group",
             title: `${SCRIPT_NAME}`,
-            icon: 'fas fa-solid fa-code-fork',
+            icon: 'fas fa-solid fa-code-compare',
             activeTool: '',
             layer: 'controls',
             tools: tools
@@ -80,9 +80,9 @@ $(document).ready(() => {
      */
     Hooks.on('init', () => {
         // Hide the control button.
-        game.settings.register(SCRIPT_ID, settings.gm, {
-            name: "GM only", //game.i18n.localize("PIR.settings.gm.name"),
-            hint: "If turned off, users will be able to run for their owned characters",
+        game.settings.register(SCRIPT_ID, settings.gm.id, {
+            name: settings.gm.name,
+            hint: settings.gm.hint,
             scope: 'world',
             config: true,
             default: true,
@@ -90,9 +90,9 @@ $(document).ready(() => {
         });
 
         // Print out debug to console.
-        game.settings.register(SCRIPT_ID, settings.debug, {
-            name: "Enable Debug", //game.i18n.localize("PIR.settings.debug.name"),
-            hint: "Print debug to console log", //game.i18n.localize("PIR.settings.debug.hint"),
+        game.settings.register(SCRIPT_ID, settings.debug.id, {
+            name: settings.debug.name,
+            hint: settings.debug.hint,
             scope: 'world',
             config: true,
             default: false,
@@ -100,18 +100,27 @@ $(document).ready(() => {
         });
 
         // Use Array Length for RE discovery.
-        game.settings.register(SCRIPT_ID, settings.rulesElementArrayLengthOnly, {
-            name: "Simplified Rule Element discovery",
-            hint: "Faster run. Performs RE comparisons using array length. This gives fewer false positives, but also misses more true positives",
+        game.settings.register(SCRIPT_ID, settings.rulesElementArrayLengthOnly.id, {
+            name: settings.rulesElementArrayLengthOnly.name,
+            hint: settings.rulesElementArrayLengthOnly.hint,
             scope: 'world',
             config: true,
             default: false,
             type: Boolean
         });
 
-        game.settings.register(SCRIPT_ID, settings.userIgnoreList, {
-            name: "Ignored Actor Items",
-            hint: "User-expanded ignore list, comma-separated",
+        game.settings.register(SCRIPT_ID, settings.revitalize.id, {
+            name: settings.revitalize.name,
+            hint: settings.revitalize.hint,
+            scope: 'world',
+            config: true,
+            default: false,
+            type: Boolean
+        });
+
+        game.settings.register(SCRIPT_ID,  settings.userIgnoreList.id, {
+            name: settings.userIgnoreList.name,
+            hint: settings.userIgnoreList.hint,
             scope: 'world',
             config: true,
             default: [],

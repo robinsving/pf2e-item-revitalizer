@@ -20,15 +20,24 @@
                 <div class="pir-table-cell">{{{this.actorLink}}}</div>
                 <div class="pir-table-cell">{{this.type}}</div>
                 <div class="pir-table-cell">{{this.name}}</div>
-                <div class="pir-table-cell">
-                    <!--<button onclick="revitalize({{{this.revitalize}}});" title="Revitalize changed properties from Compendium. WARNING, use at own risk!">
-                        <i class="fa-thin fa-code-merge fa-rotate-90"></i>
-                    </button>-->
-                    <button onclick="hide('{{this.uuid}}');" title="Hide this Item in the future">
+                <div class="pir-table-cell pir-button-holder">
+                    {{#if this.isRevitalizable}}
+                    <button class="pir-button" onclick="revitalize('{{this.uuid}}', '{{{this.comparativeData}}}') && removeRow(this);" title="Revitalize listed properties from Compendium. WARNING, use at own risk!">
+                        <i class="fa-solid fa-code-compare"></i>
+                    </button>
+                    {{else}}
+                    <button class="pir-button pir-button-disabled" disabled="true" title="Revitalize listed properties from Compendium. Disabled, or unavailable for this actor type!">
+                        <i class="fa-solid fa-code-compare"></i>
+                    </button>
+                    {{/if}}
+                    <button class="pir-button" onclick="hide('{{this.uuid}}') && removeRow(this);" title="Hide this Item in the future">
                         <i class="fa-regular fa-eye-slash"></i>
                     </button>
+                    <button class="pir-button" onclick="removeRow(this);" title="Remove Item from list" style="background-color:gold;">
+                        <i class="fa-regular fa-check" ></i>
+                    </button>
                 </div>
-                <div class="pir-table-cell">{{{this.comparativeData}}}</div>
+                <div class="pir-table-cell">{{{this.comparativeDataText}}}</div>
                 <div class="pir-table-cell">{{{this.actorItemLink}}}</div>
                 <div class="pir-table-cell">{{{this.originItemLink}}}</div>
                 <div class="pir-table-cell">{{this.notes}}</div>
