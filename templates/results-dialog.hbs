@@ -21,15 +21,15 @@
                 <div class="pir-table-cell">{{this.type}}</div>
                 <div class="pir-table-cell">{{this.name}}</div>
                 <div class="pir-table-cell pir-button-holder">
-                    {{#if this.isRevitalizable}}
+                    {{#unless this.unrevitalizable}} <!-- We are allowed to use Revitalize function -->
                     <button class="pir-button" onclick="revitalize('{{this.uuid}}', '{{{this.comparativeData}}}') && removeRow(this);" title="Revitalize listed properties from Compendium. WARNING, use at own risk!">
                         <i class="fa-solid fa-code-compare"></i>
                     </button>
-                    {{else}}
-                    <button class="pir-button pir-button-disabled" disabled="true" title="Revitalize listed properties from Compendium. Disabled, or unavailable for this actor type!">
+                    {{else}} <!-- We are not allowed to use Revitalize function -->
+                    <button class="pir-button pir-button-disabled" disabled="true" title="{{this.unrevitalizable}}">
                         <i class="fa-solid fa-code-compare"></i>
                     </button>
-                    {{/if}}
+                    {{/unless}}
                     <button class="pir-button" onclick="hide('{{this.uuid}}') && removeRow(this);" title="Hide this Item in the future">
                         <i class="fa-regular fa-eye-slash"></i>
                     </button>

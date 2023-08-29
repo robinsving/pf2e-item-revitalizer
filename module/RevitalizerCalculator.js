@@ -286,14 +286,14 @@ export class RevitalizerCalculator {
 
             const results = [];
 
-            let isRevitalizableGame = game.settings.get(SCRIPT_ID, settings.revitalize.id);
             for (const data of this.#sortChangedItems(changedData)) {
-                let isRevitalizable;
-                try {
-                    isRevitalizable = isRevitalizableGame && data.actorItem.actor.type == "character";
-                } catch {
-                    isRevitalizable = false;
-                }
+                let unrevitalizable = game.settings.get(SCRIPT_ID, settings.revitalize.id) ? undefined : "Disabled in settings";
+
+                if (!unrevitalizable && data.actorItem.actor.type != "character")
+                    unrevitalizable = "Only enabled for Player Characters";
+
+                if (!unrevitalizable && data.comparativeData.has("slug"))
+                    unrevitalizable = "Slug has changed, recreate Item instead";
 
                 results.push({
                     actorLink: await TextEditor.enrichHTML(data.actor.link, enrichOption),
@@ -307,7 +307,7 @@ export class RevitalizerCalculator {
                     originItemLink: await TextEditor.enrichHTML(data.originItem.link, enrichOption),
                     notes: this.#extrapolateNotes(data),
                     uuid: data.actorItem.uuid,
-                    isRevitalizable: isRevitalizable,
+                    unrevitalizable: unrevitalizable,
                 });
             }
             output += await renderTemplate(resultsTemplate, { items: results });
