@@ -162,11 +162,14 @@ export class RevitalizerCalculator {
     }
 
     #extrapolateNotes(changedItems) {
-        const actorSourceId = changedItems.actorItem.sourceId;
         let notes = "";
 
+        const actorSourceId = changedItems.actorItem.sourceId;
         if (actorSourceId.includes("bestiary-ability-glossary-srd") || actorSourceId.includes("bestiary-family-ability-glossary"))
-            notes = notes.concat("Bestiary abilities have known issues");
+            notes += notes.concat("Bestiary abilities have known issues");
+
+        if (changedItems.comparativeData.has("slug"))
+            notes += notes.concat("Slug changes - recommendation is to delete the Item and drag in the new one");
 
         return notes;
     }
