@@ -96,8 +96,24 @@ export class RevitalizerCalculator {
                     }, {}) :
                 value;
 
-        //TODO: This will miss some properties on the Comependium Item. Especially if the Acrot item is too old.
-        for (const key in actorItem) {
+        // Get all distinct keys in either Item
+        const allKeys = [...Object.keys(actorItem), ...Object.keys(originItem)];
+        for (const key of new Set(allKeys)) {
+
+            // Since we are looking for keys in the Item, the corresponding key may not even exist in the other Item
+            if (!originItem[key] || !actorItem[key]) {
+                debug(`Found differences in ${key} for slug ${originItem.slug}:`);
+                debug(`Actor's ${originItem.slug} (${key}) is: ${JSON.stringify(actorItem[key])}`);
+                debug(`Compendium's ${originItem.slug} (${key}) is: ${JSON.stringify(originItem[key])}`);
+
+                // sometimes Foundry adds default values
+                if (actorItem[key] !== null && actorItem[key] !== 0)
+                    differentProperties.push(key);
+                else
+                    debug(`Ignored due to no value set (null, 0)`)
+                continue;
+            }
+            
             /**
             * Create the JSON strings, but replace style formatting, as that may adjust spaces in browsers
             * e.g. the differences of the following lines:
@@ -118,20 +134,6 @@ export class RevitalizerCalculator {
                 .replaceAll(uuidCompendiumFix, "@Compendium[")
                 .replaceAll(uuidItemFix, ".")
                 .replaceAll(nullFix, ":\"\"");
-
-
-            // Since we are looking for things in Actor Item, the corresponding data may not even exist in Origin (anymore)
-            if (!originItem[key]) {
-                debug(`Found differences in ${key} for slug ${originItem.slug}:`);
-                debug(`Actor's ${originItem.slug} (${key}) is: ${actorJson}`);
-                debug(`Compendium's ${originItem.slug} (${key}) does not exist`);
-                // sometimes Foundry adds default values
-                if (actorItem[key] !== null && actorItem[key] !== 0 && actorItem[key] !== false)
-                    differentProperties.push(key);
-                else
-                    debug(`Ignored due to no value set (null, 0)`)
-                continue;
-            }
 
             const originJson = JSON.stringify(originItem[key], sorter)
                 .replaceAll(inlineStylePattern, "")
