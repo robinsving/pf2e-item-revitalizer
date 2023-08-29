@@ -171,7 +171,7 @@ export class RevitalizerCalculator {
             notes += notes.concat("Bestiary abilities have known issues");
 
         if (changedItems.comparativeData.has("slug"))
-            notes += notes.concat("Slug changes - recommendation is to delete the Item and drag in the new one");
+            notes += notes.concat("Slug changes - recommendation is to fully recreate Item");
 
         return notes;
     }
