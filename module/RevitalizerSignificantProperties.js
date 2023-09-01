@@ -148,6 +148,7 @@ const ruleTypeFlatModifier = {
     damageCategory: true,
     selector: true,
     type: true,
+    removeAfterRoll: true,
 };
 
 // Allowlists of properties to include in the Item clones
