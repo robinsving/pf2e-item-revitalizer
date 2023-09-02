@@ -32,7 +32,7 @@ window.revitalize = async function (UUID, csvProperties) {
     }
     properties.forEach(property => {
         try {
-            info(`Property ${property} will be changed from ${JSON.stringify(sourceItem.system[property])} to ${JSON.stringify(sourceItem.system[property])}`);
+            info(`Property ${property} will be changed from ${JSON.stringify(actorItem.system[property])} to ${JSON.stringify(sourceItem.system[property])}`);
             actor.items.find(i => i._id == actorItem._id).update({ [`system.${property}`]: sourceItem.system[property] });
         } catch (error) {
             console.error(error);
