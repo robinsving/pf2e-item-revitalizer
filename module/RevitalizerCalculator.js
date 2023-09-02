@@ -47,6 +47,8 @@ export class RevitalizerCalculator {
                     allowObj[key] = obj[key].length;
                 else
                     allowObj[key] = obj[key].map((i) => typeof i === "object" ? this.#allowedPropertyClone(i, allowList[key]) : i);
+            } else if (obj[key] === null) {
+                allowObj[key] = null;
             } else if (typeof obj[key] === "object") {
                 allowObj[key] = this.#allowedPropertyClone(obj[key], allowList[key]);
             } else {
@@ -99,12 +101,13 @@ export class RevitalizerCalculator {
         // Get all distinct keys in either Item
         const allKeys = [...Object.keys(actorItem), ...Object.keys(originItem)];
         for (const key of new Set(allKeys)) {
+            var humanReadableName = actorItem.slug || actorItem.name;
 
             // Since we are looking for keys in the Item, the corresponding key may not even exist in the other Item
-            if (!originItem[key] || !actorItem[key]) {
-                debug(`Found differences in ${key} for slug ${originItem.slug}:`);
-                debug(`Actor's ${originItem.slug} (${key}) is: ${JSON.stringify(actorItem[key])}`);
-                debug(`Compendium's ${originItem.slug} (${key}) is: ${JSON.stringify(originItem[key])}`);
+            if (!originItem.hasOwnProperty(key) || !actorItem.hasOwnProperty(key)) {
+                debug(`Found differences in ${key} for Item ${humanReadableName}:`);
+                debug(`Actor's ${humanReadableName} (${key}) is: ${JSON.stringify(actorItem[key])}`);
+                debug(`Compendium's ${humanReadableName} (${key}) is: ${JSON.stringify(originItem[key])}`);
 
                 // sometimes Foundry adds default values
                 if (actorItem[key] !== null && actorItem[key] !== 0)
@@ -144,9 +147,9 @@ export class RevitalizerCalculator {
 
             // If we find differences in the property
             if (actorJson !== originJson) {
-                debug(`Found differences in ${key} for slug ${originItem.slug}:`);
-                debug(`Actor's ${originItem.slug} (${key}) is: ${actorJson}`);
-                debug(`Compendium's ${originItem.slug} (${key}) is: ${originJson}`);
+                debug(`Found differences in ${key} for Item ${humanReadableName}:`);
+                debug(`Actor's ${humanReadableName} (${key}) is: ${actorJson}`);
+                debug(`Compendium's ${humanReadableName} (${key}) is: ${originJson}`);
                 differentProperties.push(key);
             }
         }
@@ -229,17 +232,19 @@ export class RevitalizerCalculator {
 
             // Iterate over the equipment
             for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && this.PF2E_PROPERTY_ITEMS.includes(item.type) && item.sourceId && item.sourceId !== null)) {
+                var humanReadableName = actorItem.slug || actorItem.name;
+
                 // Sanity check: ignore items in ignore list
                 var ignoreList = game.settings.get(SCRIPT_ID, settings.userIgnoreList.id);
                 if (ignoreList.includes(actorItem.uuid)) {
-                    debug(`Ignoring item ${actorItem.slug} due to settings ignore list`)
+                    debug(`Ignoring item ${humanReadableName} due to settings ignore list`)
                     continue;
                 }
 
                 // Sanity check: ignore infused items
                 let traits = this.#getNestedProperty(actorItem, "system.traits.value")
                 if (traits && traits.includes("infused")) {
-                    debug(`Ignoring item ${actorItem.slug} due to infused trait`)
+                    debug(`Ignoring item ${humanReadableName} due to infused trait`)
                     continue;
                 }
 
@@ -255,8 +260,7 @@ export class RevitalizerCalculator {
 
                 const getCompareData = this.#compareItems(originItem, actorItem);
 
-                // If we have a diff that is not just the slug (as that may differ on e.g. Eidolons' weapon choices)
-                if (getCompareData.size > 0 && !(getCompareData.has("slug") && getCompareData.size === 1)) {
+                if (getCompareData.size > 0) {
                     changedData.push({
                         actor: actor,
                         actorItem: actorItem,
