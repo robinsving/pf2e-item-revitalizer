@@ -176,6 +176,12 @@ export class RevitalizerCalculator {
         if (changedItems.comparativeData.has("slug"))
             notes += notes.concat("Slug changes - recommendation is to fully recreate Item");
 
+        if (changedItems.comparativeData.has("rules"))
+            notes += notes.concat("Rules changes may require re-adding Item manually");
+
+        if (changedItems.comparativeData.has("heightening"))
+            notes += notes.concat("Heightening changes may require re-adding Item manually");
+
         return notes;
     }
 
