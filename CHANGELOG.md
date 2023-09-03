@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.8.0
+New RE property: removeAfterRoll
+Added descriptor for why Revitalizer is disabled
+Improvements to Differentiation calc
+Slug changes have note added. Remaster will likely cause a few of these
+Better null-handling when cloning Items causing fewer false positives
+
 ## 1.7.0
 Adding "Revitalize" button to reset listed keys from Compendium Item (use at own discression)
 Actor selection now in alphabetical order
