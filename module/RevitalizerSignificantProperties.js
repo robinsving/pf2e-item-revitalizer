@@ -391,6 +391,8 @@ const PF2E_PROPERTY_ALLOW_LIST = {
         prerequisites: {
             value: true,
         },
+        onlyLevel1: true,
+        maxTakable: true,
         actionType: {
             value: true,
         },
@@ -410,6 +412,7 @@ const PF2E_PROPERTY_ALLOW_LIST = {
             value: true,
             rarity: true,
         },
+        selfEffect: true,
     },
 
     deity: {
