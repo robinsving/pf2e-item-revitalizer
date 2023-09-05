@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.0
+New significant properties
+  Feat: onlyLevel1, maxTakable, selfEffect
+
 ## 1.8.0
 New RE property: removeAfterRoll
 Added descriptor for why Revitalizer is disabled
