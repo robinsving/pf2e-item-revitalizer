@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID, title } from "../module.json";
-export { getAutoStyleSnippet, debug, info, settings, popup, selectionTemplate, resultsTemplate };
+export { getAutoStyleSnippet, debug, info, settings, popup, selectionTemplate, resultsTemplate, getNestedProperty };
 
 const selectionTemplate = `modules/${SCRIPT_ID}/templates/selection-dialog.hbs`;
 const resultsTemplate = `modules/${SCRIPT_ID}/templates/results-dialog.hbs`;
@@ -9,7 +9,16 @@ const settings = {
     debug: { id: "debugMode", name: "Enable Debugging", hint: "Print debug to console log" },
     rulesElementArrayLengthOnly: { id: "useArrayLength", name: "Simplified Rule Element discovery", hint: "Faster run. Performs RE comparisons using array length. This gives fewer false positives, but also misses more true positives" },
     userIgnoreList: { id: "userIgnoreList", name: "Ignored Actor Items", hint: "User-expanded ignore list, comma-separated" },
-    revitalize: { id: "allowRevitalize", name: "Allow updating Item version from Compendium", hint: "WARNING: this may destroy your Items, and may potentially cause issues with the Actor" },
+    revitalize: { id: "allowRevitalize", name: "Allow updating Item version from Compendium", hint: "WARNING: this may destroy your Item, and may potentially cause issues with the Actor" },
+}
+
+function getNestedProperty(obj, path) {
+    try {
+        const value = path.split('.').reduce((acc, key) => acc[key], obj);
+        return value !== undefined ? value : null;
+    } catch (error) {
+        return null;
+    }
 }
 
 function popup(message) {

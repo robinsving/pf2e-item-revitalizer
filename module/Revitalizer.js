@@ -31,6 +31,19 @@ export class Revitalizer {
         await this.revitalizerCalculator.runPIR(actors);
     }
 
+    async runRevitalizerForActorId(actorId) {
+        const actor = canvas.tokens.placeables
+            .filter(token => token.actor).map(token => token.actor) // Filter out actors
+            .find((actor) => actor._id == actorId);
+
+        if (!actor) {
+            debug("ActorId not found: {}", actorId);
+            return;
+        }
+            
+        await this.revitalizerCalculator.runPIR([actor]);
+    }
+
     async #extractActorsFromCheckboxes() {
         // Get the dialog
         let pirSelectionElement = await this.#waitForElementToBeRendered("pir-container-body");

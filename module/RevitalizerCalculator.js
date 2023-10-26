@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
-import { popup, info, debug, settings, getAutoStyleSnippet, resultsTemplate } from "./RevitalizerUtilities.js";
+import { popup, info, debug, settings, getAutoStyleSnippet, resultsTemplate, getNestedProperty} from "./RevitalizerUtilities.js";
 import { PF2E_PROPERTY_ALLOW_LIST, PF2E_PROPERTY_ALLOW_LIST_BASE, IGNORABLE_PROPERTIES } from "./RevitalizerSignificantProperties.js";
 
 export class RevitalizerCalculator {
@@ -171,19 +171,12 @@ export class RevitalizerCalculator {
 
         const actorSourceId = changedItems.actorItem.sourceId;
         if (actorSourceId.includes("bestiary-ability-glossary-srd") || actorSourceId.includes("bestiary-family-ability-glossary"))
-            notes += notes.concat("Bestiary abilities have known issues");
+            notes = notes.concat("Bestiary abilities have known issues. ");
 
         if (changedItems.comparativeData.has("slug"))
-            notes += notes.concat("Slug changes - recommendation is to fully recreate Item");
-
-        if (changedItems.comparativeData.has("rules"))
-            notes += notes.concat("Rules changes may require re-adding Item manually");
-
-        if (changedItems.comparativeData.has("heightening"))
-            notes += notes.concat("Heightening changes may require re-adding Item manually");
-
-        if (changedItems.comparativeData.has("damage"))
-            notes += notes.concat("Damage changes may require re-adding Item manually");
+            notes = notes.concat("Slug changes - recommendation is to fully recreate Item. ");
+        else if (changedItems.comparativeData.has("rules") || changedItems.comparativeData.has("heightening") || changedItems.comparativeData.has("damage") )
+            notes = notes.concat("These changes may require re-adding Item manually. ");
 
         return notes;
     }
@@ -220,15 +213,6 @@ export class RevitalizerCalculator {
         return sortedItems;
     }
 
-    #getNestedProperty(obj, path) {
-        try {
-            const value = path.split('.').reduce((acc, key) => acc[key], obj);
-            return value !== undefined ? value : null;
-        } catch (error) {
-            return null;
-        }
-    }
-
     async runPIR(actors) {
         info(`Starting ${SCRIPT_NAME}`);
 
@@ -251,7 +235,7 @@ export class RevitalizerCalculator {
                 }
 
                 // Sanity check: ignore infused items
-                let traits = this.#getNestedProperty(actorItem, "system.traits.value")
+                let traits = getNestedProperty(actorItem, "system.traits.value")
                 if (traits && traits.includes("infused")) {
                     debug(`Ignoring item ${humanReadableName} due to infused trait`)
                     continue;
