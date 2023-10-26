@@ -187,23 +187,23 @@ export class RevitalizerCalculator {
 
         sortedItems.sort((a, b) => {
             // Sort by actorName
-            if (a.actorName < b.actorName) {
+            if (a.actor.name < b.actor.name) {
                 return -1;
-            } else if (a.actorName > b.actorName) {
+            } else if (a.actor.name > b.actor.name) {
                 return 1;
             }
 
             // Sort by type if actorName is equal
-            if (a.type < b.type) {
+            if (a.actorItem.type < b.actorItem.type) {
                 return -1;
-            } else if (a.type > b.type) {
+            } else if (a.actorItem.type > b.actorItem.type) {
                 return 1;
             }
 
             // Sort by name if actorName and type are equal
-            if (a.name < b.name) {
+            if (a.actorItem.name < b.actorItem.name) {
                 return -1;
-            } else if (a.name > b.name) {
+            } else if (a.actorItem.name > b.actorItem.name) {
                 return 1;
             }
 
