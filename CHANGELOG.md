@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.0
+Adding trigger to Character sheets removing Scene Control button for non-GM
+New RE properties: AdjustStrike, LoseHitPoints, ChangeDegreeOfSuccess
+Bugfix: new layer for Scene Control button. Issue caused incompatabilities with other modules using the same "controls" layer
+
 ## 1.9.0
 New significant properties
   Feat: onlyLevel1, maxTakable, selfEffect

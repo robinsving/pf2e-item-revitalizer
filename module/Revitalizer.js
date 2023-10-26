@@ -2,7 +2,7 @@ import { RevitalizerCalculator } from "./RevitalizerCalculator.js";
 import { popup, debug, selectionTemplate } from "./RevitalizerUtilities.js";
 import { title as SCRIPT_NAME } from "../module.json";
 
-export class Revitalizer {
+export default class Revitalizer {
 
     revitalizerCalculator = new RevitalizerCalculator();
 

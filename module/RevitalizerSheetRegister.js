@@ -1,14 +1,14 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
 import { settings, getNestedProperty } from "./RevitalizerUtilities.js";
 
-export class RevitalizerSheetRegister {
+export default class RevitalizerSheetRegister {
     
     constructor(revitalizer) {
         this.revitalizer = revitalizer;
 
-        // Determine if button should be visible to user
+        // Determine if button should be visible to user at all
         if (!game.user.isGM && game.settings.get(SCRIPT_ID, settings.gm.id)) {
-            debug("User is not permitted to see anything")
+            debug("User is not permitted")
             // Don't display anything
             return;
         }
@@ -36,7 +36,8 @@ export class RevitalizerSheetRegister {
 
     #registerHook(sheet) {
         Hooks.on("render" + sheet, (app, html, data) => {
-            // if we don't have access to this actor, then don't draw anything
+            // Determine if button should be visible to user
+            // If we don't own this actor, then don't draw anything
             if (!game.user.isGM && !data.actor.ownership.hasOwnProperty(game.userId))
                 return;
 
@@ -44,8 +45,8 @@ export class RevitalizerSheetRegister {
 
             if (!actorId)
                 return;
-
-                
+            
+            // add a "button" to the title bar of the sheet
             const className = `${SCRIPT_ID}-initiate-single-actor`;
             const button = $(`
                 <a class="${className}" title="Check for new versions of this Actor's Items using ${SCRIPT_NAME}">
@@ -55,7 +56,7 @@ export class RevitalizerSheetRegister {
             );
 
             // add onclick event to start a Revitalizer run for Actor Id
-            button.click(() => { this.revitalizer.runRevitalizerForActorId(data.actor._id)});
+            button.click(() => this.revitalizer.runRevitalizerForActorId(data.actor._id));
 
             // remove any existing versions of button
             html.closest('.app').find(`.${className}`).remove();

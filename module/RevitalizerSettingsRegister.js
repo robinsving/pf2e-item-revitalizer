@@ -1,10 +1,10 @@
 import { id as SCRIPT_ID } from "../module.json";
 import { settings } from "./RevitalizerUtilities.js";
 
-export class RevitalizerSettingsRegister {
+export default class RevitalizerSettingsRegister {
     
     constructor() {
-        // Hide the control button.
+        // Hide the interface for non-GMs.
         game.settings.register(SCRIPT_ID, settings.gm.id, {
             name: settings.gm.name,
             hint: settings.gm.hint,
@@ -34,6 +34,7 @@ export class RevitalizerSettingsRegister {
             type: Boolean
         });
 
+        // Allow Revitalization (updating Items)
         game.settings.register(SCRIPT_ID, settings.revitalize.id, {
             name: settings.revitalize.name,
             hint: settings.revitalize.hint,
@@ -43,6 +44,7 @@ export class RevitalizerSettingsRegister {
             type: Boolean
         });
 
+        // List of ignored Items
         game.settings.register(SCRIPT_ID,  settings.userIgnoreList.id, {
             name: settings.userIgnoreList.name,
             hint: settings.userIgnoreList.hint,
