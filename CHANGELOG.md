@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.11.0
+Special properties handling for icons, names, and types
+Bugfix: Result sorting suffered from old refactor
+
 ## 1.10.0
 Adding trigger to Character sheets removing Scene Control button for non-GM
 New RE properties: AdjustStrike, LoseHitPoints, ChangeDegreeOfSuccess
