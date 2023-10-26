@@ -182,6 +182,9 @@ export class RevitalizerCalculator {
         if (changedItems.comparativeData.has("heightening"))
             notes += notes.concat("Heightening changes may require re-adding Item manually");
 
+        if (changedItems.comparativeData.has("damage"))
+            notes += notes.concat("Damage changes may require re-adding Item manually");
+
         return notes;
     }
 

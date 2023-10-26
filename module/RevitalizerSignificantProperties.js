@@ -9,7 +9,7 @@ const IGNORABLE_PROPERTIES = [
     //"rules",
 ];
 
-const ruleTypeChoiceSet = {
+const choiceSetRE = {
     // ChoiceSet
     choices: {
         label: true,
@@ -20,9 +20,13 @@ const ruleTypeChoiceSet = {
     definition: true,
     label: true,
     rollOption: true,
+    allowedDrops: {
+        label: true,
+        predicate: true,
+    },
 };
 
-const ruleTypeStrike = {
+const strikeRE = {
     // Strike
     category: true,
     damage: {
@@ -38,7 +42,7 @@ const ruleTypeStrike = {
     traits: true,
 };
 
-const ruleTypeCraftingEntry = {
+const craftingEntryRE = {
     // Crafting Entry
     craftableItems: true,
     isAlchemical: true,
@@ -46,26 +50,21 @@ const ruleTypeCraftingEntry = {
     maxItemLevel: true,
 };
 
-const ruleTypeActiveEffect = {
-    // ActiveEffect-like
-    mode: true,
-    path: true,
-    phase: true,
-};
-
-const ruleTypeAura = {
+const aurasRE = {
     // Aura
     effects: {
         affects: true,
         events: true,
         includesSelf: true,
         uuid: true,
+        predicate: true,
     },
     radius: true,
     traits: true,
+    appearance: true,
 };
 
-const ruleTypeGrantItem = {
+const grantItemRE = {
     alterations: {
         mode: true,
         property: true,
@@ -75,9 +74,12 @@ const ruleTypeGrantItem = {
         grantee: true,
     },
     uuid: true,
+    reevaluateOnUpdate: true,
+    inMemoryOnly: true,
+    allowDuplicate: true,
 };
 
-const ruleTypeRollOption = {
+const rollOptionRE = {
     domain: true,
     option: true,
     toggleable: true,
@@ -87,8 +89,9 @@ const ruleTypeRollOption = {
     },
 };
 
-const ruleTypeDamageDie = {
+const damageDiceRE = {
     //DamageDice
+    critical: true,
     predicate: true,
     label: true,
     category: true,
@@ -99,49 +102,55 @@ const ruleTypeDamageDie = {
         damageType: true,
         dieSize: true,
         upgrade: true,
-    }
+    },
 };
 
-const ruleTypeIWR = {
+const iwrRE = {
     exceptions: true,
     mode: true,
     type: true,
 };
 
-const ruleTypeNote = {
+const noteRE = {
     title: true,
     text: true,
 };
 
-const ruleTypeSense = {
+const senseRE = {
     acuity: true,
 };
 
-const ruleTypeAdjustModifier = {
+const adjustModifierRE = {
     relabel: true,
 };
 
-const ruleTypeCriticalSpecialization = {
+const criticalSpecializationRE = {
     alternate: true,
 };
 
-const ruleTypeSubstituteRoll = {
+const substituteRollRE = {
     suppress: true,
+    removeAfterRoll: true,
+    required: true,
 };
 
-const ruleElementTokenImage = {
+const tokenImageRE = {
     scale: true,
 };
 
-const ruleElementActorTrait = {
+const actorTraitRE = {
     add: true,
 };
 
-const ruleElementRollTwice = {
+const rollTwiceRE = {
     keep: true,
 };
 
-const ruleTypeFlatModifier = {
+const adjustStrikeRE = {
+    property: true,
+};
+
+const flatModifierRE = {
     ability: true,
     //predicate: true,
     damageType: true,
@@ -150,6 +159,23 @@ const ruleTypeFlatModifier = {
     type: true,
     removeAfterRoll: true,
 };
+
+const activeEffectRE = {
+    // ActiveEffect-like
+    mode: true,
+    path: true,
+    phase: true,
+};
+
+const loseHitPointsRE = {
+    // Lose Hit Points
+    recoverable: true,
+};
+
+const changingDegreeOfSuccessRE = {
+    adjustment: true,
+};
+
 
 // Allowlists of properties to include in the Item clones
 const PF2E_PROPERTY_ALLOW_LIST_BASE = {
@@ -161,25 +187,137 @@ const PF2E_PROPERTY_ALLOW_LIST_BASE = {
     key: true,
     slug: true,
     rules: {
-        ...ruleTypeChoiceSet,
-        ...ruleTypeStrike,
-        ...ruleTypeActiveEffect,
-        ...ruleTypeCraftingEntry,
-        ...ruleTypeAura,
-        ...ruleTypeGrantItem,
-        ...ruleTypeRollOption,
-        ...ruleTypeDamageDie,
-        ...ruleTypeFlatModifier,
-        ...ruleTypeIWR,
-        ...ruleTypeNote,
-        ...ruleTypeSense,
-        ...ruleTypeAdjustModifier,
-        ...ruleTypeCriticalSpecialization,
-        ...ruleTypeSubstituteRoll,
-        ...ruleElementTokenImage,
-        ...ruleElementActorTrait,
-        ...ruleElementRollTwice,
+        // Flat Modifier
+        ...flatModifierRE,
+        
+        // Immunity, Weakness, Resistance
+        ...iwrRE,
+        
+        // Fast Healing
+        // no new properties
+        
+        // Damage Dice 
+        ...damageDiceRE,
+        
+        // Base Speed
+        // no new properties
+        
+        // Fixed Proficiency
+        // no new properties
+
+        // Strike
+        ...strikeRE,
+
+        // Note
+        ...noteRE,
+
+        // Dexterity Modifier Cap
+        // no new properties
+
+        // Sense
+        ...senseRE,
+
+        // Weapon Potency and Striking
+        // no new properties
+        
+        // Multiple Attack Penalty
+        // no new properties
+
+        // Lose Hit Points
+        ...loseHitPointsRE,
+
+        // Adjust Strike
+        ...adjustStrikeRE,
+
+        // Adjust Modifier
+        ...adjustModifierRE,
+
+        // Token Light
+        // no new properties (everything is in "value" object)
+
+        // Token Name
+        // no new properties
+
+        // Critical Specialization
+        ...criticalSpecializationRE,
+
+        // Substitute Roll
+        ...substituteRollRE,
+
+        // Martial Proficiency
+        // no new properties
+
+        // ActiveEffect-Like
+        ...activeEffectRE,
+
+        // RollOption
+        ...rollOptionRE,
+        
+        // Choice Set
+        ...choiceSetRE,
+
+        // Grant Item
+        ...grantItemRE,
+
+        // Ephemeral Effect
+        // no new properties
+
+        // Item Alteration 
+        // no new properties
+
+        // Temp HP
+        // no new properties
+
+        // Token Effect Icon
+        // no new properties
+
+        // Token Image
+        ...tokenImageRE,
+
+        // Creature Size
+        // no new properties
+
+        // Adding Actor Traits
+        ...actorTraitRE,
+
+        // Roll Twice (Fortune or Misfortune)
+        ...rollTwiceRE,
+
+        // Token Mark 
+        // no new properties
+
+        // Auras
+        ...aurasRE,
+
+        // Bracket using Item Attribute
+        // no new properties
+
+        // Character stats in value formula
+        // no new properties
+
+        // Bracketed Properties
+        // no new properties
+
+        // Damage Dice override
+        // (damage dice)
+
+        // Advanced Selectors
+        // no new properties
+
+        // Predicate by proficiency
+        // no new properties
+
+        // Options vs. Traits for Strikes
+        // no new properties
+
+        // Changing Degree of Success 
+        ...changingDegreeOfSuccessRE,
+        
+        // other
+        ...craftingEntryRE,
+        // Battle Form - not relevant as they are Spell Effects only
     },
+
     traits: {
         rarity: true,
         //value: true,
