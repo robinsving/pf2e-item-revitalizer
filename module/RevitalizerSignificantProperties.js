@@ -1,5 +1,10 @@
 export { PF2E_PROPERTY_ALLOW_LIST, PF2E_PROPERTY_ALLOW_LIST_BASE };
-export { IGNORABLE_PROPERTIES };
+export { IGNORABLE_PROPERTIES, SPECIAL_ITEM_PROPERTIES };
+
+const SPECIAL_ITEM_PROPERTIES = [
+    { path: "img", name : "icon-link" },
+    { path: "type", name : "type" },
+];
 
 const IGNORABLE_PROPERTIES = [
     "predicate",
@@ -461,7 +466,7 @@ const PF2E_PROPERTY_ALLOW_LIST = {
         "category": "martial",
         "group": "firearm",
         "bonus": {
-            "value": 0
+            "value": true
         },
         "damage": {
             "dice": true,

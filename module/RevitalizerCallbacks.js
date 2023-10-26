@@ -1,5 +1,6 @@
 import { id } from "../module.json";
 import { info, popup, settings } from './RevitalizerUtilities';
+import { SPECIAL_ITEM_PROPERTIES } from "./RevitalizerSignificantProperties";
 
 // A function to remove an element
 window.removeRow = async function (element) {
@@ -32,8 +33,14 @@ window.revitalize = async function (UUID, csvProperties) {
     }
     properties.forEach(property => {
         try {
-            info(`Property ${property} will be changed from ${JSON.stringify(actorItem.system[property])} to ${JSON.stringify(sourceItem.system[property])}`);
-            actor.items.find(i => i._id == actorItem._id).update({ [`system.${property}`]: sourceItem.system[property] });
+            info(`Property ${property} will be updated`);
+
+            // if this is a special property, rather than a "normal" system property
+            const specialProperty = SPECIAL_ITEM_PROPERTIES.find(obj => obj.name === property);
+            if (specialProperty)
+                actor.items.find(i => i._id == actorItem._id).update({ [specialProperty.path]: sourceItem[specialProperty.path] });
+            else
+                actor.items.find(i => i._id == actorItem._id).update({ [`system.${property}`]: sourceItem.system[property] });
         } catch (error) {
             console.error(error);
             popup(`Something went wrong with revitalizing the property ${property}`);

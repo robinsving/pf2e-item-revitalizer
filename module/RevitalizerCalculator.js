@@ -1,12 +1,12 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
-import { popup, info, debug, settings, getAutoStyleSnippet, resultsTemplate, getNestedProperty} from "./RevitalizerUtilities.js";
-import { PF2E_PROPERTY_ALLOW_LIST, PF2E_PROPERTY_ALLOW_LIST_BASE, IGNORABLE_PROPERTIES } from "./RevitalizerSignificantProperties.js";
+import { popup, info, debug, settings, getAutoStyleSnippet, resultsTemplate, getNestedProperty } from "./RevitalizerUtilities.js";
+import { PF2E_PROPERTY_ALLOW_LIST, PF2E_PROPERTY_ALLOW_LIST_BASE, IGNORABLE_PROPERTIES, SPECIAL_ITEM_PROPERTIES } from "./RevitalizerSignificantProperties.js";
 
 export class RevitalizerCalculator {
     constructor() { }
 
     // List of Items to locate
-    PF2E_PROPERTY_ITEMS = ["action", "ancestry", "armor", "background", "backpack", "class", "consumable", "deity", "equipment", "feat", "heritage", "spell", "treasure", "weapon"];
+    PF2E_ITEM_TYPES = ["action", "ancestry", "armor", "background", "backpack", "class", "consumable", "deity", "equipment", "feat", "heritage", "spell", "treasure", "weapon"];
 
     // List of Items to ignore
     PF2E_IGNORABLE_ITEM_UUIDS = [
@@ -163,7 +163,16 @@ export class RevitalizerCalculator {
 
         const clones = this.#createShallowClones(originItem, actorItem);
 
-        return new Set(this.#getDifferentiatingProperties(clones.origin, clones.actor));
+        const differences = new Set(this.#getDifferentiatingProperties(clones.origin, clones.actor));
+
+        // Special property handler
+        // if there is a non-system property we need to handle, e.g. "item.img", then check the similarities for these as well
+        SPECIAL_ITEM_PROPERTIES.forEach(specialProperty => {
+            if (getNestedProperty(originItem, specialProperty.path) != getNestedProperty(actorItem, specialProperty.path))
+                differences.add(specialProperty.name);
+        });
+
+        return differences;
     }
 
     #extrapolateNotes(changedItems) {
@@ -224,7 +233,7 @@ export class RevitalizerCalculator {
             popup(`Parsing actor ${actor.name} (${actor.items.size} Items)`);
 
             // Iterate over the equipment
-            for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && this.PF2E_PROPERTY_ITEMS.includes(item.type) && item.sourceId && item.sourceId !== null)) {
+            for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && this.PF2E_ITEM_TYPES.includes(item.type) && item.sourceId && item.sourceId !== null)) {
                 var humanReadableName = actorItem.slug || actorItem.name;
 
                 // Sanity check: ignore items in ignore list
