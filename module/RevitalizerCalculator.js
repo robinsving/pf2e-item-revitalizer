@@ -41,7 +41,7 @@ export class RevitalizerCalculator {
         return Object.keys(allowList).reduce((allowObj, key) => {
             if (!obj || !obj.hasOwnProperty(key)) {
                 // Exclude properties not present in the object
-            } else if (IGNORABLE_PROPERTIES.includes(key)) {
+            } else if (allowList[key] === true || IGNORABLE_PROPERTIES.includes(key)) {
                 // Specific handling
                 allowObj[key] = obj[key];
             } else if (Array.isArray(obj[key])) {
