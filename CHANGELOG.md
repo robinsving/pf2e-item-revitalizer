@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.12.1
+Added popup text informing (first-time) users to be patient
+
 ## 1.12.0
 Allow Revitalization on non-scene sheets (from sheet title bar)
 Some improvements to cloning speed
