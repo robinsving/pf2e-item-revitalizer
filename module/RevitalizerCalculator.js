@@ -129,21 +129,24 @@ export class RevitalizerCalculator {
             const uuidNamePattern = /\{[\s\w-':()]+\}/gm;
             const uuidCompendiumFix = "@UUID[Compendium.";
             const uuidItemFix = ".Item.";
-            const nullFix = ":null";
+            const nullFix = ":0";
+            const nullFix2 = "\"\"";
 
             const actorJson = JSON.stringify(actorItem[key], sorter)
                 .replaceAll(inlineStylePattern, "")
                 .replaceAll(uuidNamePattern, "")
                 .replaceAll(uuidCompendiumFix, "@Compendium[")
                 .replaceAll(uuidItemFix, ".")
-                .replaceAll(nullFix, ":\"\"");
+                .replaceAll(nullFix, ":null")
+                .replaceAll(nullFix2, "null");
 
             const originJson = JSON.stringify(originItem[key], sorter)
                 .replaceAll(inlineStylePattern, "")
                 .replaceAll(uuidNamePattern, "")
                 .replaceAll(uuidCompendiumFix, "@Compendium[")
                 .replaceAll(uuidItemFix, ".")
-                .replaceAll(nullFix, ":\"\"");
+                .replaceAll(nullFix, ":null")
+                .replaceAll(nullFix2, "null");
 
             // If we find differences in the property
             if (actorJson !== originJson) {
