@@ -32,9 +32,7 @@ export default class Revitalizer {
     }
 
     async runRevitalizerForActorId(actorId) {
-        const actor = canvas.tokens.placeables
-            .filter(token => token.actor).map(token => token.actor) // Filter out actors
-            .find((actor) => actor._id == actorId);
+        const actor = game.actors.get(actorId);
 
         if (!actor) {
             debug("ActorId not found: {}", actorId);
