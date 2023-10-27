@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.12.0
+Allow Revitalization on non-scene sheets (from sheet title bar)
+Some improvements to cloning speed
+Changes in notes
+Changes to null-handling for JSON strings
+
 ## 1.11.0
 Special properties handling for icons, names, and types
 Bugfix: Result sorting suffered from old refactor
