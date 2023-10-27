@@ -5,8 +5,10 @@ import { PF2E_PROPERTY_ALLOW_LIST, PF2E_PROPERTY_ALLOW_LIST_BASE, IGNORABLE_PROP
 export class RevitalizerCalculator {
     constructor() { }
 
-    // List of Items to locate
-    PF2E_ITEM_TYPES = ["action", "ancestry", "armor", "background", "backpack", "class", "consumable", "deity", "equipment", "feat", "heritage", "spell", "treasure", "weapon"];
+    // List of Types to locate
+    PF2E_IMPORTANT_ITEM_TYPES = ["class", "ancestry", "heritage", "background"];
+    PF2E_ITEM_TYPES = ["action", "armor", "backpack", "consumable", "deity", "equipment", "feat", "spell", "treasure", "weapon", ...this.PF2E_IMPORTANT_ITEM_TYPES];
+    PF2E_IMPORTANT_ITEM_PROPERTIES = ["slug", "rules", "heightening", "damage", "overlays"];
 
     // List of Items to ignore
     PF2E_IGNORABLE_ITEM_UUIDS = [
@@ -183,12 +185,15 @@ export class RevitalizerCalculator {
 
         const actorSourceId = changedItems.actorItem.sourceId;
         if (actorSourceId.includes("bestiary-ability-glossary-srd") || actorSourceId.includes("bestiary-family-ability-glossary"))
-            notes = notes.concat("Bestiary abilities have known issues. ");
+            notes = notes.concat("Bestiary abilities. ");
 
-        if (changedItems.comparativeData.has("slug"))
-            notes = notes.concat("Slug changes - recommendation is to fully recreate Item. ");
-        else if (changedItems.comparativeData.has("rules") || changedItems.comparativeData.has("heightening") || changedItems.comparativeData.has("damage") )
-            notes = notes.concat("These changes may require re-adding Item manually. ");
+        if (this.PF2E_IMPORTANT_ITEM_TYPES.includes(changedItems.actorItem.type))
+            notes = notes.concat("Important Type. ");
+        else if (changedItems.comparativeData.some((value) => this.PF2E_IMPORTANT_ITEM_PROPERTIES.includes(value)))
+            notes = notes.concat("Important Property. ");
+
+        if (notes)
+            notes = notes.concat("Use manual recreation. ");
 
         return notes;
     }
@@ -296,25 +301,26 @@ export class RevitalizerCalculator {
             const results = [];
 
             for (const data of this.#sortChangedItems(changedData)) {
+                const notes = this.#extrapolateNotes(data)
                 let unrevitalizable = game.settings.get(SCRIPT_ID, settings.revitalize.id) ? undefined : "Disabled in settings";
 
                 if (!unrevitalizable && data.actorItem.actor.type != "character")
-                    unrevitalizable = "Only enabled for Player Characters";
+                    unrevitalizable = "Only enabled for character Actors";
 
-                if (!unrevitalizable && data.comparativeData.has("slug"))
-                    unrevitalizable = "Slug has changed, recreate Item instead";
+                if (!unrevitalizable && notes)
+                    unrevitalizable = "See notes";
 
                 results.push({
                     actorLink: await TextEditor.enrichHTML(data.actor.link, enrichOption),
                     type: data.actorItem.type,
                     name: data.actorItem.name,
                     comparativeDataText: [...data.comparativeData].map((prop) => {
-                        return ["description", "rules", "save", "damage", "heightening", "overlays"].includes(prop) ? `<strong>${prop}</strong>` : prop;
+                        return this.PF2E_IMPORTANT_ITEM_PROPERTIES.includes(prop) ? `<strong>${prop}</strong>` : prop;
                     }).join(", "),
                     comparativeData: [...data.comparativeData].join(", "),
                     actorItemLink: await TextEditor.enrichHTML(data.actorItem.link, enrichOption),
                     originItemLink: await TextEditor.enrichHTML(data.originItem.link, enrichOption),
-                    notes: this.#extrapolateNotes(data),
+                    notes: notes,
                     uuid: data.actorItem.uuid,
                     unrevitalizable: unrevitalizable,
                 });
