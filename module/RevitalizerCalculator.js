@@ -238,7 +238,7 @@ export class RevitalizerCalculator {
 
         // Iterate over the actors
         for (const actor of actors) {
-            popup(`Parsing actor ${actor.name} (${actor.items.size} Items)`);
+            popup(`Parsing actor ${actor.name} (${actor.items.size} Items). Please be patient`);
 
             // Iterate over the equipment
             for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && this.PF2E_ITEM_TYPES.includes(item.type) && item.sourceId && item.sourceId !== null)) {

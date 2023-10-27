@@ -47,6 +47,12 @@ https://github.com/robinsving/pf2e-item-revitalizer/assets/3072502/f29a9951-07cc
 ## Compatibility
 This module is designed for use with the PF2e system in Foundry VTT. It is not compatible with other game systems on Foundry VTT
 
+## Limitations
+This module is a use-at-own-risk, as updates of Items may have unforseen consequences. There is of course a Setting to toggle the update, so that you can use this module with the listing-parts only.
+
+It should also be noted here that the changes may contain false positives, as well as a lack of true positives. 
+The reason for this is that it works on a subset of the real Items' properties, as many of the properties are modified when the Item is added to the Actor.
+
 ## Issues
 
 ## Reporting issues
@@ -64,7 +70,6 @@ If you discover any issues with this module, please create an issue in the Githu
 - Check the console.log for the reason an Item ended up where it did
   - Filter the log by the Item slug (name) and you will get both the Actor Item's property and the Origin Items property
 - Compare these and to see any differences
-
 
 ## License
 This module is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information
