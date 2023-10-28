@@ -7,7 +7,7 @@
     min-width: 27px;
  }
 
-.pir-button-disabled {
+.pir-button:disabled {
     background-color: darkgrey;
 }
 

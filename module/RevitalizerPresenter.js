@@ -226,12 +226,13 @@ export class RevitalizerPresenter {
 
         return {
             "revitalize": {
-                disabled: unrevitalizable ? true : false,
+                disabled: unrevitalizable ? unrevitalizable : false,
                 icon: "fa-solid fa-code-compare",
                 click: `Hooks.call('${SCRIPT_ID}-revitalize', this, '${data.actorItem.uuid}', '${csvSeparatedProperties}')`,
                 title: unrevitalizable
             },
             "hide": {
+                disabled: !game.user.isGM ? "GM only" : false,
                 icon: "fa-regular fa-eye-slash",
                 click: `Hooks.call('${SCRIPT_ID}-hide', this, '${data.actorItem.uuid}')`,
                 title: "Hide this Item in the future"
