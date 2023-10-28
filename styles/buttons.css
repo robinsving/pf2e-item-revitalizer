@@ -10,3 +10,7 @@
 .pir-button-disabled {
     background-color: darkgrey;
 }
+
+.pir-button > i {
+    margin-right: 0px;
+}

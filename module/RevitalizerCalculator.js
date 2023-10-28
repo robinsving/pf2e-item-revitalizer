@@ -1,9 +1,13 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
 import { popup, info, debug, settings, getAutoStyleSnippet, resultsTemplate, getNestedProperty } from "./RevitalizerUtilities.js";
 import { PF2E_PROPERTY_ALLOW_LIST, PF2E_PROPERTY_ALLOW_LIST_BASE, IGNORABLE_PROPERTIES, SPECIAL_ITEM_PROPERTIES } from "./RevitalizerSignificantProperties.js";
+import RevitalizerCallbackHookRegister from "./RevitalizerCallbackHookRegister.js";
 
 export class RevitalizerCalculator {
-    constructor() { }
+
+    constructor() {
+        new RevitalizerCallbackHookRegister();
+    }
 
     // List of Types to locate
     PF2E_IMPORTANT_ITEM_TYPES = ["class", "ancestry", "heritage", "background"];
@@ -310,18 +314,36 @@ export class RevitalizerCalculator {
                 if (!unrevitalizable && notes)
                     unrevitalizable = "See notes";
 
+                const csvSeparatedProperties = [...data.comparativeData].join(", ");
+
                 results.push({
+                    buttons: {
+                        "revitalize": {
+                            disabled: unrevitalizable ? true : false,
+                            icon: "fa-solid fa-code-compare",
+                            click: `Hooks.call('${SCRIPT_ID}-revitalize', this, '${data.actorItem.uuid}', '${csvSeparatedProperties}')`,
+                            title: unrevitalizable
+                        },
+                        "hide": {
+                            icon: "fa-regular fa-eye-slash",
+                            click: `Hooks.call('${SCRIPT_ID}-hide', this, '${data.actorItem.uuid}')`,
+                            title: "Hide this Item in the future"
+                        },
+                        "remove": {
+                            icon: "fa-regular fa-check",
+                            click: `Hooks.call('${SCRIPT_ID}-remove', this)`,
+                            title: "Remove Item from list"
+                        },
+                    },
                     actorLink: await TextEditor.enrichHTML(data.actor.link, enrichOption),
                     type: data.actorItem.type,
                     name: data.actorItem.name,
                     comparativeDataText: [...data.comparativeData].map((prop) => {
                         return this.PF2E_IMPORTANT_ITEM_PROPERTIES.includes(prop) ? `<strong>${prop}</strong>` : prop;
                     }).join(", "),
-                    comparativeData: [...data.comparativeData].join(", "),
                     actorItemLink: await TextEditor.enrichHTML(data.actorItem.link, enrichOption),
                     originItemLink: await TextEditor.enrichHTML(data.originItem.link, enrichOption),
                     notes: notes,
-                    uuid: data.actorItem.uuid,
                     unrevitalizable: unrevitalizable,
                 });
             }

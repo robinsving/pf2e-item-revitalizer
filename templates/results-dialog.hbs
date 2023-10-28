@@ -21,21 +21,11 @@
                 <div class="pir-table-cell">{{this.type}}</div>
                 <div class="pir-table-cell">{{this.name}}</div>
                 <div class="pir-table-cell pir-button-holder">
-                    {{#unless this.unrevitalizable}} <!-- We are allowed to use Revitalize function -->
-                    <button class="pir-button" onclick="revitalize('{{this.uuid}}', '{{{this.comparativeData}}}') && removeRow(this);" title="Revitalize listed properties from Compendium. WARNING, use at own risk!">
-                        <i class="fa-solid fa-code-compare"></i>
-                    </button>
-                    {{else}} <!-- We are not allowed to use Revitalize function -->
-                    <button class="pir-button pir-button-disabled" disabled="true" title="{{this.unrevitalizable}}">
-                        <i class="fa-solid fa-code-compare"></i>
-                    </button>
-                    {{/unless}}
-                    <button class="pir-button" onclick="hide('{{this.uuid}}') && removeRow(this);" title="Hide this Item in the future">
-                        <i class="fa-regular fa-eye-slash"></i>
-                    </button>
-                    <button class="pir-button" onclick="removeRow(this);" title="Remove Item from list">
-                        <i class="fa-regular fa-check" ></i>
-                    </button>
+                    {{#each this.buttons}}
+                        <button class="pir-button {{#if this.disabled}}pir-button-disabled{{/if}}" {{#if this.disabled}} disabled="true" {{/if}} title="{{this.title}}" onclick="{{this.click}}">
+                            <i class="{{this.icon}}"></i>
+                        </button>
+                    {{/each}}
                 </div>
                 <div class="pir-table-cell">{{{this.comparativeDataText}}}</div>
                 <div class="pir-table-cell">{{{this.actorItemLink}}}</div>

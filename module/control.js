@@ -4,8 +4,6 @@ import Revitalizer from "./Revitalizer";
 import RevitalizerSheetRegister from "./RevitalizerSheetRegister";
 import RevitalizerSettingsRegister from "./RevitalizerSettingsRegister";
 import RevitalizerSceneControlRegister from "./RevitalizerSceneControlRegister";
-import RevitalizerLayerRegister from "./RevitalizerLayerRegister";
-import "./RevitalizerCallbacks";
 
 $(document).ready(() => {
     let revitalizer = new Revitalizer();
