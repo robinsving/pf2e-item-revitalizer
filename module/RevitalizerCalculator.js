@@ -6,6 +6,7 @@ import RevitalizerCallbackHookRegister from "./RevitalizerCallbackHookRegister.j
 export class RevitalizerCalculator {
 
     constructor() {
+        // Register callback Hooks for triggering Check result actions
         new RevitalizerCallbackHookRegister();
     }
 
@@ -137,6 +138,8 @@ export class RevitalizerCalculator {
             const uuidItemFix = ".Item.";
             const nullFix = ":0";
             const nullFix2 = "\"\"";
+            const nullFix3 = /,?\"[^\"]+\":null,?/gm;
+            const applyMod = "\"applyMod\":false,";
 
             const actorJson = JSON.stringify(actorItem[key], sorter)
                 .replaceAll(inlineStylePattern, "")
@@ -144,7 +147,9 @@ export class RevitalizerCalculator {
                 .replaceAll(uuidCompendiumFix, "@Compendium[")
                 .replaceAll(uuidItemFix, ".")
                 .replaceAll(nullFix, ":null")
-                .replaceAll(nullFix2, "null");
+                .replaceAll(nullFix2, "null")
+                .replaceAll(nullFix3, ",")
+                .replaceAll(applyMod, "")
 
             const originJson = JSON.stringify(originItem[key], sorter)
                 .replaceAll(inlineStylePattern, "")
@@ -152,7 +157,9 @@ export class RevitalizerCalculator {
                 .replaceAll(uuidCompendiumFix, "@Compendium[")
                 .replaceAll(uuidItemFix, ".")
                 .replaceAll(nullFix, ":null")
-                .replaceAll(nullFix2, "null");
+                .replaceAll(nullFix2, "null")
+                .replaceAll(nullFix3, ",")
+                .replaceAll(applyMod, "")
 
             // If we find differences in the property
             if (actorJson !== originJson) {
