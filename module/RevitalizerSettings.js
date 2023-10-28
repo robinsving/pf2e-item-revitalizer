@@ -1,7 +1,7 @@
 import { id as SCRIPT_ID } from "../module.json";
 import { settings } from "./RevitalizerUtilities.js";
 
-export default class RevitalizerSettingsRegister {
+export default class RevitalizerSettings {
     
     constructor() {
         // Hide the interface for non-GMs.

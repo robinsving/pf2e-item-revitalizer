@@ -1,33 +1,24 @@
-import { title as SCRIPT_NAME } from "../module.json";
-import { info, selectionTemplate, resultsTemplate } from "./RevitalizerUtilities";
-import Revitalizer from "./Revitalizer";
-import RevitalizerSheetRegister from "./RevitalizerSheetRegister";
-import RevitalizerSettingsRegister from "./RevitalizerSettingsRegister";
-import RevitalizerSceneControlRegister from "./RevitalizerSceneControlRegister";
+import RevitalizerRunner from "./RevitalizerRunner";
+import RevitalizerSettings from "./RevitalizerSettings";
+import { info, settings, getSettings } from "./RevitalizerUtilities";
 
 $(document).ready(() => {
-    let revitalizer = new Revitalizer();
 
-    Hooks.once("init", () => {
-        info(`Initializing ${SCRIPT_NAME}`);
-        loadTemplates([selectionTemplate, resultsTemplate]);
-        CONFIG.supportedLanguages['en'] = 'English';
-        new RevitalizerSettingsRegister();
-    });
+    // Register callback for Setup phase, as we need game.user to be set
+    Hooks.once("setup", () => {
+        info(`Initializing`);
 
-    // register on Character sheets
-    Hooks.once("ready", () => {
-        new RevitalizerSheetRegister(revitalizer);
-    });
+        // Register settings
+        new RevitalizerSettings();
 
-    // register Scene Control Buttons
-    Hooks.on('getSceneControlButtons', (control) => {
-        info("Add hook on getSceneControlButtons");
-
-        // Don't render buttons for non-GM
-        if (!game.user.isGM)
+        // Determine if user is allowed access
+        if (!game.user.isGM && getSettings(settings.gm.id)) {
+            info("User is not permitted")
+            // Don't even blink
             return;
+        }
 
-        new RevitalizerSceneControlRegister(revitalizer, control);
+        // Create the Revitalizer
+        new RevitalizerRunner();
     });
 });

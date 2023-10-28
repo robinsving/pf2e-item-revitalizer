@@ -1,11 +1,35 @@
-import { RevitalizerCalculator } from "./RevitalizerCalculator.js";
-import { popup, debug, selectionTemplate } from "./RevitalizerUtilities.js";
 import { title as SCRIPT_NAME } from "../module.json";
+import { RevitalizerCalculator } from "./RevitalizerCalculator.js";
+import { popup, debug, selectionTemplate, resultsTemplate } from "./RevitalizerUtilities";
+import RevitalizerSheet from "./hooks/RevitalizerSheet";
+import RevitalizerSceneControl from "./hooks/RevitalizerSceneControl";
+import { RevitalizerPresenter } from "./RevitalizerPresenter";
 
-export default class Revitalizer {
+export default class RevitalizerRunner {
+
+    constructor() {
+        // Load HTML templates for everyone
+        loadTemplates([selectionTemplate, resultsTemplate]);
+
+        // Register Sheet link for everyone
+        new RevitalizerSheet(this);
+
+        // The rest is for GM's eyes only
+        if (!game.user.isGM)
+            return;
+        
+        // Register Scene Control Buttons for GM
+        new RevitalizerSceneControl(this);
+    }
 
     revitalizerCalculator = new RevitalizerCalculator();
+    revitalizerPresenter = new RevitalizerPresenter();
 
+    /**
+     * Wait for an element (id) to be properly rendered on page
+     * @param {*} id DOM element
+     * @returns Promise that resolves when element is rendered
+     */
     #waitForElementToBeRendered(id) {
         return new Promise(resolve => {
             if (document.getElementById(id)) {
@@ -25,21 +49,32 @@ export default class Revitalizer {
             });
         });
     }
-
-    async #runRevitalizerWithSelection() {
-        const actors = await this.#extractActorsFromCheckboxes();
-        await this.revitalizerCalculator.runPIR(actors);
-    }
-
-    async runRevitalizerForActorId(actorId) {
+    
+    /**
+     * Runs Revitalizer Check for a single Actor
+     * @param String actorId 
+     * @returns 
+     */
+    async runRevitalizerCheckForActorId(actorId) {
         const actor = game.actors.get(actorId);
 
         if (!actor) {
             debug("ActorId not found: {}", actorId);
             return;
         }
-            
-        await this.revitalizerCalculator.runPIR([actor]);
+
+        const actors = [actor];
+        this.#runRevitalizerCheckForActors(actors);
+    }
+
+    async #runRevitalizerCheckWithSelection() {
+        const actors = await this.#extractActorsFromCheckboxes();
+        this.#runRevitalizerCheckForActors(actors);
+    }
+
+    async #runRevitalizerCheckForActors(actors) {
+        const changedData = await this.revitalizerCalculator.runRevitalizerCheck(actors);
+        await this.revitalizerPresenter.present(changedData, actors);
     }
 
     async #extractActorsFromCheckboxes() {
@@ -96,7 +131,7 @@ export default class Revitalizer {
                 ok: {
                     icon: '<i class="fas fa-selection"></i>',
                     label: "Proceed",
-                    callback: () => this.#runRevitalizerWithSelection(),
+                    callback: () => this.#runRevitalizerCheckWithSelection(),
                 },
                 cancel: {
                     icon: '<i class="fas fa-close"></i>',

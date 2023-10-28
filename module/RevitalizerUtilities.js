@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID, title } from "../module.json";
-export { getAutoStyleSnippet, debug, info, settings, popup, selectionTemplate, resultsTemplate, getNestedProperty };
+export { getAutoStyleSnippet, debug, info, popup, settings, getSettings, selectionTemplate, resultsTemplate, getNestedProperty };
 
 const selectionTemplate = `modules/${SCRIPT_ID}/templates/selection-dialog.hbs`;
 const resultsTemplate = `modules/${SCRIPT_ID}/templates/results-dialog.hbs`;
@@ -10,6 +10,10 @@ const settings = {
     rulesElementArrayLengthOnly: { id: "useArrayLength", name: "Simplified Rule Element discovery", hint: "Faster run. Performs RE comparisons using array length. This gives fewer false positives, but also misses more true positives" },
     userIgnoreList: { id: "userIgnoreList", name: "Ignored Actor Items", hint: "User-expanded ignore list, comma-separated" },
     revitalize: { id: "allowRevitalize", name: "Allow updating Item version from Compendium", hint: "WARNING: this may destroy your Item, and may potentially cause issues with the Actor" },
+}
+
+function getSettings(setting) {
+    return game.settings.get(SCRIPT_ID, setting);
 }
 
 function getNestedProperty(obj, path) {
@@ -26,7 +30,7 @@ function popup(message) {
 }
 
 function debug(message) {
-    if (game.settings.get(SCRIPT_ID, settings.debug.id))
+    if (getSettings(settings.debug.id))
         console.debug(`${title}: ${message}`);
 }
 

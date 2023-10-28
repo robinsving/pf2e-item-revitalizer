@@ -1,34 +1,17 @@
-import { title as SCRIPT_NAME } from "../module.json";
-import { popup, info, debug, settings, getNestedProperty, getSettings } from "./RevitalizerUtilities.js";
-import { ALL_ITEM_TYPES, PROPERTY_ALLOW_LIST, PROPERTY_ALLOW_LIST_BASE, SPECIAL_ITEM_PROPERTIES } from "./RevitalizerSignificantProperties.js";
+import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
+import { popup, info, debug, settings, getAutoStyleSnippet, resultsTemplate, getNestedProperty, getSettings } from "./RevitalizerUtilities.js";
+import { IMPORTANT_ITEM_TYPES, PROPERTY_ALLOW_LIST, PROPERTY_ALLOW_LIST_BASE, SPECIAL_ITEM_PROPERTIES } from "./RevitalizerSignificantProperties.js";
+import RevitalizerCallbacks from "./hooks/RevitalizerCallbacks.js";
 
-export class RevitalizerCalculator {
+export class RevitalizerPresenter {
 
-    // List of Items to ignore
-    IGNORABLE_ITEM_UUIDS = [
-        "Compendium.pf2e.equipment-srd.Item.UJWiN0K3jqVjxvKk", // Wand, lvl 1
-        "Compendium.pf2e.equipment-srd.Item.vJZ49cgi8szuQXAD", // Wand, lvl 2
-        "Compendium.pf2e.equipment-srd.Item.wrDmWkGxmwzYtfiA", // Wand, lvl 3
-        "Compendium.pf2e.equipment-srd.Item.Sn7v9SsbEDMUIwrO", // Wand, lvl 4
-        "Compendium.pf2e.equipment-srd.Item.5BF7zMnrPYzyigCs", // Wand, lvl 5
-        "Compendium.pf2e.equipment-srd.Item.kiXh4SUWKr166ZeM", // Wand, lvl 6
-        "Compendium.pf2e.equipment-srd.Item.nmXPj9zuMRQBNT60", // Wand, lvl 7
-        "Compendium.pf2e.equipment-srd.Item.Qs8RgNH6thRPv2jt", // Wand, lvl 8
-        "Compendium.pf2e.equipment-srd.Item.Fgv722039TVM5JTc", // Wand, lvl 9
+    constructor() {
+        // Register callback Hooks for triggering Check result actions
+        new RevitalizerCallbacks();
+    }
 
-        "Compendium.pf2e.equipment-srd.Item.RjuupS9xyXDLgyIr", // Scroll, lvl 1
-        "Compendium.pf2e.equipment-srd.Item.Y7UD64foDbDMV9sx", // Scroll, lvl 2
-        "Compendium.pf2e.equipment-srd.Item.ZmefGBXGJF3CFDbn", // Scroll, lvl 3
-        "Compendium.pf2e.equipment-srd.Item.QSQZJ5BC3DeHv153", // Scroll, lvl 4
-        "Compendium.pf2e.equipment-srd.Item.tjLvRWklAylFhBHQ", // Scroll, lvl 5
-        "Compendium.pf2e.equipment-srd.Item.4sGIy77COooxhQuC", // Scroll, lvl 6
-        "Compendium.pf2e.equipment-srd.Item.fomEZZ4MxVVK3uVu", // Scroll, lvl 7
-        "Compendium.pf2e.equipment-srd.Item.iPki3yuoucnj7bIt", // Scroll, lvl 8
-        "Compendium.pf2e.equipment-srd.Item.cFHomF3tty8Wi1e5", // Scroll, lvl 9
-        "Compendium.pf2e.equipment-srd.Item.o1XIHJ4MJyroAHfF", // Scroll, lvl 10
-
-        "Compendium.pf2e.equipment-srd.Item.tLa4bewBhyqzi6Ow" // Cantrip deck
-    ];
+    // List of Properties which require complete remaking
+    IMPORTANT_ITEM_PROPERTIES = ["slug", "rules", "heightening", "damage", "overlays", "type"];
 
     // Function to clone the allowed properties from an object
     #allowedPropertyClone(obj, allowList) {
@@ -180,58 +163,139 @@ export class RevitalizerCalculator {
         return differences;
     }
 
-    async runRevitalizerCheck(actors) {
-        info(`Starting ${SCRIPT_NAME}`);
+    #extrapolateNotes(changedItems) {
+        let notes = "";
 
-        // Create an array of objects to store change information
-        const changedData = [];
+        const actorSourceId = changedItems.actorItem.sourceId;
+        if (actorSourceId.includes("bestiary-ability-glossary-srd") || actorSourceId.includes("bestiary-family-ability-glossary"))
+            notes = notes.concat("Bestiary abilities. ");
 
-        // Iterate over the actors
-        for (const actor of actors) {
-            popup(`Parsing actor ${actor.name} (${actor.items.size} Items). Please be patient`);
+        if (IMPORTANT_ITEM_TYPES.includes(changedItems.actorItem.type))
+            notes = notes.concat("Important Type. ");
+        else if (changedItems.comparativeData.some((value) => this.IMPORTANT_ITEM_PROPERTIES.includes(value)))
+            notes = notes.concat("Important Property. ");
 
-            const ignoreList = getSettings(settings.userIgnoreList.id);
+        if (notes)
+            notes = notes.concat("Use manual recreation. ");
 
-            // Iterate over the equipment
-            for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && ALL_ITEM_TYPES.includes(item.type) && item.sourceId && item.sourceId !== null)) {
-                var humanReadableName = actorItem.slug || actorItem.name;
+        return notes;
+    }
 
-                // Sanity check: ignore items in ignore list
-                if (ignoreList.includes(actorItem.uuid)) {
-                    debug(`Ignoring item ${humanReadableName} due to settings ignore list`)
-                    continue;
-                }
+    // Function to sort the changed items based on actorName, type, and name
+    #sortChangedItems(changedItems) {
+        const sortedItems = [...changedItems];
 
-                // Sanity check: ignore infused items
-                let traits = getNestedProperty(actorItem, "system.traits.value")
-                if (traits && traits.includes("infused")) {
-                    debug(`Ignoring item ${humanReadableName} due to infused trait`)
-                    continue;
-                }
-
-                // Check if the item has been changed
-                const originItem = await fromUuid(actorItem.sourceId);
-
-                // Sanity check: If the original UUID didn't exists, it was either a creation from the player
-                //   or the UUID has been changed by the PF2e creators.
-                // Sanity check: If the Item should be ignored, ignore it.
-                if (originItem === null || this.IGNORABLE_ITEM_UUIDS.includes(originItem.sourceId)) {
-                    continue;
-                }
-
-                const getCompareData = this.#compareItems(originItem, actorItem);
-
-                if (getCompareData.size > 0) {
-                    changedData.push({
-                        actor: actor,
-                        actorItem: actorItem,
-                        originItem: originItem,
-                        comparativeData: getCompareData,
-                    });
-                }
+        sortedItems.sort((a, b) => {
+            // Sort by actorName
+            if (a.actor.name < b.actor.name) {
+                return -1;
+            } else if (a.actor.name > b.actor.name) {
+                return 1;
             }
+
+            // Sort by type if actorName is equal
+            if (a.actorItem.type < b.actorItem.type) {
+                return -1;
+            } else if (a.actorItem.type > b.actorItem.type) {
+                return 1;
+            }
+
+            // Sort by name if actorName and type are equal
+            if (a.actorItem.name < b.actorItem.name) {
+                return -1;
+            } else if (a.actorItem.name > b.actorItem.name) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        return sortedItems;
+    }
+
+    #getButtons(data, notes) {
+        let unrevitalizable = getSettings(settings.revitalize.id) ? undefined : "Disabled in settings";
+
+        if (!unrevitalizable && data.actorItem.actor.type != "character")
+            unrevitalizable = "Only enabled for character Actors";
+
+        if (!unrevitalizable && notes)
+            unrevitalizable = "See notes";
+
+        const csvSeparatedProperties = [...data.comparativeData].join(", ");
+
+        return {
+            "revitalize": {
+                disabled: unrevitalizable ? true : false,
+                icon: "fa-solid fa-code-compare",
+                click: `Hooks.call('${SCRIPT_ID}-revitalize', this, '${data.actorItem.uuid}', '${csvSeparatedProperties}')`,
+                title: unrevitalizable
+            },
+            "hide": {
+                icon: "fa-regular fa-eye-slash",
+                click: `Hooks.call('${SCRIPT_ID}-hide', this, '${data.actorItem.uuid}')`,
+                title: "Hide this Item in the future"
+            },
+            "remove": {
+                icon: "fa-regular fa-check",
+                click: `Hooks.call('${SCRIPT_ID}-remove', this)`,
+                title: "Remove Item from list"
+            },
+        }
+    }
+
+    async present(changedData, actors) {
+        
+        popup(`Parsing complete. Rendering results`);
+
+        // Generate output
+        let output = "";
+
+        // Check if any changed items are found
+        if (changedData.length == 0) {
+            const searchedActors = actors.map(actor => actor.name).join(', ') || "none";
+            output = `<h2>✅ No changed items found</h2><p>Searched through the following actors:<br>${searchedActors}</p>`;
+        } else {
+            const enrichOption = {
+                async: true
+            };
+
+            // Fetch style changes to handle Dialog element style issues
+            output = getAutoStyleSnippet();
+
+            const results = [];
+
+            for (const data of this.#sortChangedItems(changedData)) {
+                const notes = this.#extrapolateNotes(data)
+
+                results.push({
+                    buttons: this.#getButtons(data, notes),
+                    actorLink: await TextEditor.enrichHTML(data.actor.link, enrichOption),
+                    type: data.actorItem.type,
+                    name: data.actorItem.name,
+                    comparativeDataText: [...data.comparativeData].map((prop) => {
+                        return this.IMPORTANT_ITEM_PROPERTIES.includes(prop) ? `<strong>${prop}</strong>` : prop;
+                    }).join(", "),
+                    actorItemLink: await TextEditor.enrichHTML(data.actorItem.link, enrichOption),
+                    originItemLink: await TextEditor.enrichHTML(data.originItem.link, enrichOption),
+                    notes: notes,
+                });
+            }
+            output += await renderTemplate(resultsTemplate, { items: results });
         }
 
-        return changedData;
+        await new Dialog({
+            title: SCRIPT_NAME,
+            content: output,
+            buttons: {
+                ok: {
+                    icon: '<i class="fas fa-selection"></i>',
+                    label: "Done",
+                },
+            },
+            default: 'ok',
+        }).render(true);
+
+        info(`Ending calculation of ${SCRIPT_NAME}`);
     }
 }

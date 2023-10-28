@@ -1,18 +1,13 @@
-export { PF2E_PROPERTY_ALLOW_LIST, PF2E_PROPERTY_ALLOW_LIST_BASE };
-export { IGNORABLE_PROPERTIES, SPECIAL_ITEM_PROPERTIES };
+export { PROPERTY_ALLOW_LIST, PROPERTY_ALLOW_LIST_BASE, SPECIAL_ITEM_PROPERTIES, IMPORTANT_ITEM_TYPES, ALL_ITEM_TYPES };
 
 const SPECIAL_ITEM_PROPERTIES = [
     { path: "img", name : "icon-link" },
     { path: "type", name : "type" },
 ];
 
-const IGNORABLE_PROPERTIES = [
-    "predicate",
-    "value",
-    "overlays",
-    "heightening",
-    //"rules",
-];
+// List of Types to locate
+const IMPORTANT_ITEM_TYPES = ["class", "ancestry", "heritage", "background"];
+const ALL_ITEM_TYPES = ["action", "armor", "backpack", "consumable", "deity", "equipment", "feat", "spell", "treasure", "weapon", ...IMPORTANT_ITEM_TYPES];
 
 const choiceSetRE = {
     // ChoiceSet
@@ -183,7 +178,7 @@ const changingDegreeOfSuccessRE = {
 
 
 // Allowlists of properties to include in the Item clones
-const PF2E_PROPERTY_ALLOW_LIST_BASE = {
+const PROPERTY_ALLOW_LIST_BASE = {
     baseItem: true,
     description: {
         gm: true,
@@ -330,7 +325,7 @@ const PF2E_PROPERTY_ALLOW_LIST_BASE = {
 };
 
 const baseEquipment = {
-    ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+    ...PROPERTY_ALLOW_LIST_BASE,
     "level": {
         "value": true,
     },
@@ -369,9 +364,9 @@ const baseEquipment = {
     }
 };
 
-const PF2E_PROPERTY_ALLOW_LIST = {
+const PROPERTY_ALLOW_LIST = {
     ancestry: {
-        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+        ...PROPERTY_ALLOW_LIST_BASE,
         // Ancestry
         hp: true,
         size: true,
@@ -380,7 +375,7 @@ const PF2E_PROPERTY_ALLOW_LIST = {
     },
     
     heritage: {
-        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+        ...PROPERTY_ALLOW_LIST_BASE,
         // Heritage
         ancestry: {
             name: true,
@@ -390,7 +385,7 @@ const PF2E_PROPERTY_ALLOW_LIST = {
     },
 
     background: {
-        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+        ...PROPERTY_ALLOW_LIST_BASE,
         // Background
         "boosts": {
             0: {
@@ -408,7 +403,7 @@ const PF2E_PROPERTY_ALLOW_LIST = {
     },
 
     class: {
-        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+        ...PROPERTY_ALLOW_LIST_BASE,
         // Class
         trainedSkills: {
             value: true,
@@ -525,7 +520,7 @@ const PF2E_PROPERTY_ALLOW_LIST = {
     },
 
     feat: {
-        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+        ...PROPERTY_ALLOW_LIST_BASE,
         // feats
         // level: false,        // level differs due to level of feats being bound to the lowest applicable value, e.g. Resolve is level 7, but some classes gets it at level 11
         actions: {
@@ -559,7 +554,7 @@ const PF2E_PROPERTY_ALLOW_LIST = {
     },
 
     deity: {
-        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+        ...PROPERTY_ALLOW_LIST_BASE,
         alignment: {
             own: true,
             follower: true,
@@ -586,7 +581,7 @@ const PF2E_PROPERTY_ALLOW_LIST = {
     },
 
     spell: {
-        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+        ...PROPERTY_ALLOW_LIST_BASE,
         "level": {
             "value": true,
         },
@@ -648,17 +643,14 @@ const PF2E_PROPERTY_ALLOW_LIST = {
             "value": true,
         },
         "overlays": true,
-        "heightening": {
-            // "levels": skipping this, as this may be too advanced for this little script
-            "type": true,
-        },
+        "heightening": true,
         "prepared": {
             "value": true,
         }
     },
 
     action: {
-        ...PF2E_PROPERTY_ALLOW_LIST_BASE,
+        ...PROPERTY_ALLOW_LIST_BASE,
         "actionType": {
             "value": true,
         },

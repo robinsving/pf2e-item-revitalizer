@@ -1,37 +1,37 @@
-import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
-import { settings, getNestedProperty } from "./RevitalizerUtilities.js";
+import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../../module.json";
+import { info } from "../RevitalizerUtilities";
+import { getNestedProperty } from "../RevitalizerUtilities.js";
 
-export default class RevitalizerSheetRegister {
+export default class RevitalizerSheet {
     
     constructor(revitalizer) {
         this.revitalizer = revitalizer;
+    
+        // Wait for app to be ready
+        Hooks.once('ready', () => {
+            info("Creating Hooks for Sheet rendering")
+            
+            /**
+             * Register hooks for all Character sheets
+             */
+            Object.values(CONFIG.Actor.sheetClasses.character)
+                .map((sheetClass) => sheetClass.cls)
+                .map((sheet) => sheet.name)
+                .forEach((sheet) => { this.#registerHook(sheet) });
 
-        // Determine if button should be visible to user at all
-        if (!game.user.isGM && game.settings.get(SCRIPT_ID, settings.gm.id)) {
-            debug("User is not permitted")
-            // Don't display anything
-            return;
-        }
-        
-        /**
-         * Register hooks for all Character sheets
-         */
-        Object.values(CONFIG.Actor.sheetClasses.character)
-            .map((sheetClass) => sheetClass.cls)
-            .map((sheet) => sheet.name)
-            .forEach((sheet) => { this.#registerHook(sheet) });
+            // Skip NPCs for players
+            if (!game.user.isGM) {
+                return;
+            }
 
-        if (!game.user.isGM) {
-            return;
-        }
-
-        /**
-         * Register hooks for all NPC sheets
-         */
-        Object.values(CONFIG.Actor.sheetClasses.npc)
-            .map((sheetClass) => sheetClass.cls)
-            .map((sheet) => sheet.name)
-            .forEach((sheet) => { this.#registerHook(sheet) });
+            /**
+             * Register hooks for all NPC sheets
+             */
+            Object.values(CONFIG.Actor.sheetClasses.npc)
+                .map((sheetClass) => sheetClass.cls)
+                .map((sheet) => sheet.name)
+                .forEach((sheet) => { this.#registerHook(sheet) });
+        });
     }
 
     #registerHook(sheet) {
@@ -56,7 +56,7 @@ export default class RevitalizerSheetRegister {
             );
 
             // add onclick event to start a Revitalizer run for Actor Id
-            button.click(() => this.revitalizer.runRevitalizerForActorId(data.actor._id));
+            button.click(() => this.revitalizer.runRevitalizerCheckForActorId(data.actor._id));
 
             // remove any existing versions of button
             html.closest('.app').find(`.${className}`).remove();
