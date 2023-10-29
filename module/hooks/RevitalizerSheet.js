@@ -1,12 +1,11 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../../module.json";
+import { revitalizerCheckHook } from "../RevitalizerRunner";
 import { info } from "../RevitalizerUtilities";
 import { getNestedProperty } from "../RevitalizerUtilities.js";
 
 export default class RevitalizerSheet {
     
-    constructor(revitalizer) {
-        this.revitalizer = revitalizer;
-    
+    constructor() {
         // Wait for app to be ready
         Hooks.once('ready', () => {
             info("Creating Hooks for Sheet rendering")
@@ -56,7 +55,7 @@ export default class RevitalizerSheet {
             );
 
             // add onclick event to start a Revitalizer run for Actor Id
-            button.click(() => this.revitalizer.runRevitalizerCheckForActorId(data.actor._id));
+            button.click(() => Hooks.call(revitalizerCheckHook, [data.actor._id]));
 
             // remove any existing versions of button
             html.closest('.app').find(`.${className}`).remove();

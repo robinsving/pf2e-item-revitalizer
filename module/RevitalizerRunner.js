@@ -1,9 +1,14 @@
-import { title as SCRIPT_NAME } from "../module.json";
-import { RevitalizerCalculator } from "./RevitalizerCalculator.js";
+import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
 import { popup, debug, selectionTemplate, resultsTemplate } from "./RevitalizerUtilities";
+import RevitalizerCalculator from "./RevitalizerCalculator.js";
 import RevitalizerSheet from "./hooks/RevitalizerSheet";
 import RevitalizerSceneControl from "./hooks/RevitalizerSceneControl";
-import { RevitalizerPresenter } from "./RevitalizerPresenter";
+import RevitalizerPresenter from "./RevitalizerPresenter";
+import RevitalizerActorsSidebar from "./hooks/RevitalizerActorsSidebar";
+
+export const revitalizerCheckHook = SCRIPT_ID + "-run-revitalizer-check";
+export const selectionActorIdHook = SCRIPT_ID + "-selection-actor-ids";
+export const selectionActorHook   = SCRIPT_ID + "-selection-actor";
 
 export default class RevitalizerRunner {
 
@@ -12,14 +17,23 @@ export default class RevitalizerRunner {
         loadTemplates([selectionTemplate, resultsTemplate]);
 
         // Register Sheet link for everyone
-        new RevitalizerSheet(this);
+        new RevitalizerSheet();
 
         // The rest is for GM's eyes only
         if (!game.user.isGM)
             return;
+
+        // Register Actor Tab Button for GM
+        new RevitalizerActorsSidebar();
         
         // Register Scene Control Buttons for GM
         new RevitalizerSceneControl(this);
+
+        Hooks.on(revitalizerCheckHook, (actorIds) => this.#revitalizerCheckForActorIds(actorIds));
+
+        Hooks.on(selectionActorIdHook, (actorIds) => this.#createSelectionBoxesForActorIds(actorIds));
+
+        Hooks.on(selectionActorHook, (actors) => this.#renderPirContainerElementForSelection(actors));
     }
 
     revitalizerCalculator = new RevitalizerCalculator();
@@ -51,20 +65,33 @@ export default class RevitalizerRunner {
     }
     
     /**
-     * Runs Revitalizer Check for a single Actor
+     * Runs Revitalizer Check for a list of Actor IDs
      * @param String actorId 
      * @returns 
      */
-    async runRevitalizerCheckForActorId(actorId) {
-        const actor = game.actors.get(actorId);
+    async #revitalizerCheckForActorIds(actorIds) {
+        const actors = this.#getActorsFromIds(actorIds);
+        
+        if (actors)
+            return this.#runRevitalizerCheckForActors(actors);
+        
+        debug("No valid actors found");
+        return;
+    }
 
-        if (!actor) {
-            debug("ActorId not found: {}", actorId);
-            return;
-        }
-
-        const actors = [actor];
-        this.#runRevitalizerCheckForActors(actors);
+    /**
+     * Runs Revitalizer Check for a list of Actor IDs
+     * @param String actorId 
+     * @returns 
+     */
+    async #createSelectionBoxesForActorIds(actorIds) {
+        const actors = this.#getActorsFromIds(actorIds);
+        
+        if (actors)
+            return await this.#renderPirContainerElementForSelection(actors);
+        
+        popup("No valid actors found");
+        return;
     }
 
     async #runRevitalizerCheckWithSelection() {
@@ -90,8 +117,19 @@ export default class RevitalizerRunner {
             actorIds.push(checkbox.value);
         });
 
-        let actors = this.#getActorsFromSelection((token) => actorIds.includes(token.id));
+        let actors = this.#getActorsFromIds(actorIds);
 
+        return actors;
+    }
+
+    #getActorsFromIds(actorIds) {
+        const actors = [];
+        actorIds.forEach((actorId) => {
+            const actor = game.actors.get(actorId);
+            
+            if (actor)
+                actors.push(actor);
+        });
         return actors;
     }
 
@@ -139,35 +177,5 @@ export default class RevitalizerRunner {
                 },
             },
         }).render(true);
-    }
-
-    // Filter out Actors (based on selection from Scene Control button pressed)
-    #getActorsFromSelection(actorSelection) {
-        debug(`Filtering using ${actorSelection}`)
-        // Get all available actors
-        let actors = canvas.tokens.placeables
-            .filter(token => token.actor).map(token => token.actor) // Filter out actors
-            .filter(actorSelection)                                 // Filter out according to selection, e.g. ownership
-            .sort((a, b) => (a.name > b.name) ? 1 : -1)             // Sort by actor name
-
-        return actors;
-    }
-
-    async start(actorSelection) {
-        // Don't start if already running
-        if (document.getElementById("pir-container-body")) {
-            popup(`Selection already ongoing`);
-            return;
-        }
-        
-        let actors = this.#getActorsFromSelection(actorSelection);
-
-        if (!actors.length) {
-            popup(`No actors found matching selection`);
-            return;
-        }
-        
-        // Start the selection Dialog
-        await this.#renderPirContainerElementForSelection(actors)
     }
 }

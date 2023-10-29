@@ -2,7 +2,7 @@ import { title as SCRIPT_NAME } from "../module.json";
 import { popup, info, debug, settings, getNestedProperty, getSettings } from "./RevitalizerUtilities.js";
 import { ALL_ITEM_TYPES, PROPERTY_ALLOW_LIST, PROPERTY_ALLOW_LIST_BASE, SPECIAL_ITEM_PROPERTIES } from "./RevitalizerSignificantProperties.js";
 
-export class RevitalizerCalculator {
+export default class RevitalizerCalculator {
 
     // List of Items to ignore
     IGNORABLE_ITEM_UUIDS = [

@@ -3,7 +3,7 @@ import { popup, info, debug, settings, getAutoStyleSnippet, resultsTemplate, get
 import { IMPORTANT_ITEM_TYPES, PROPERTY_ALLOW_LIST, PROPERTY_ALLOW_LIST_BASE, SPECIAL_ITEM_PROPERTIES } from "./RevitalizerSignificantProperties.js";
 import RevitalizerCallbacks from "./hooks/RevitalizerCallbacks.js";
 
-export class RevitalizerPresenter {
+export default class RevitalizerPresenter {
 
     constructor() {
         // Register callback Hooks for triggering Check result actions
