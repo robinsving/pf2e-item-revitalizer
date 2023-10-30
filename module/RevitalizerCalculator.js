@@ -60,8 +60,8 @@ export default class RevitalizerCalculator {
         const type = actorItem.type;
         // Clone the items
         const clones = {
-            origin: duplicate(originItem).system,
-            actor: duplicate(actorItem).system,
+            origin: duplicate(originItem.system),
+            actor: duplicate(actorItem.system),
         };
 
         //debug(JSON.stringify(clones.actor));
@@ -69,6 +69,10 @@ export default class RevitalizerCalculator {
 
         for (let [key, value] of Object.entries(clones)) {
             if (PROPERTY_ALLOW_LIST.hasOwnProperty(type)) {
+                // Filter out list based on settings
+                getSettings(settings.propertyIgnoreList.id)[0].split(",")
+                    .forEach(key => delete PROPERTY_ALLOW_LIST[type][key]);
+
                 clones[key] = this.#allowedPropertyClone(value, PROPERTY_ALLOW_LIST[type]);
             } else {
                 info(`${type} is not yet a properly handled Item type, defaulting to base class`);
@@ -172,7 +176,10 @@ export default class RevitalizerCalculator {
 
         // Special property handler
         // if there is a non-system property we need to handle, e.g. "item.img", then check the similarities for these as well
-        SPECIAL_ITEM_PROPERTIES.forEach(specialProperty => {
+        const ignorePropertySettings = getSettings(settings.propertyIgnoreList.id)[0].split(",");
+        const specialPropertiesFiltered = SPECIAL_ITEM_PROPERTIES.filter((value) => !ignorePropertySettings.includes(value.name));
+
+        specialPropertiesFiltered.forEach(specialProperty => {
             if (getNestedProperty(originItem, specialProperty.path) != getNestedProperty(actorItem, specialProperty.path))
                 differences.add(specialProperty.name);
         });
@@ -186,11 +193,14 @@ export default class RevitalizerCalculator {
         // Create an array of objects to store change information
         const changedData = [];
 
+        // Start a simple timer
+        const start = Date.now();
+
         // Iterate over the actors
         for (const actor of actors) {
             popup(`Parsing actor ${actor.name} (${actor.items.size} Items). Please be patient`);
 
-            const ignoreList = getSettings(settings.userIgnoreList.id);
+            const ignoreList = getSettings(settings.itemIgnoreList.id);
 
             // Iterate over the equipment
             for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && ALL_ITEM_TYPES.includes(item.type) && item.sourceId && item.sourceId !== null)) {
@@ -231,6 +241,7 @@ export default class RevitalizerCalculator {
                 }
             }
         }
+        info("Calculation took " + (Date.now()-start) + " milliseconds");
 
         return changedData;
     }

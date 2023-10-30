@@ -45,9 +45,19 @@ export default class RevitalizerSettings {
         });
 
         // List of ignored Items
-        game.settings.register(SCRIPT_ID,  settings.userIgnoreList.id, {
-            name: settings.userIgnoreList.name,
-            hint: settings.userIgnoreList.hint,
+        game.settings.register(SCRIPT_ID,  settings.itemIgnoreList.id, {
+            name: settings.itemIgnoreList.name,
+            hint: settings.itemIgnoreList.hint,
+            scope: 'world',
+            config: true,
+            default: [],
+            type: Array
+        });
+
+        // List of ignored properties
+        game.settings.register(SCRIPT_ID,  settings.propertyIgnoreList.id, {
+            name: settings.propertyIgnoreList.name,
+            hint: settings.propertyIgnoreList.hint,
             scope: 'world',
             config: true,
             default: [],

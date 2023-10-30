@@ -8,7 +8,8 @@ const settings = {
     gm: { id: "forGmOnly", name: "Access to GM only", hint: "If unchecked, users will be able to run for their owned characters" },
     debug: { id: "debugMode", name: "Enable Debugging", hint: "Print debug to console log" },
     rulesElementArrayLengthOnly: { id: "useArrayLength", name: "Simplified Rule Element discovery", hint: "Faster run. Performs RE comparisons using array length. This gives fewer false positives, but also misses more true positives" },
-    userIgnoreList: { id: "userIgnoreList", name: "Ignored Actor Items", hint: "User-expanded ignore list, comma-separated" },
+    itemIgnoreList: { id: "userIgnoreList", name: "Ignored Actor Items", hint: "User-expanded Item ignore list, comma-separated" },
+    propertyIgnoreList: { id: "propertyIgnoreList", name: "Ignored Item properties", hint: "Insert text separated by commas (,).  Each of these Item Properties will be ignored. E.g. rules,icon-link" },
     revitalize: { id: "allowRevitalize", name: "Allow updating Item version from Compendium", hint: "WARNING: this may destroy your Item, and may potentially cause issues with the Actor" },
 }
 
