@@ -38,7 +38,7 @@ export default class RevitalizerRunner {
 
         Hooks.on(selectionActorIdHook, (actorIds) => this.#createSelectionBoxesForActorIds(actorIds));
 
-        Hooks.on(selectionActorHook, (actors) => this.#renderPirContainerElementForSelection(actors));
+        Hooks.on(selectionActorHook, (actors, fromSceneControl) => this.#renderPirContainerElementForSelection(actors, fromSceneControl));
     }
 
     revitalizerCalculator = new RevitalizerCalculator();
@@ -153,7 +153,7 @@ export default class RevitalizerRunner {
         return label;
     }
 
-    async #renderPirContainerElementForSelection(actors) {
+    async #renderPirContainerElementForSelection(actors, deprecatedWarning) {
         debug(`Toggling display of ${actors.length} actors`);
 
         const pirSelectionElement = document.createElement("div")
@@ -185,5 +185,25 @@ export default class RevitalizerRunner {
                 },
             },
         }).render(true);
+
+        if (deprecatedWarning) {
+            await new Dialog({
+                title: SCRIPT_NAME,
+                content: `
+                The Scene Control buttons will be Deprecated, as they are not suitable for modules.<br>
+                The module will instead use three new locations:<br>
+                -The Scene Tab <i class='fas fa-map'></i> giving the same functionality as these buttons<br>
+                -The Actors Tab<i class='fas fa-user'></i> allowing filtering using the Actor search<br>
+                -Any Character Sheet<i class='fas fa-passport'></i> from the Sheet Title bar<br>
+                <br>
+                Look for the <i class='fas fa-code-compare'></i> icon`,
+                buttons: {
+                    ok: {
+                        icon: '<i class="fas fa-selection"></i>',
+                        label: "Yes, I will use those from now on",
+                    },
+                },
+            }).render(true);
+        }
     }
 }

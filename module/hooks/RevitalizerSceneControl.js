@@ -38,7 +38,7 @@ export default class RevitalizerSceneControl {
             // Add a new Scene Control Button group
             control.push({
                 name: SCRIPT_ID+"-group",
-                title: `${SCRIPT_NAME}`,
+                title: `${SCRIPT_NAME} - Deprecated`,
                 icon: 'fas fa-solid fa-code-compare',
                 activeTool: '',
                 layer: 'revitalizerLayer',
@@ -65,6 +65,6 @@ export default class RevitalizerSceneControl {
         }
         
         // Start the selection Dialog
-        Hooks.call(selectionActorHook, actors);
+        Hooks.call(selectionActorHook, actors, true);
     }
 }
