@@ -1,4 +1,4 @@
-import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
+import { title as SCRIPT_NAME } from "../module.json";
 import { popup, info, debug, settings, getAutoStyleSnippet, resultsTemplate, getNestedProperty, getSettings } from "./utilities/RevitalizerUtilities.js";
 import { IMPORTANT_ITEM_TYPES, PROPERTY_ALLOW_LIST, PROPERTY_ALLOW_LIST_BASE, SPECIAL_ITEM_PROPERTIES } from "./utilities/RevitalizerSignificantProperties.js";
 import RevitalizerCallbacks, { hideHook, removeHook, revitalizeHook } from "./hooks/RevitalizerCallbacks.js";

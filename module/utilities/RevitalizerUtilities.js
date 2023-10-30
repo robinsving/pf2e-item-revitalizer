@@ -5,7 +5,7 @@ const selectionTemplate = `modules/${SCRIPT_ID}/templates/selection-dialog.hbs`;
 const resultsTemplate = `modules/${SCRIPT_ID}/templates/results-dialog.hbs`;
 
 const settings = {
-    gm: { id: "forGmOnly", name: "Access to GM only", hint: "If 'false', users will be able to run for their owned characters" },
+    gm: { id: "forGmOnly", name: "Access to GM only", hint: "If unchecked, users will be able to run for their owned characters" },
     debug: { id: "debugMode", name: "Enable Debugging", hint: "Print debug to console log" },
     rulesElementArrayLengthOnly: { id: "useArrayLength", name: "Simplified Rule Element discovery", hint: "Faster run. Performs RE comparisons using array length. This gives fewer false positives, but also misses more true positives" },
     userIgnoreList: { id: "userIgnoreList", name: "Ignored Actor Items", hint: "User-expanded ignore list, comma-separated" },
