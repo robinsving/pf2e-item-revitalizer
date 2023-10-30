@@ -5,6 +5,7 @@ import RevitalizerSheet from "./hooks/RevitalizerSheet";
 import RevitalizerSceneControl from "./hooks/RevitalizerSceneControl";
 import RevitalizerPresenter from "./RevitalizerPresenter";
 import RevitalizerActorsSidebar from "./hooks/RevitalizerActorsSidebar";
+import RevitalizerSceneSidebar from "./hooks/RevitalizerSceneSidebar";
 import { toggleAllHook } from "./hooks/RevitalizerCallbacks";
 
 export const revitalizerCheckHook = SCRIPT_ID + "-run-revitalizer-check";
@@ -26,6 +27,9 @@ export default class RevitalizerRunner {
 
         // Register Actor Tab Button for GM
         new RevitalizerActorsSidebar();
+
+        // Register Scene Tab Button for GM
+        new RevitalizerSceneSidebar();
         
         // Register Scene Control Buttons for GM
         new RevitalizerSceneControl(this);
