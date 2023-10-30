@@ -4,7 +4,7 @@ import RevitalizerLayer from "../RevitalizerLayer";
 import { selectionActorHook } from "../RevitalizerRunner";
 
 // Enum with filtering methods
-const ActorSelection = {
+export const ActorSelection = {
     All: () => true,
     Characters: (token) => token.type == "character",
 };

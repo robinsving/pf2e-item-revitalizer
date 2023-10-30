@@ -5,6 +5,7 @@ import RevitalizerSheet from "./hooks/RevitalizerSheet";
 import RevitalizerSceneControl from "./hooks/RevitalizerSceneControl";
 import RevitalizerPresenter from "./RevitalizerPresenter";
 import RevitalizerActorsSidebar from "./hooks/RevitalizerActorsSidebar";
+import { toggleAllHook } from "./hooks/RevitalizerCallbacks";
 
 export const revitalizerCheckHook = SCRIPT_ID + "-run-revitalizer-check";
 export const selectionActorIdHook = SCRIPT_ID + "-selection-actor-ids";
@@ -151,7 +152,7 @@ export default class RevitalizerRunner {
     async #renderPirContainerElementForSelection(actors) {
         debug(`Toggling display of ${actors.length} actors`);
 
-        let pirSelectionElement = document.createElement("div")
+        const pirSelectionElement = document.createElement("div")
         // Create checkboxes for each actor in the list
         actors.forEach((actor) => {
             const checkbox = this.#createCheckbox(actor);
@@ -160,7 +161,10 @@ export default class RevitalizerRunner {
             pirSelectionElement.appendChild(document.createElement("br")); // Add a line break element
         });
 
-        const rendered_html = await renderTemplate(selectionTemplate, {body: pirSelectionElement.innerHTML});
+        const rendered_html = await renderTemplate(selectionTemplate, {
+            body: pirSelectionElement.innerHTML,
+            click: `Hooks.call('${toggleAllHook}', this)`,
+        });
 
         await new Dialog({
             title: SCRIPT_NAME,

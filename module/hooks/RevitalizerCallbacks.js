@@ -2,16 +2,21 @@ import { id as SCRIPT_ID } from "../../module.json";
 import { popup, info, settings, getSettings } from "../RevitalizerUtilities.js";
 import { SPECIAL_ITEM_PROPERTIES } from "../RevitalizerSignificantProperties.js";
 
+export const toggleAllHook          = SCRIPT_ID + "-toggle-all-actors";
+export const revitalizeHook         = SCRIPT_ID + "-revitalize";
+export const hideHook               = SCRIPT_ID + "-hide";
+export const removeElementHook      = SCRIPT_ID + "-remove";
+
 // interim solution
-window.toggleAllActors = (source) => Hooks.call(SCRIPT_ID + "-toggle-all-actors", source);
+window.toggleAllActors = (source) => Hooks.call(toggleAllHook, source);
 
 export default class RevitalizerCallbackHookRegister {
-
+    
     constructor() {
-        // register Hooks for callbacks
+        this.removeHook             = SCRIPT_ID + "-remove";
 
         // A function to clone the data from Compendium source
-        Hooks.on(SCRIPT_ID + "-toggle-all-actors", (source) => {
+        Hooks.on(toggleAllHook, (source) => {
             var checkboxes = document.getElementsByName('pir-actors');
             for (var i = 0, n = checkboxes.length; i < n; i++) {
                 checkboxes[i].checked = source.checked;
@@ -19,7 +24,7 @@ export default class RevitalizerCallbackHookRegister {
         });
 
         // A function to clone the data from Compendium source
-        Hooks.on(SCRIPT_ID + "-revitalize", async (element, UUID, csvProperties) => {
+        Hooks.on(revitalizeHook, async (element, UUID, csvProperties) => {
             var properties = csvProperties.split(", ");
             // sanity check
             try {
@@ -52,7 +57,7 @@ export default class RevitalizerCallbackHookRegister {
         });
 
         // A function to store Actor Item UUID to Settings
-        Hooks.on(SCRIPT_ID + "-hide", async (element, UUID) => {
+        Hooks.on(hideHook, async (element, UUID) => {
             var currentIgnoreList = new Set(await getSettings(settings.userIgnoreList.id).filter(a=>a));
 
             // Add to list, unless it exists
@@ -64,7 +69,6 @@ export default class RevitalizerCallbackHookRegister {
         });
 
         // A function to remove an element
-        Hooks.on(SCRIPT_ID + "-remove", (element) => element.parentNode.parentNode.remove());
-
+        Hooks.on(this.removeHook, (element) => element.parentNode.parentNode.remove());
     }
 }

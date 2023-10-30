@@ -1,7 +1,7 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
 import { popup, info, debug, settings, getAutoStyleSnippet, resultsTemplate, getNestedProperty, getSettings } from "./RevitalizerUtilities.js";
 import { IMPORTANT_ITEM_TYPES, PROPERTY_ALLOW_LIST, PROPERTY_ALLOW_LIST_BASE, SPECIAL_ITEM_PROPERTIES } from "./RevitalizerSignificantProperties.js";
-import RevitalizerCallbacks from "./hooks/RevitalizerCallbacks.js";
+import RevitalizerCallbacks, { hideHook, revitalizeHook } from "./hooks/RevitalizerCallbacks.js";
 
 export default class RevitalizerPresenter {
 
@@ -228,13 +228,13 @@ export default class RevitalizerPresenter {
             "revitalize": {
                 disabled: unrevitalizable ? unrevitalizable : false,
                 icon: "fa-solid fa-code-compare",
-                click: `Hooks.call('${SCRIPT_ID}-revitalize', this, '${data.actorItem.uuid}', '${csvSeparatedProperties}')`,
+                click: `Hooks.call('${revitalizeHook}', this, '${data.actorItem.uuid}', '${csvSeparatedProperties}')`,
                 title: unrevitalizable
             },
             "hide": {
                 disabled: !game.user.isGM ? "GM only" : false,
                 icon: "fa-regular fa-eye-slash",
-                click: `Hooks.call('${SCRIPT_ID}-hide', this, '${data.actorItem.uuid}')`,
+                click: `Hooks.call('${hideHook}', this, '${data.actorItem.uuid}')`,
                 title: "Hide this Item in the future"
             },
             "remove": {
