@@ -75,6 +75,9 @@ export default class RevitalizerRunner {
      * @returns 
      */
     async #revitalizerCheckForActorIds(actorIds) {
+        if (!actorIds)
+            return;
+
         const actors = this.#getActorsFromIds(actorIds);
         
         if (actors)
@@ -90,6 +93,9 @@ export default class RevitalizerRunner {
      * @returns 
      */
     async #createSelectionBoxesForActorIds(actorIds) {
+        if (!actorIds)
+            return;
+
         const actors = this.#getActorsFromIds(actorIds);
         
         if (actors)

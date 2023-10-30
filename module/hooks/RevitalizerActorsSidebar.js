@@ -1,37 +1,28 @@
-import { id as SCRIPT_ID } from "../../module.json";
-import { info, popup } from "../utilities/RevitalizerUtilities.js";
+import { info, isRunning } from "../utilities/RevitalizerUtilities.js";
 import { selectionActorIdHook } from "../RevitalizerRunner";
+import AbstractSidebar from "./AbstractSidebar";
 
-export default class RevitalizerActorsSidebar {
+
+export default class RevitalizerActorsSidebar extends AbstractSidebar {
 
     constructor() {
-
+        super();
         Hooks.on("renderActorDirectoryPF2e", (_directory, section) => {
             info("Registering Actor Directory button");
 
             // Get the Actors field we want to add ourselves in
             const searchHeader = section[0].querySelector('div.header-search');
 
-            // Create the anchor
-            const anchor = document.createElement("a");
-            anchor.role = "button";
-            anchor.classList.add("header-control");
-            anchor.classList.add(SCRIPT_ID + "-actor-anchor");
-            anchor.onclick = () => Hooks.call(selectionActorIdHook, this.#fetchCurrentlyFilteredActors(section));
-            anchor.title = "Create Revitalizer Selection for all visible Actors";
-            anchor.ariaLabel = anchor.title;
-            anchor.innerHTML = "<i class=\"fa-solid fa-code-compare\"></i>"
+            const anchor = this.createAnchor("Create Revitalizer Selection for all visible Actors", () => Hooks.call(selectionActorIdHook, this.#callback(section)));
 
             searchHeader.appendChild(anchor);
         });
     }
 
-    #fetchCurrentlyFilteredActors(section) {
+    #callback(section) {
         // Don't start if already running
-        if (document.getElementById("pir-container-body")) {
-            popup(`Selection already ongoing`);
+        if (isRunning())
             return;
-        }
 
         const actorIds = [];
 

@@ -79,3 +79,11 @@ function getAutoStyleSnippet() {
     }
     </style>`;
 }
+
+export const isRunning = () => {
+    if (document.getElementById("pir-container-body")) {
+        popup(`Selection already ongoing`);
+        return true;
+    }
+    return false;
+}

@@ -1,12 +1,12 @@
-import { id as SCRIPT_ID } from "../../module.json";
-import { info, popup } from "../utilities/RevitalizerUtilities.js";
+import { info, isRunning, popup } from "../utilities/RevitalizerUtilities.js";
 import { selectionActorHook } from "../RevitalizerRunner";
 import { ActorSelection } from "./RevitalizerSceneControl.js";
+import AbstractSidebar from "./AbstractSidebar";
 
-export default class RevitalizerSceneSidebar {
+export default class RevitalizerSceneSidebar extends AbstractSidebar {
 
     constructor() {
-
+        super();
         Hooks.on("renderSceneDirectory", (_directory, section) => {
             info("Registering Scene Directory button");
 
@@ -14,25 +14,16 @@ export default class RevitalizerSceneSidebar {
             const searchHeader = section[0].querySelector('div.header-search');
 
             // Create the anchor
-            const anchor = document.createElement("a");
-            anchor.role = "button";
-            anchor.classList.add("header-control");
-            anchor.classList.add(SCRIPT_ID + "-scene-anchor");
-            anchor.onclick = () => Hooks.call(selectionActorHook, this.#callSelection(ActorSelection.All));
-            anchor.title = "Create Revitalizer Selection for all Actors in Scene";
-            anchor.ariaLabel = anchor.title;
-            anchor.innerHTML = "<i class=\"fa-solid fa-code-compare\"></i>"
+            const anchor = this.createAnchor("Create Revitalizer Selection for Actors in Scene", () => Hooks.call(selectionActorHook, this.#callback(ActorSelection.All)));
 
             searchHeader.appendChild(anchor);
         });
     }
 
-    #callSelection(actorSelection) {
+    #callback(actorSelection) {
         // Don't start if already running
-        if (document.getElementById("pir-container-body")) {
-            popup(`Selection already ongoing`);
+        if (isRunning())
             return;
-        }
         
         let actors = canvas.tokens.placeables
             .filter(token => token.actor).map(token => token.actor) // Filter out actors
