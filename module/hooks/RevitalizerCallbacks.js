@@ -5,17 +5,14 @@ import { SPECIAL_ITEM_PROPERTIES } from "../utilities/RevitalizerSignificantProp
 export const toggleAllHook          = SCRIPT_ID + "-toggle-all-actors";
 export const revitalizeHook         = SCRIPT_ID + "-revitalize";
 export const hideHook               = SCRIPT_ID + "-hide";
-export const removeElementHook      = SCRIPT_ID + "-remove";
-
-// interim solution
-window.toggleAllActors = (source) => Hooks.call(toggleAllHook, source);
+export const removeHook             = SCRIPT_ID + "-remove";
 
 export default class RevitalizerCallbackHookRegister {
 
     constructor() {
 
         // A function to clone the data from Compendium source
-        Hooks.on(this.toggleAllHook, (source) => {
+        Hooks.on(toggleAllHook, (source) => {
             var checkboxes = document.getElementsByName('pir-actors');
             for (var i = 0, n = checkboxes.length; i < n; i++) {
                 checkboxes[i].checked = source.checked;
@@ -23,7 +20,7 @@ export default class RevitalizerCallbackHookRegister {
         });
 
         // A function to clone the data from Compendium source
-        Hooks.on(this.revitalizeHook, async (element, UUID, csvProperties) => {
+        Hooks.on(revitalizeHook, async (element, UUID, csvProperties) => {
             var properties = csvProperties.split(", ");
             // sanity check
             try {
@@ -56,7 +53,7 @@ export default class RevitalizerCallbackHookRegister {
         });
 
         // A function to store Actor Item UUID to Settings
-        Hooks.on(this.hideHook, async (element, UUID) => {
+        Hooks.on(hideHook, async (element, UUID) => {
             var currentIgnoreList = new Set(await getSettings(settings.userIgnoreList.id).filter(a=>a));
 
             // Add to list, unless it exists
@@ -68,6 +65,6 @@ export default class RevitalizerCallbackHookRegister {
         });
 
         // A function to remove an element
-        Hooks.on(this.removeHook, (element) => element.parentNode.parentNode.remove());
+        Hooks.on(removeHook, (element) => element.parentNode.parentNode.remove());
     }
 }

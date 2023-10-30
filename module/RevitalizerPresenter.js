@@ -1,7 +1,7 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
 import { popup, info, debug, settings, getAutoStyleSnippet, resultsTemplate, getNestedProperty, getSettings } from "./utilities/RevitalizerUtilities.js";
 import { IMPORTANT_ITEM_TYPES, PROPERTY_ALLOW_LIST, PROPERTY_ALLOW_LIST_BASE, SPECIAL_ITEM_PROPERTIES } from "./utilities/RevitalizerSignificantProperties.js";
-import RevitalizerCallbacks, { hideHook, revitalizeHook } from "./hooks/RevitalizerCallbacks.js";
+import RevitalizerCallbacks, { hideHook, removeHook, revitalizeHook } from "./hooks/RevitalizerCallbacks.js";
 
 export default class RevitalizerPresenter {
 
@@ -228,7 +228,7 @@ export default class RevitalizerPresenter {
             "revitalize": {
                 disabled: unrevitalizable ? unrevitalizable : false,
                 icon: "fa-solid fa-code-compare",
-                click: `Hooks.call('${RevitalizerCallbacks.revitalizeHook}', this, '${data.actorItem.uuid}', '${csvSeparatedProperties}')`,
+                click: `Hooks.call('${revitalizeHook}', this, '${data.actorItem.uuid}', '${csvSeparatedProperties}')`,
                 title: unrevitalizable
             },
             "hide": {
@@ -239,7 +239,7 @@ export default class RevitalizerPresenter {
             },
             "remove": {
                 icon: "fa-regular fa-check",
-                click: `Hooks.call('${SCRIPT_ID}-remove', this)`,
+                click: `Hooks.call('${removeHook}', this)`,
                 title: "Remove Item from list"
             },
         }

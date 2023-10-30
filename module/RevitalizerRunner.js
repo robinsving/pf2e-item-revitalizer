@@ -192,11 +192,11 @@ export default class RevitalizerRunner {
                 content: `
                 The Scene Control buttons will be Deprecated, as they are not suitable for modules.<br>
                 The module will instead use three new locations:<br>
-                -The Scene Tab <i class='fas fa-map'></i> giving the same functionality as these buttons<br>
-                -The Actors Tab<i class='fas fa-user'></i> allowing filtering using the Actor search<br>
-                -Any Character Sheet<i class='fas fa-passport'></i> from the Sheet Title bar<br>
+                - <i class='fas fa-map'></i>\tThe Scene Tab gives the same functionality as these buttons<br>
+                - <i class='fas fa-user'></i>\tThe Actors Tab allows filtering using the Actor search<br>
+                - <i class='fas fa-passport'></i>\tAny Character Sheet<br>
                 <br>
-                Look for the <i class='fas fa-code-compare'></i> icon`,
+                Look for the RF2e Item Revitalizer icon <i class='fas fa-code-compare'></i>`,
                 buttons: {
                     ok: {
                         icon: '<i class="fas fa-selection"></i>',

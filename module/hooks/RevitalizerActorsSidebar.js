@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID } from "../../module.json";
-import { info } from "../utilities/RevitalizerUtilities.js";
+import { info, popup } from "../utilities/RevitalizerUtilities.js";
 import { selectionActorIdHook } from "../RevitalizerRunner";
 
 export default class RevitalizerActorsSidebar {
@@ -27,6 +27,12 @@ export default class RevitalizerActorsSidebar {
     }
 
     #fetchCurrentlyFilteredActors(section) {
+        // Don't start if already running
+        if (document.getElementById("pir-container-body")) {
+            popup(`Selection already ongoing`);
+            return;
+        }
+
         const actorIds = [];
 
         // Fetch the currently searched Actors' IDs
