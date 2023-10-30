@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID } from "../../module.json";
-import { info, popup } from "../RevitalizerUtilities.js";
+import { info, popup } from "../utilities/RevitalizerUtilities.js";
 import { selectionActorHook } from "../RevitalizerRunner";
 import { ActorSelection } from "./RevitalizerSceneControl.js";
 

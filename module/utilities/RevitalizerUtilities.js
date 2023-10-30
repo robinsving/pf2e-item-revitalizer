@@ -1,4 +1,4 @@
-import { id as SCRIPT_ID, title } from "../module.json";
+import { id as SCRIPT_ID, title } from "../../module.json";
 export { getAutoStyleSnippet, debug, info, popup, settings, getSettings, selectionTemplate, resultsTemplate, getNestedProperty };
 
 const selectionTemplate = `modules/${SCRIPT_ID}/templates/selection-dialog.hbs`;

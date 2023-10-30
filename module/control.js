@@ -1,6 +1,6 @@
 import RevitalizerRunner from "./RevitalizerRunner";
 import RevitalizerSettings from "./RevitalizerSettings";
-import { info, settings, getSettings } from "./RevitalizerUtilities";
+import { info, settings, getSettings } from "./utilities/RevitalizerUtilities";
 
 $(document).ready(() => {
 

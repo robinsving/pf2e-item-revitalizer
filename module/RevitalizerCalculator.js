@@ -1,6 +1,6 @@
 import { title as SCRIPT_NAME } from "../module.json";
-import { popup, info, debug, settings, getNestedProperty, getSettings } from "./RevitalizerUtilities.js";
-import { ALL_ITEM_TYPES, PROPERTY_ALLOW_LIST, PROPERTY_ALLOW_LIST_BASE, SPECIAL_ITEM_PROPERTIES } from "./RevitalizerSignificantProperties.js";
+import { popup, info, debug, settings, getNestedProperty, getSettings } from "./utilities/RevitalizerUtilities.js";
+import { ALL_ITEM_TYPES, PROPERTY_ALLOW_LIST, PROPERTY_ALLOW_LIST_BASE, SPECIAL_ITEM_PROPERTIES } from "./utilities/RevitalizerSignificantProperties.js";
 
 export default class RevitalizerCalculator {
 

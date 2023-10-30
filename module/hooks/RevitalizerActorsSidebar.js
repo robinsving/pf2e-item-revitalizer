@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID } from "../../module.json";
-import { info } from "../RevitalizerUtilities.js";
+import { info } from "../utilities/RevitalizerUtilities.js";
 import { selectionActorIdHook } from "../RevitalizerRunner";
 
 export default class RevitalizerActorsSidebar {

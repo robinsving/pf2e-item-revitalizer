@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
-import { popup, debug, selectionTemplate, resultsTemplate } from "./RevitalizerUtilities";
+import { popup, debug, selectionTemplate, resultsTemplate } from "./utilities/RevitalizerUtilities";
 import RevitalizerCalculator from "./RevitalizerCalculator.js";
 import RevitalizerSheet from "./hooks/RevitalizerSheet";
 import RevitalizerSceneControl from "./hooks/RevitalizerSceneControl";

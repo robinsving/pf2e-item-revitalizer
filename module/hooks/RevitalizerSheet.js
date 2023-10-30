@@ -1,7 +1,7 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../../module.json";
 import { revitalizerCheckHook } from "../RevitalizerRunner";
-import { info } from "../RevitalizerUtilities";
-import { getNestedProperty } from "../RevitalizerUtilities.js";
+import { info } from "../utilities/RevitalizerUtilities";
+import { getNestedProperty } from "../utilities/RevitalizerUtilities.js";
 
 export default class RevitalizerSheet {
     

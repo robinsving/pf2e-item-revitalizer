@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID } from "../module.json";
-import { settings } from "./RevitalizerUtilities.js";
+import { settings } from "./utilities/RevitalizerUtilities.js";
 
 export default class RevitalizerSettings {
     
