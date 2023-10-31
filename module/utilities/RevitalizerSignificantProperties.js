@@ -346,14 +346,7 @@ const baseEquipment = {
     "equippedBulk": {
         "value": true,
     },
-    "price": {
-        "value": {
-            "gp": true,
-            "sp": true,
-            "cp": true,
-            "pp": true,
-        }
-    },
+    //"price": false            -- runes will automatically change prices
     "stackGroup": true,
     "negateBulk": {
         "value": true,

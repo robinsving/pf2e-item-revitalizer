@@ -71,7 +71,7 @@ export default class RevitalizerRunner {
     
     /**
      * Runs Revitalizer Check for a list of Actor IDs
-     * @param String actorId 
+     * @param String[] actorIds
      * @returns 
      */
     async #revitalizerCheckForActorIds(actorIds) {
@@ -159,6 +159,12 @@ export default class RevitalizerRunner {
         return label;
     }
 
+    /**
+     * Runs comparison for all Items in actors, comparing them to the Items in the PF2e Compendium
+     * @param {_CharacterPF2e[]} actors list of Actors to display
+     * @param {boolean} deprecatedWarning should deprecation warning be shown
+     * @returns Array containing object with data required to display data
+     */
     async #renderPirContainerElementForSelection(actors, deprecatedWarning) {
         debug(`Toggling display of ${actors.length} actors`);
 
