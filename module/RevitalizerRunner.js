@@ -21,6 +21,8 @@ export default class RevitalizerRunner {
         // Register Sheet link for everyone
         new RevitalizerSheet();
 
+        Hooks.on(revitalizerCheckHook, (actorIds) => this.#revitalizerCheckForActorIds(actorIds));
+
         // The rest is for GM's eyes only
         if (!game.user.isGM)
             return;
@@ -28,17 +30,15 @@ export default class RevitalizerRunner {
         // Register Actor Tab Button for GM
         new RevitalizerActorsSidebar();
 
+        Hooks.on(selectionActorIdHook, (actorIds) => this.#createSelectionBoxesForActorIds(actorIds));
+
         // Register Scene Tab Button for GM
         new RevitalizerSceneSidebar();
+
+        Hooks.on(selectionActorHook, (actors, fromSceneControl) => this.#renderPirContainerElementForSelection(actors, fromSceneControl));
         
         // Register Scene Control Buttons for GM
         new RevitalizerSceneControl(this);
-
-        Hooks.on(revitalizerCheckHook, (actorIds) => this.#revitalizerCheckForActorIds(actorIds));
-
-        Hooks.on(selectionActorIdHook, (actorIds) => this.#createSelectionBoxesForActorIds(actorIds));
-
-        Hooks.on(selectionActorHook, (actors, fromSceneControl) => this.#renderPirContainerElementForSelection(actors, fromSceneControl));
     }
 
     revitalizerCalculator = new RevitalizerCalculator();
