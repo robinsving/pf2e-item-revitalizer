@@ -8,16 +8,29 @@ Add `https://raw.githubusercontent.com/robinsving/pf2e-item-revitalizer/main/mod
 
 ## Usage
 
+### From the Actor Tab
+1. Open up an Actor Tab
+2. Optionally, make a search
+3. Click the Revitalize link (<img src="assets/pir-main-icon.png" width="16"/>) to create a selection dialog with the current search results
+
+<img src="assets/pir-actors-tab-filter.png" width="240"/>  <img src="assets/pir-actors-tab-filter-selection.png" width="240"/>
+
+### From the Scene Tab
+1. Open up an Scene Tab
+2. Click the Revitalize link (<img src="assets/pir-main-icon.png" width="16"/>) to create a selection dialog with the current Scene's Actors
+
+<img src="assets/pir-scene-tab.png" width="240"/>
+
 ### From the Actor Sheet
 1. Open up an Actor Sheet
 2. Click the Revitalize link in the top bar
 
-<img src="assets/pir-sheet-title.png"/>
+<img src="assets/pir-sheet-title.png" width="460"/>
 
-### From the Scene Controls
+### From the Scene Controls (Deprecated, to be removed)
 1. Open your game in Foundry VTT
 2. Navigate to the desired Scene where you want to perform the compatibility check
-3. Click the pf2e-item-revitalizer icon (<img src="assets/pir-main-icon.png" width="24"/>) in the Scene Control buttons and choose which selection mode to use (all, characters only)
+3. Click the Revitalizer icon (<img src="assets/pir-main-icon.png" width="16"/>) in the Scene Control buttons and choose which selection mode to use (all, characters only)
 4. Select Actors *from the current scene*
 
 https://github.com/robinsving/pf2e-item-revitalizer/assets/3072502/f29a9951-07cc-44e8-aad9-6d863e8f3df9
@@ -29,20 +42,43 @@ https://github.com/robinsving/pf2e-item-revitalizer/assets/3072502/f29a9951-07cc
 - Highlights any properties that differ between the Items
 - Provides links to easily access the Compendium and Actor Items for further inspection
 - Button menu to select further options
-  - Performs an Item update ([see below](#automatic-item-updates)) with the **Revitalizer button**
+#### Resulting dialog with buttons
+  - Performs an [Item update](#automatic-item-updates) with the **Revitalizer button**
   - Hides Items on future runs with the **Hide button**
   - Removes Items with the **Checkmark button**
 
-<img src="assets/pir-check-results.png"/>
+<img src="assets/pir-check-results.png" width="460"/>
 
 ### Automatic Item updates
 - Perform an update of an old copy by clicking the Revitalize button when you see the check results
-- Handles many changes, but prevents updating of properties (e.g. Rule Engine changes) or item-types (e.g. class) that may cause issues (use manual update for these)
+- Handles many changes, but prevents updating of properties (e.g. Rule Engine changes) or item-types (e.g. class) that may cause issues (use manual update for these).
+
+[Turned off by default](#allow-updating-item-version-from-compendium).
 
 ### Player mode
 - GMs can toggle this in Settings
 - Allows your players to use this mod [from the Actor Sheet title bar](#from-the-actor-sheet)
 - Actor ownership is required to use the feature
+
+## Settings
+
+### GM only
+By default, the GM is the only one who is allowed to run this module. They have the option to turn it on for Players, but it will be limited _only_ to Actors they own.
+
+### Debugging
+If you want to [report an issue](#reporting-issues) you may want to [investigate the issue](#using-debug-mode-to-find-issues) first. Turning this on will give you a lot of information on the console log.
+
+### Simplified Rule Element discovery
+Faster runs. Not by a lot though.
+
+### Ignored Actor Items
+The **Hide button** in the results dialog will allow GMs to hide Items on future runs.
+
+### Ignored Item properties
+Listing a property here will allow you to ignore certain properties, like "rules" or "icon-link". This will mean faster runs, and no [Automatic Item updates](#automatic-item-updates) for that property.
+
+### Allow updating Item version from Compendium
+Enables [Automatic Item updates](#automatic-item-updates). Off by default, as there is a slight risk that the Item (and in some cases Actor) will have issues.
 
 ## Compatibility
 This module is designed for use with the PF2e system in Foundry VTT. It is not compatible with other game systems on Foundry VTT
