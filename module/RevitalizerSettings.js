@@ -64,19 +64,34 @@ export default class RevitalizerSettings {
             type: String
         });
 
+        // Last migration, in case I will need to run 
+        game.settings.register(SCRIPT_ID,  settings.completedMigration.id, {
+            name: settings.completedMigration.name,
+            hint: settings.completedMigration.hint,
+            scope: 'world',
+            config: false,
+            default: 0,
+            type: Number
+        });
+
         // Migrate settings from Arrays (which was the original) to CSV-Strings. Also, remove duplicates
-        Hooks.once("ready", () =>{
+        Hooks.once("ready", async () =>{
             try {
-                // Validate settings
-                [settings.itemIgnoreList.id, settings.propertyIgnoreList.id].forEach(async id => {
-                    var setting = getSettings(id);
-                    // fix move from Array to String
-                    setting = setting.replaceAll(/[\]\[\"\s]/gm, "");
-                    setting = Array.from(new Set(setting.split(","))).join(',')
-                    
-                    await game.settings.set(SCRIPT_ID, id, setting)
-                }) 
+                // Migration 1
+                if (getSettings(settings.completedMigration.id) === 0) {
+                    await game.settings.set(SCRIPT_ID, settings.completedMigration.id, 1);
+                    // Validate settings
+                    [settings.itemIgnoreList.id, settings.propertyIgnoreList.id].forEach(async id => {
+                        var setting = getSettings(id);
+                        // fix move from Array to String
+                        setting = setting.replaceAll(/[\]\[\"\s]/gm, "");
+                        setting = Array.from(new Set(setting.split(","))).join(',')
+                        
+                        await game.settings.set(SCRIPT_ID, id, setting)
+                    });
+                }
             } catch (_error) {}
-        })
+
+        });
     }
 }
