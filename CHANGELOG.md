@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.13.0
+Added Revitalizer button to Actor Sidebar
+Added Revitalizer button to Scene Sidebar
+Adding Deprecation warning for Scene Control
+Filtering properties feature
+Removing price as property
+
 ## 1.12.1
 Added popup text informing (first-time) users to be patient
 
