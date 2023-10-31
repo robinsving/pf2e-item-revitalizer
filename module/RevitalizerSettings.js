@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID } from "../module.json";
-import { settings } from "./utilities/RevitalizerUtilities.js";
+import { getSettings, settings } from "./utilities/RevitalizerUtilities.js";
 
 export default class RevitalizerSettings {
     
@@ -50,8 +50,8 @@ export default class RevitalizerSettings {
             hint: settings.itemIgnoreList.hint,
             scope: 'world',
             config: true,
-            default: [],
-            type: Array
+            default: "",
+            type: String
         });
 
         // List of ignored properties
@@ -60,8 +60,23 @@ export default class RevitalizerSettings {
             hint: settings.propertyIgnoreList.hint,
             scope: 'world',
             config: true,
-            default: [],
-            type: Array
+            default: "",
+            type: String
         });
+
+        // Migrate settings from Arrays (which was the original) to CSV-Strings. Also, remove duplicates
+        Hooks.once("ready", () =>{
+            try {
+                // Validate settings
+                [settings.itemIgnoreList.id, settings.propertyIgnoreList.id].forEach(async id => {
+                    var setting = getSettings(id);
+                    // fix move from Array to String
+                    setting = setting.replaceAll(/[\]\[\"\s]/gm, "");
+                    setting = Array.from(new Set(setting.split(","))).join(',')
+                    
+                    await game.settings.set(SCRIPT_ID, id, setting)
+                }) 
+            } catch (_error) {}
+        })
     }
 }

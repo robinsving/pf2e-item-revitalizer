@@ -70,7 +70,7 @@ export default class RevitalizerCalculator {
         for (let [key, value] of Object.entries(clones)) {
             if (PROPERTY_ALLOW_LIST.hasOwnProperty(type)) {
                 // Filter out list based on settings
-                getSettings(settings.propertyIgnoreList.id)[0].split(",")
+                getSettings(settings.propertyIgnoreList.id).split(",")
                     .forEach(key => delete PROPERTY_ALLOW_LIST[type][key]);
 
                 clones[key] = this.#allowedPropertyClone(value, PROPERTY_ALLOW_LIST[type]);
@@ -176,7 +176,7 @@ export default class RevitalizerCalculator {
 
         // Special property handler
         // if there is a non-system property we need to handle, e.g. "item.img", then check the similarities for these as well
-        const ignorePropertySettings = getSettings(settings.propertyIgnoreList.id)[0].split(",");
+        const ignorePropertySettings = getSettings(settings.propertyIgnoreList.id).split(",");
         const specialPropertiesFiltered = SPECIAL_ITEM_PROPERTIES.filter((value) => !ignorePropertySettings.includes(value.name));
 
         specialPropertiesFiltered.forEach(specialProperty => {
@@ -205,7 +205,7 @@ export default class RevitalizerCalculator {
         for (const actor of actors) {
             popup(`Parsing actor ${actor.name} (${actor.items.size} Items). Please be patient`);
 
-            const ignoreList = getSettings(settings.itemIgnoreList.id);
+            const ignoreList = getSettings(settings.itemIgnoreList.id).split(",");
 
             // Iterate over the equipment
             for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && ALL_ITEM_TYPES.includes(item.type) && item.sourceId && item.sourceId !== null)) {
@@ -247,8 +247,6 @@ export default class RevitalizerCalculator {
             }
         }
 
-        // Speed up Garbage Collection
-        processedItems = null;
         debug("Calculation took " + (Date.now()-start) + " milliseconds");
 
         return changedData;
