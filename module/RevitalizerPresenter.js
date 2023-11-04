@@ -20,7 +20,7 @@ export default class RevitalizerPresenter {
         if (actorSourceId.includes("bestiary-ability-glossary-srd") || actorSourceId.includes("bestiary-family-ability-glossary"))
             notes = notes.concat("Bestiary abilities. ");
 
-        if (IMPORTANT_ITEM_TYPES.includes(changedItems.actorItem.type))
+        if (IMPORTANT_ITEM_TYPES.includes(changedItems.actorItem.type) && changedItems.comparativeData.filter(a => a != "icon-link").size > 0)
             notes = notes.concat("Important Type. ");
         else if (changedItems.comparativeData.some((value) => this.IMPORTANT_ITEM_PROPERTIES.includes(value)))
             notes = notes.concat("Important Property. ");
