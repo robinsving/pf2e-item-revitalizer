@@ -129,10 +129,25 @@ export default class RevitalizerCalculator {
             const uuidNamePattern = /\{[\s\w-':()]+\}/gm;
             const uuidCompendiumFix = "@UUID[Compendium.";
             const uuidItemFix = ".Item.";
+
+            // Fix null-issues
             const nullFix = ":0";
             const nullFix2 = "\"\"";
-            const nullFix3 = /,?\"[^\"]+\":null,?/gm;
-            const applyMod = "\"applyMod\":false,";
+            const nullFix3 = /\"[^\"]+\":null/gm;
+
+            // Fix properties which are added by Foundry
+            const allEmptyArrays = /\"\w+\"\:\[\]/gm;
+            const applyMod = '"applyMod":false';
+            const removeAfterRoll = '"removeAfterRoll":false';
+            const anythingFalse = /"\w+":false/gm;
+            const selectorToArray = /"selector":"([^\"]*)"/gm;
+            const typeUntyped = '"type":"untyped"';
+            const typeToArray = /"type":"([^\"]*)"/gm;
+
+            // Fix problems with JSON after replacements
+            const postFix = "{,";
+            const postFix2 = ",}";
+            const postFix3 = /,{2,}/gm;
 
             const actorJson = JSON.stringify(actorItem[key], sorter)
                 .replaceAll(inlineStylePattern, "")
@@ -141,8 +156,19 @@ export default class RevitalizerCalculator {
                 .replaceAll(uuidItemFix, ".")
                 .replaceAll(nullFix, ":null")
                 .replaceAll(nullFix2, "null")
-                .replaceAll(nullFix3, ",")
+                .replaceAll(nullFix3, "")
                 .replaceAll(applyMod, "")
+                .replaceAll(allEmptyArrays, "")
+                .replaceAll(removeAfterRoll, "")
+                .replaceAll(typeUntyped, "")
+                .replaceAll(anythingFalse, "")
+                .replaceAll(selectorToArray, '"selector":["$1"]')
+                .replaceAll(typeToArray, '"type":["$1"]')
+
+                
+                .replaceAll(postFix3, ",")
+                .replaceAll(postFix, "{")
+                .replaceAll(postFix2, "}")
 
             const originJson = JSON.stringify(originItem[key], sorter)
                 .replaceAll(inlineStylePattern, "")
@@ -151,8 +177,18 @@ export default class RevitalizerCalculator {
                 .replaceAll(uuidItemFix, ".")
                 .replaceAll(nullFix, ":null")
                 .replaceAll(nullFix2, "null")
-                .replaceAll(nullFix3, ",")
+                .replaceAll(nullFix3, "")
                 .replaceAll(applyMod, "")
+                .replaceAll(allEmptyArrays, "")
+                .replaceAll(removeAfterRoll, "")
+                .replaceAll(typeUntyped, "")
+                .replaceAll(anythingFalse, "")
+                .replaceAll(selectorToArray, '"selector":["$1"]')
+                .replaceAll(typeToArray, '"type":["$1"]')
+
+                .replaceAll(postFix3, ",")
+                .replaceAll(postFix, "{")
+                .replaceAll(postFix2, "}")
 
             // If we find differences in the property
             if (actorJson !== originJson) {
