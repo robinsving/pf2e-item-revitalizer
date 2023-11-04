@@ -54,13 +54,15 @@ export default class RevitalizerCallbackHookRegister {
 
         // A function to store Actor Item UUID to Settings
         Hooks.on(hideHook, async (element, UUID) => {
-            var currentIgnoreList = new Set(await getSettings(settings.itemIgnoreList.id).filter(a=>a));
+            const currentIgnoreSetting = await getSettings(settings.itemIgnoreList.id);
+            
+            var currentIgnoreList = currentIgnoreSetting ? new Set(currentIgnoreSetting.split(",")) : new Set();
 
             // Add to list, unless it exists
             currentIgnoreList.add(UUID);
 
             // Save to settings
-            game.settings.set(SCRIPT_ID, settings.itemIgnoreList.id, [...currentIgnoreList]);
+            game.settings.set(SCRIPT_ID, settings.itemIgnoreList.id, [...currentIgnoreList].join(","));
             element.parentNode.parentNode.remove()
         });
 
