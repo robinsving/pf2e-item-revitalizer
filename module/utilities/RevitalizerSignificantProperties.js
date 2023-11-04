@@ -10,20 +10,17 @@ const IMPORTANT_ITEM_TYPES = ["class", "ancestry", "heritage", "background"];
 const ALL_ITEM_TYPES = ["action", "armor", "backpack", "consumable", "deity", "equipment", "feat", "spell", "treasure", "weapon", ...IMPORTANT_ITEM_TYPES];
 
 const choiceSetRE = {
+    key: true,
     // ChoiceSet
-    choices: {
-        label: true,
-        value: true,
-        predicate: true,
-    },
+    //choices: {
+        //label: true,
+        //value: true,
+        //predicate: true,
+    //},
     prompt: true,
     definition: true,
-    label: true,
-    rollOption: true,
-    allowedDrops: {
-        label: true,
-        predicate: true,
-    },
+    //rollOption: true,
+    //allowedDrops: false,
 };
 
 const strikeRE = {
@@ -38,7 +35,6 @@ const strikeRE = {
     },
     otherTags: true,
     group: true,
-    label: true,
     traits: true,
 };
 
@@ -55,13 +51,13 @@ const aurasRE = {
     effects: {
         affects: true,
         events: true,
-        includesSelf: true,
+        //includesSelf: true,
         uuid: true,
         predicate: true,
     },
     radius: true,
     traits: true,
-    appearance: true,
+    //appearance: true,
 };
 
 const grantItemRE = {
@@ -76,7 +72,7 @@ const grantItemRE = {
     uuid: true,
     reevaluateOnUpdate: true,
     inMemoryOnly: true,
-    allowDuplicate: true,
+    //allowDuplicate: true,
 };
 
 const rollOptionRE = {
@@ -93,7 +89,6 @@ const damageDiceRE = {
     //DamageDice
     critical: true,
     predicate: true,
-    label: true,
     category: true,
     damageType: true,
     diceNumber: true,
@@ -107,7 +102,7 @@ const damageDiceRE = {
 
 const iwrRE = {
     exceptions: true,
-    mode: true,
+    //mode: true,
     type: true,
 };
 
@@ -162,9 +157,9 @@ const flatModifierRE = {
 
 const activeEffectRE = {
     // ActiveEffect-like
-    mode: true,
+    //mode: true, (interferes with Resistance. Re-add on separated logic)
     path: true,
-    phase: true,
+    //phase: true,
 };
 
 const loseHitPointsRE = {
@@ -326,11 +321,9 @@ const PROPERTY_ALLOW_LIST_BASE = {
 
 const baseEquipment = {
     ...PROPERTY_ALLOW_LIST_BASE,
-    "level": {
-        "value": true,
-    },
+    //"level": false
     "traits": {
-        "value": true,
+        //"value": true,            -- runes will change traits
         "rarity": true,
         "otherTags": true,
     },
@@ -351,7 +344,7 @@ const baseEquipment = {
     "negateBulk": {
         "value": true,
     },
-    "size": true,
+    //"size": true,
     "usage": {
         "value": true,
     }
@@ -388,7 +381,7 @@ const PROPERTY_ALLOW_LIST = {
                 value: true,
             }
         },
-        "items": true,
+        //"items": true, (covered by rule GrantItem)
         "trainedLore": true,
         "trainedSkills": {
             "value": true,
@@ -457,7 +450,7 @@ const PROPERTY_ALLOW_LIST = {
             "value": true
         },
         "damage": {
-            "dice": true,
+            //"dice": true, (auto-scaling from e.g. ABP causes this to increase)
             "die": true,
             "damageType": true,
             "persistent": true,
@@ -543,7 +536,10 @@ const PROPERTY_ALLOW_LIST = {
             value: true,
             rarity: true,
         },
-        selfEffect: true,
+        selfEffect: {
+            name: true,
+            uuid: true
+        },
     },
 
     deity: {
