@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.13.1
+Bugfix: Hide functionality had incorrect handling
+
 ## 1.13.0
 Added Revitalizer button to Actor Sidebar
 Added Revitalizer button to Scene Sidebar
