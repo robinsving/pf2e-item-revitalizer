@@ -61,17 +61,13 @@ const aurasRE = {
 };
 
 const grantItemRE = {
-    alterations: {
-        mode: true,
-        property: true,
-        value: true,
-    },
+    //alterations: false
     onDeleteActions: {
         grantee: true,
     },
     uuid: true,
-    reevaluateOnUpdate: true,
-    inMemoryOnly: true,
+    //reevaluateOnUpdate: true,
+    //inMemoryOnly: true,
     //allowDuplicate: true,
 };
 
