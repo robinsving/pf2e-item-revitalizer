@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.14.0
+Fixing some false positives
+Allow icon-link update even for important types
+
 ## 1.13.1
 Bugfix: Hide functionality had incorrect handling
 
