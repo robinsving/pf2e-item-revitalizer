@@ -485,6 +485,7 @@ const PROPERTY_ALLOW_LIST = {
         "check": {
             "value": true,
         },
+        "hp": false, //override, as shields are changed by runes / Shield Ally
         "speed": {
             "value": true,
         },
@@ -608,9 +609,7 @@ const PROPERTY_ALLOW_LIST = {
         "duration": {
             "value": true,
         },
-        "damage": {
-            "value": true,
-        },
+        "damage": true,
         "save": {
             "value": true,
             "basic": true,
