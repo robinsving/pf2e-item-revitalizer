@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.14.1
+Bugfix: Spell Damage false negative (Remaster redefined the value)
+Bugfix: Armor HP removed due to Shield Ally
+
 ## 1.14.0
 Fixing some false positives
 Allow icon-link update even for important types
