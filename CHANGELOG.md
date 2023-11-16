@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.14.2
+Added maximum System version as pre-master
+
 ## 1.14.1
 Bugfix: Spell Damage false negative (Remaster redefined the value)
 Bugfix: Armor HP removed due to Shield Ally
