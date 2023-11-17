@@ -192,6 +192,15 @@ export default class RevitalizerCalculator {
 
             // If we find differences in the property
             if (actorJson !== originJson) {
+
+                // for traits, ignore if the origin only contains Spell Traditions
+                if (key == "traits") {
+                    // iff the _only_ trait differences are the Traditions, then ignore this one
+                    if (this.#hasOnlyIgnorableTraits(actorItem[key].value, originItem[key].value)) {
+                        continue;
+                    }
+                }
+
                 debug(`Found differences in ${key} for Item ${humanReadableName}:`);
                 debug(`Actor's ${humanReadableName} (${key}) is: ${actorJson}`);
                 debug(`Compendium's ${humanReadableName} (${key}) is: ${originJson}`);
@@ -221,6 +230,18 @@ export default class RevitalizerCalculator {
         });
 
         return differences;
+    }
+
+    #hasOnlyIgnorableTraits(actorItemTraits, originItemTraits) {
+        const traitIgnoreList = ["magical", "good", "evil", "arcane","divine","occult","primal"]
+        const differencesInActor = actorItemTraits.filter(item => !originItemTraits.includes(item));
+        const differencesInOrigin = originItemTraits.filter(item => !actorItemTraits.includes(item));
+
+        // iff the _only_ trait differences are the Traditions, then ignore this one
+        if (differencesInActor.every(item => traitIgnoreList.includes(item)) && differencesInOrigin.every(item => traitIgnoreList.includes(item))) {
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -311,7 +311,7 @@ const PROPERTY_ALLOW_LIST_BASE = {
 
     traits: {
         rarity: true,
-        //value: true,
+        value: true
     },
 };
 

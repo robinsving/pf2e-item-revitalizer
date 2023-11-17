@@ -11,7 +11,7 @@ export default class RevitalizerPresenter {
     }
 
     // List of Properties which require complete remaking
-    IMPORTANT_ITEM_PROPERTIES = ["slug", "rules", "heightening", "damage", "overlays", "type"];
+    IMPORTANT_ITEM_PROPERTIES = ["traits", "slug", "rules", "heightening", "damage", "overlays", "type"];
 
     #extrapolateNotes(changedItems) {
         let notes = "";
