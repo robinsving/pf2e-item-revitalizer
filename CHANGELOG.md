@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.16.1
+Bugfix: Scene Selection error message when trying to start while selection already started
+
 ## 1.16.0
 Results Dialog window CSS upgrades
   Dialog Resizability
