@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.16.0
+Results Dialog window CSS upgrades
+  Dialog Resizability
+
+Bugfix: Missing tooltips
+
 ## 1.15.0
 Remaster improvements
 - Ancestry changes
@@ -14,7 +20,7 @@ Remaster improvements
 
 Trait handling
   Ignores Spell traditions, good/evil, magical
-  
+
 ## 1.14.2
 Added maximum System version as pre-master
 
