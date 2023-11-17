@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../../module.json";
-import { info, popup } from "../utilities/RevitalizerUtilities";
+import { info, popup, isRunning } from "../utilities/RevitalizerUtilities";
 import RevitalizerLayer from "../RevitalizerLayer";
 import { selectionActorHook } from "../RevitalizerRunner";
 
@@ -49,7 +49,7 @@ export default class RevitalizerSceneControl {
 
     async #callSelection(actorSelection) {
         // Don't start if already running
-        if (document.getElementById("pir-container-body")) {
+        if (isRunning()) {
             popup(`Selection already ongoing`);
             return;
         }
