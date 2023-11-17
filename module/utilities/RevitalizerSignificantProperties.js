@@ -158,6 +158,11 @@ const activeEffectRE = {
     //phase: true,
 };
 
+const itemAlterationRE = {
+    // ItemAlteration
+    itemType: true
+};
+
 const loseHitPointsRE = {
     // Lose Hit Points
     recoverable: true,
@@ -222,6 +227,9 @@ const PROPERTY_ALLOW_LIST_BASE = {
 
         // Adjust Modifier
         ...adjustModifierRE,
+
+        // Item Alteration
+        ...itemAlterationRE,
 
         // Token Light
         // no new properties (everything is in "value" object)
@@ -318,11 +326,6 @@ const PROPERTY_ALLOW_LIST_BASE = {
 const baseEquipment = {
     ...PROPERTY_ALLOW_LIST_BASE,
     //"level": false
-    "traits": {
-        //"value": true,            -- runes will change traits
-        "rarity": true,
-        "otherTags": true,
-    },
     //"quantity": false,
     "baseItem": true,
     "hp": {
@@ -343,6 +346,10 @@ const baseEquipment = {
     //"size": true,
     "usage": {
         "value": true,
+    },
+    "bulk": {
+        "worn": true,
+        "per": true,
     }
 };
 
@@ -350,10 +357,19 @@ const PROPERTY_ALLOW_LIST = {
     ancestry: {
         ...PROPERTY_ALLOW_LIST_BASE,
         // Ancestry
+        boosts: {
+            0: {value: true},
+            1: {value: true},
+            2: {value: true},
+        },
+        flaws: false,
         hp: true,
+        languages: true,
+        additionalLanguages: true,
         size: true,
         reach: true,
         speed: true,
+        vision: true,
     },
     
     heritage: {
@@ -369,50 +385,28 @@ const PROPERTY_ALLOW_LIST = {
     background: {
         ...PROPERTY_ALLOW_LIST_BASE,
         // Background
-        "boosts": {
-            0: {
-                value: true,
-            },
-            1: {
-                value: true,
-            }
+        boosts: {
+            0: {value: true},
+            1: {value: true},
+            2: {value: true},
         },
-        //"items": true, (covered by rule GrantItem)
-        "trainedLore": true,
-        "trainedSkills": {
-            "value": true,
-        }
+        items: false, // covered by rule GrantItem
+        trainedLore: true,
+        trainedSkills: true,
     },
 
     class: {
         ...PROPERTY_ALLOW_LIST_BASE,
         // Class
-        trainedSkills: {
-            value: true,
-            additional: true,
+        keyAbility: {
+            value: true
         },
+        hp: true,
+        trainedSkills: true,
         perception: true,
-        savingThrows: {
-            fortitude: true,
-            reflex: true,
-            will: true
-        },
-        attacks: {
-            simple: true,
-            martial: true,
-            advanced: true,
-            unarmed: true,
-            other: {
-                name: true,
-                rank: true,
-            },
-        },
-        defenses: {
-            unarmored: true,
-            light: true,
-            medium: true,
-            heavy: true,
-        },
+        savingThrows: true,
+        attacks: true,
+        defenses: true,
     },
 
     equipment: {
@@ -421,74 +415,60 @@ const PROPERTY_ALLOW_LIST = {
 
     consumable: {
         ...baseEquipment,
-        "consumableType": {
-            "value": true,
+        consumableType: true,
+        charges: {
+            max: true,
         },
-        "charges": {
-            "max": true,
-        },
-        "consume": {
-            "value": true,
-        },
-        "autoDestroy": {
-            "value": true,
-        },
-        "spell": true,
-        "temporary": true,
+        consume: true,
+        autoDestroy: true,
+        spell: true,
     },
 
     weapon: {
         ...baseEquipment,
+        usage: true,
+        category: true,
+        group: true,
+        bonus: true,
+        damage: {
+            //dice: true, (auto-scaling from e.g. ABP causes this to increase)
+            die: true,
+            damageType: true,
+            persistent: true,
+        },
+        bonusDamage: true,
+        splashDamage: true,
+        range: true,
+        reload: true,
+        graspingAppendage: true,
+        attribute: true,
 
-        "category": "martial",
-        "group": "firearm",
-        "bonus": {
-            "value": true
-        },
-        "damage": {
-            //"dice": true, (auto-scaling from e.g. ABP causes this to increase)
-            "die": true,
-            "damageType": true,
-            "persistent": true,
-        },
-        "bonusDamage": {
-            "value": true,
-        },
-        "splashDamage": {
-            "value": true,
-        },
-        "range": true,
-        "reload": {
-            "value": true,
-        },
-        "MAP": {
-            "value": true,
-        },
-        "specific": {
-            "value": true,
-        },
+        // pre-remaster
+        MAP: true,
+        specific: true,
     },
 
     armor: {
         ...baseEquipment,
+        acBonus: true,              //shields
+        category: true,
+        group: true,                // e.g. leather
+        hardness: true,
+        hp: true,
+        strength: true,
+        dexCap: true,
+        checkPenalty: true,
+        speedPenalty: true,
+
+        // investigate
         "armor": {
             "value": true,
         },
-        "category": true,
-        "group": true,
-        "strength": {
-            "value": true,
-        },
-        "dex": {
-            "value": true,
-        },
-        "check": {
-            "value": true,
-        },
-        "hp": false, //override, as shields are changed by runes / Shield Ally
-        "speed": {
-            "value": true,
-        },
+        
+        // pre-remaster
+        dex: true,
+        check: true,
+        speed: true,
     },
 
     backpack: {
@@ -505,18 +485,26 @@ const PROPERTY_ALLOW_LIST = {
     feat: {
         ...PROPERTY_ALLOW_LIST_BASE,
         // feats
-        // level: false,        // level differs due to level of feats being bound to the lowest applicable value, e.g. Resolve is level 7, but some classes gets it at level 11
-        actions: {
-            value: true,
-        },
-        prerequisites: {
-            value: true,
-        },
-        onlyLevel1: true,
-        maxTakable: true,
         actionType: {
             value: true,
         },
+        actions: {
+            value: true,
+        },
+        category: true,
+        frequency: {
+            max: true,
+            per: true,
+        },
+        level: false,        // level differs due to level of feats being bound to the lowest applicable value, e.g. Resolve is level 7, but some classes gets it at level 11
+        maxTakable: false,
+        onlyLevel1: true,
+        prerequisites: {
+            value: true,
+        },
+
+        // investigation required
+
         requirements: {
             value: true,
         },
@@ -527,12 +515,6 @@ const PROPERTY_ALLOW_LIST = {
         weapon: {
             value: true,
         },
-        //location: true,
-        category: true,
-        traits: {
-            value: true,
-            rarity: true,
-        },
         selfEffect: {
             name: true,
             uuid: true
@@ -541,114 +523,78 @@ const PROPERTY_ALLOW_LIST = {
 
     deity: {
         ...PROPERTY_ALLOW_LIST_BASE,
-        alignment: {
-            own: true,
-            follower: true,
-        },
+        sanctification: true,
         domains: {
             primary: true,
             alternate: true,
         },
         font: true,
-        ability: true,
+        attribute: true,
         skill: true,
         weapons: true,
-        spells: {
-            1: true,
-            2: true,
-            3: true,
-            4: true,
-            5: true,
-            6: true,
-            7: true,
-            8: true,
-            9: true,
-        }
+        spells: true,
+        // pre-remaster
+        alignment: true,
+        ability: true,
     },
 
     spell: {
         ...PROPERTY_ALLOW_LIST_BASE,
-        "level": {
-            "value": true,
+        area: {
+            type: true,
+            value: true,
         },
-        "spellType": {
-            "value": true,
+        category: {
+            value: true,
         },
-        "category": {
-            "value": true,
+        cost: true,
+        counteraction: true,
+        damage: true,
+        defense: true,
+        duration: true,
+        heightening: true,
+        level: true,
+        location: false,
+        overlays: true,
+        publication: true,
+        range: true,
+        requirements: true,
+        spellType: {
+            value: true,
         },
-        "traditions": {
-            "value": true,
-            "custom": true,
+        target: true,
+        time: true,
+        traits: {
+            rarity: true,
+            traditions: true,
+            value: true
         },
-        "school": {
-            "value": true,
-        },
-        "components": {
-            "focus": true,
-            "material": true,
-            "somatic": true,
-            "verbal": true,
-        },
-        "materials": {
-            "value": true,
-        },
-        "target": {
-            "value": true,
-        },
-        "range": {
-            "value": true,
-        },
-        "area": {
-            "type": true,
-            "value": true,
-        },
-        "time": {
-            "value": true,
-        },
-        "duration": {
-            "value": true,
-        },
-        "damage": true,
-        "save": {
-            "value": true,
-            "basic": true,
-        },
-        "sustained": {
-            "value": true,
-        },
-        "cost": {
-            "value": true,
-        },
-        "hasCounteractCheck": {
-            "value": true,
-        },
-        "ability": {
-            "value": true,
-        },
-        "overlays": true,
-        "heightening": true,
-        "prepared": {
-            "value": true,
-        }
+
+        // pre-remaster - should be removed if found
+        "save": true,
+        "school": true,
+        "components": true,
+        "materials": true,
+        "sustained": true,
+        "ability": true,
+        "prepared": true,
     },
 
     action: {
         ...PROPERTY_ALLOW_LIST_BASE,
-        "actionType": {
-            "value": true,
+        actionType: true,
+        category: true,
+        actions: true,
+
+        // investigate
+        requirements: {
+            value: true,
         },
-        "actions": {
-            "value": true,
+        trigger: {
+            value: true,
         },
-        "requirements": {
-            "value": true,
-        },
-        "trigger": {
-            "value": true,
-        },
-        "weapon": {
-            "value": true,
+        weapon: {
+            value: true,
         }
     }
 };
