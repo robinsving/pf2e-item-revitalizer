@@ -166,6 +166,10 @@ export default class RevitalizerRunner {
      * @returns Array containing object with data required to display data
      */
     async #renderPirContainerElementForSelection(actors, deprecatedWarning) {
+        // Don't start if there are no actors supplied
+        if (!actors)
+            return;
+    
         debug(`Toggling display of ${actors.length} actors`);
 
         const pirSelectionElement = document.createElement("div")
