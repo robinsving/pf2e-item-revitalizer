@@ -1,5 +1,5 @@
 import { title as SCRIPT_NAME } from "../module.json";
-import { popup, info, settings, getAutoStyleSnippet, resultsTemplate, getSettings } from "./utilities/RevitalizerUtilities.js";
+import { popup, info, settings, resultsTemplate, getSettings } from "./utilities/RevitalizerUtilities.js";
 import { IMPORTANT_ITEM_TYPES } from "./utilities/RevitalizerSignificantProperties.js";
 import RevitalizerCallbacks, { hideHook, removeHook, revitalizeHook } from "./hooks/RevitalizerCallbacks.js";
 
@@ -111,8 +111,7 @@ export default class RevitalizerPresenter {
                 async: true
             };
 
-            // Fetch style changes to handle Dialog element style issues
-            output = getAutoStyleSnippet();
+            output = "";
 
             const results = [];
 
@@ -145,6 +144,10 @@ export default class RevitalizerPresenter {
                 },
             },
             default: 'ok',
+        }, {
+            classes: ["dialog", "pir-dialog"],
+            resizable: true,
+            width: 1024
         }).render(true);
 
         info(`Ending calculation of ${SCRIPT_NAME}`);
