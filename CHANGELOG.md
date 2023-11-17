@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.15.0
+Remaster improvements
+- Ancestry changes
+- Background changes
+- Class changes
+- Weapon changes
+- Armor changes
+- Feat changes
+- Deity changes
+- Spell changes
+- Action changes
+
+Trait handling
+  Ignores Spell traditions, good/evil, magical
+  
 ## 1.14.2
 Added maximum System version as pre-master
 
