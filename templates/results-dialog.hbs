@@ -22,7 +22,7 @@
                 <div class="pir-table-cell">{{this.name}}</div>
                 <div class="pir-table-cell pir-button-holder">
                     {{#each this.buttons}}
-                        <button class="pir-button" {{#if this.disabled}} disabled="true" {{/if}} title={{#if this.disabled}} "{{this.disabled}}" {{^}} ""{{this.title}}" {{/if}} onclick="{{this.click}}">
+                        <button class="pir-button" {{#if this.disabled}} disabled="true" {{/if}} title={{#if this.disabled}} "{{this.disabled}}" {{^}} "{{this.title}}" {{/if}} onclick="{{this.click}}">
                             <i class="{{this.icon}}"></i>
                         </button>
                     {{/each}}
