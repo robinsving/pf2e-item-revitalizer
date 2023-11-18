@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.17.0
+Adding client (e.g. Player) settings allowing players to Hide Items
+New display information for Results
+  Spell shows rank
+  Feats show category
+
+Improved sorting
+Style changes
+  Buttons are more compact
+  Results table cells are more compact
+  
 ## 1.16.1
 Bugfix: Scene Selection error message when trying to start while selection already started
 
