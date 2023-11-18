@@ -22,11 +22,12 @@
 
 .pir-table-cell {
     display: table-cell;
-    padding: 4px;
-    width: 10%;
+    padding-left: 3px;
+    padding-top: 1px;
+    padding-bottom: 1px;
 }
 
 /* Odd row color */
 .pir-table .pir-table-row:nth-child(even) {
-    background-color:rgba(28, 28, 28, 0.1);
+    background-color:rgba(28, 28, 28, 0.05);
 }

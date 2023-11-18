@@ -4,7 +4,8 @@
 
 .pir-button {
     display: inline-block;
-    min-width: 27px;
+    min-width: 25px;
+    padding: 0px;
  }
 
 .pir-button:disabled {
