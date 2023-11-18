@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.17.1
+Adding "invested" as ignorable trait, as this is added by equipment becoming magical by runes
+
 ## 1.17.0
 Adding client (e.g. Player) settings allowing players to Hide Items
 New display information for Results
