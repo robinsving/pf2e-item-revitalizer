@@ -14,26 +14,6 @@ export default class RevitalizerSettings {
             type: Boolean
         });
 
-        // Print out debug to console.
-        game.settings.register(SCRIPT_ID, settings.debug.id, {
-            name: settings.debug.name,
-            hint: settings.debug.hint,
-            scope: 'world',
-            config: true,
-            default: false,
-            type: Boolean
-        });
-
-        // Use Array Length for RE discovery.
-        game.settings.register(SCRIPT_ID, settings.rulesElementArrayLengthOnly.id, {
-            name: settings.rulesElementArrayLengthOnly.name,
-            hint: settings.rulesElementArrayLengthOnly.hint,
-            scope: 'world',
-            config: true,
-            default: false,
-            type: Boolean
-        });
-
         // Allow Revitalization (updating Items)
         game.settings.register(SCRIPT_ID, settings.revitalize.id, {
             name: settings.revitalize.name,
@@ -44,11 +24,36 @@ export default class RevitalizerSettings {
             type: Boolean
         });
 
+        // Determine if user is allowed access, otherwise don't add the remaining settings
+        if (!game.user.isGM && getSettings(settings.gm.id)) {
+            return;
+        }
+
+        // Print out debug to console.
+        game.settings.register(SCRIPT_ID, settings.debug.id, {
+            name: settings.debug.name,
+            hint: settings.debug.hint,
+            scope: 'client',
+            config: true,
+            default: false,
+            type: Boolean
+        });
+
+        // Use Array Length for RE discovery.
+        game.settings.register(SCRIPT_ID, settings.rulesElementArrayLengthOnly.id, {
+            name: settings.rulesElementArrayLengthOnly.name,
+            hint: settings.rulesElementArrayLengthOnly.hint,
+            scope: 'client',
+            config: true,
+            default: false,
+            type: Boolean
+        });
+
         // List of ignored Items
         game.settings.register(SCRIPT_ID,  settings.itemIgnoreList.id, {
             name: settings.itemIgnoreList.name,
             hint: settings.itemIgnoreList.hint,
-            scope: 'world',
+            scope: 'client',
             config: true,
             default: "",
             type: String
@@ -58,7 +63,7 @@ export default class RevitalizerSettings {
         game.settings.register(SCRIPT_ID,  settings.propertyIgnoreList.id, {
             name: settings.propertyIgnoreList.name,
             hint: settings.propertyIgnoreList.hint,
-            scope: 'world',
+            scope: 'client',
             config: true,
             default: "",
             type: String
@@ -68,7 +73,7 @@ export default class RevitalizerSettings {
         game.settings.register(SCRIPT_ID,  settings.completedMigration.id, {
             name: settings.completedMigration.name,
             hint: settings.completedMigration.hint,
-            scope: 'world',
+            scope: 'client',
             config: false,
             default: 0,
             type: Number

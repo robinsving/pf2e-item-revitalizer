@@ -82,7 +82,6 @@ export default class RevitalizerPresenter {
                 title: unrevitalizable
             },
             "hide": {
-                disabled: !game.user.isGM ? "GM only" : false,
                 icon: "fa-regular fa-eye-slash",
                 click: `Hooks.call('${hideHook}', this, '${data.actorItem.uuid}')`,
                 title: "Hide this Item in the future"

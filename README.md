@@ -69,7 +69,7 @@ By default, the GM is the only one who is allowed to run this module. They have 
 If you want to [report an issue](#reporting-issues) you may want to [investigate the issue](#using-debug-mode-to-find-issues) first. Turning this on will give you a lot of information on the console log.
 
 ### Simplified Rule Element discovery
-Faster runs. Not by a lot though.
+Simpler Rule change discoveries. Gives fewer false positives, but also misses more true positives
 
 ### Ignored Actor Items
 The **Hide button** in the results dialog will allow GMs to hide Items on future runs.
