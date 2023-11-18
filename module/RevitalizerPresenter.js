@@ -1,5 +1,5 @@
 import { title as SCRIPT_NAME } from "../module.json";
-import { popup, info, settings, resultsTemplate, getSettings } from "./utilities/RevitalizerUtilities.js";
+import { popup, info, settings, resultsTemplate, getSettings, getNestedProperty } from "./utilities/RevitalizerUtilities.js";
 import { IMPORTANT_ITEM_TYPES } from "./utilities/RevitalizerSignificantProperties.js";
 import RevitalizerCallbacks, { hideHook, removeHook, revitalizeHook } from "./hooks/RevitalizerCallbacks.js";
 
@@ -35,27 +35,26 @@ export default class RevitalizerPresenter {
     #sortChangedItems(changedItems) {
         const sortedItems = [...changedItems];
 
+        const sortOrder = [
+            "actor.name",
+            "actorItem.type",
+            "actorItem.system.category",
+            "actorItem.system.level.value",
+            "actorItem.system.traits.value",
+            "actorItem.name"
+        ];
+
         sortedItems.sort((a, b) => {
-            // Sort by actorName
-            if (a.actor.name < b.actor.name) {
-                return -1;
-            } else if (a.actor.name > b.actor.name) {
-                return 1;
-            }
+            for (const sorter of sortOrder) {
+                const aSortValue = getNestedProperty(a, sorter) || "";
+                const bSortValue = getNestedProperty(b, sorter) || "";
 
-            // Sort by type if actorName is equal
-            if (a.actorItem.type < b.actorItem.type) {
-                return -1;
-            } else if (a.actorItem.type > b.actorItem.type) {
-                return 1;
-            }
-
-            // Sort by name if actorName and type are equal
-            if (a.actorItem.name < b.actorItem.name) {
-                return -1;
-            } else if (a.actorItem.name > b.actorItem.name) {
-                return 1;
-            }
+                if (aSortValue < bSortValue) {
+                    return -1;
+                } else if (aSortValue > bSortValue) {
+                    return 1;
+                }
+            };
 
             return 0;
         });
@@ -94,6 +93,18 @@ export default class RevitalizerPresenter {
         }
     }
 
+    #getType(data) {
+        try {
+            switch(data.actorItem.type) {
+                case "spell":       return getNestedProperty(data, "actorItem.system.traits.value").includes("focus") ? "spell\u00A0(focus)" : "spell\u00A0(rank\u00A0" +  getNestedProperty(data, "actorItem.system.level.value") + ")";
+                case "feat":        return "feat\u00A0(" + getNestedProperty(data, "actorItem.system.category").replace("feature", "") + ")";
+                default:            return data.actorItem.type;
+            }
+        } catch (_ignore) {
+            return data.actorItem.type;
+        }
+    }
+
     async present(changedData, actors) {
         
         popup(`Parsing complete. Rendering results`);
@@ -120,7 +131,7 @@ export default class RevitalizerPresenter {
                 results.push({
                     buttons: this.#getButtons(data, notes),
                     actorLink: await TextEditor.enrichHTML(data.actor.link, enrichOption),
-                    type: data.actorItem.type,
+                    type: this.#getType(data),
                     name: data.actorItem.name,
                     comparativeDataText: [...data.comparativeData].map((prop) => {
                         return this.IMPORTANT_ITEM_PROPERTIES.includes(prop) ? `<strong>${prop}</strong>` : prop;
@@ -144,6 +155,7 @@ export default class RevitalizerPresenter {
             },
             default: 'ok',
         }, {
+            popout: true,
             classes: ["dialog", "pir-dialog"],
             resizable: true,
             width: 1024
