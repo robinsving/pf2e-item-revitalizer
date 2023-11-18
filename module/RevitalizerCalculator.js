@@ -233,7 +233,7 @@ export default class RevitalizerCalculator {
     }
 
     #hasOnlyIgnorableTraits(actorItemTraits, originItemTraits) {
-        const traitIgnoreList = ["magical", "good", "evil", "arcane","divine","occult","primal"]
+        const traitIgnoreList = ["magical", "invested", "good", "evil", "arcane","divine","occult","primal"]
         const differencesInActor = actorItemTraits.filter(item => !originItemTraits.includes(item));
         const differencesInOrigin = originItemTraits.filter(item => !actorItemTraits.includes(item));
 
