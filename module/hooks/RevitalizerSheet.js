@@ -22,6 +22,30 @@ export default class RevitalizerSheet {
             if (!game.user.isGM) {
                 return;
             }
+            
+            /**
+             * Register hooks for all vehicle sheets
+             */
+            Object.values(CONFIG.Actor.sheetClasses.vehicle)
+                .map((sheetClass) => sheetClass.cls)
+                .map((sheet) => sheet.name)
+                .forEach((sheet) => { this.#registerHook(sheet) });
+
+            /**
+             * Register hooks for all loot sheets
+             */
+            Object.values(CONFIG.Actor.sheetClasses.loot)
+                .map((sheetClass) => sheetClass.cls)
+                .map((sheet) => sheet.name)
+                .forEach((sheet) => { this.#registerHook(sheet) });
+
+            /**
+             * Register hooks for party sheet
+             */
+            Object.values(CONFIG.Actor.sheetClasses.party)
+                .map((sheetClass) => sheetClass.cls)
+                .map((sheet) => sheet.name)
+                .forEach((sheet) => { this.#registerHook(sheet) });
 
             /**
              * Register hooks for all NPC sheets
