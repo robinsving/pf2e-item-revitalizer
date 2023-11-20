@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.19.0
+Remove SceneController button
+Revitalize will now run for all properties that are not prohibited
+  Non-revitalizable properties will be skipped.
+  Relevant information shown in Tooltip and legend
+Removed notes from Revitalizer Results
+Removed name from Revitalizer Results
+
+Bugfix: Selection for Scene Sidebar didn't filter for types
+
 ## 1.18.0
 Allow GM running on new Sheet types
   Vehicles, Loot, and Party sheets
