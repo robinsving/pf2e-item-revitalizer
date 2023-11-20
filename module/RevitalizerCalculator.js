@@ -58,6 +58,10 @@ export default class RevitalizerCalculator {
     // Function to include only allowed properties in the cloned items
     #createShallowClones(originItem, actorItem) {
         const type = actorItem.type;
+
+        // Create a local allowlist based on possible Item type
+        var propertyAllowList = PROPERTY_ALLOW_LIST.hasOwnProperty(type) ? structuredClone(PROPERTY_ALLOW_LIST[type]) : structuredClone(PROPERTY_ALLOW_LIST_BASE);
+
         // Clone the items
         const clones = {
             origin: structuredClone(originItem.system),
@@ -68,16 +72,11 @@ export default class RevitalizerCalculator {
         //debug(JSON.stringify(clones.origin));
 
         for (let [key, value] of Object.entries(clones)) {
-            if (PROPERTY_ALLOW_LIST.hasOwnProperty(type)) {
-                // Filter out list based on settings
-                getSettings(settings.propertyIgnoreList.id).split(",")
-                    .forEach(key => delete PROPERTY_ALLOW_LIST[type][key]);
+            // Filter out list based on settings
+            getSettings(settings.propertyIgnoreList.id).split(",")
+                .forEach(key => delete propertyAllowList[key]);
 
-                clones[key] = this.#allowedPropertyClone(value, PROPERTY_ALLOW_LIST[type]);
-            } else {
-                info(`${type} is not yet a properly handled Item type, defaulting to base class`);
-                clones[key] = this.#allowedPropertyClone(value, PROPERTY_ALLOW_LIST_BASE);
-            }
+            clones[key] = this.#allowedPropertyClone(value, propertyAllowList);
         }
 
         return clones;
