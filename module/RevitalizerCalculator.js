@@ -6,6 +6,9 @@ export default class RevitalizerCalculator {
 
     // List of Items to ignore
     IGNORABLE_ITEM_UUIDS = [
+        "Compendium.pf2e.ancestryfeatures.Item.HHVQDp61ehcpdiU8", // Darkvision
+        "Compendium.pf2e.ancestryfeatures.Item.DRtaqOHXTRtGRIUT", // Low-light vision
+
         "Compendium.pf2e.equipment-srd.Item.UJWiN0K3jqVjxvKk", // Wand, lvl 1
         "Compendium.pf2e.equipment-srd.Item.vJZ49cgi8szuQXAD", // Wand, lvl 2
         "Compendium.pf2e.equipment-srd.Item.wrDmWkGxmwzYtfiA", // Wand, lvl 3
