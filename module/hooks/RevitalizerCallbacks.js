@@ -1,6 +1,6 @@
 import { id as SCRIPT_ID } from "../../module.json";
 import { popup, info, settings, getSettings } from "../utilities/RevitalizerUtilities.js";
-import { SPECIAL_ITEM_PROPERTIES } from "../utilities/RevitalizerSignificantProperties.js";
+import { SPECIAL_ITEM_PROPERTIES, IMPORTANT_ITEM_PROPERTIES } from "../utilities/RevitalizerSignificantProperties.js";
 
 export const toggleAllHook          = SCRIPT_ID + "-toggle-all-actors";
 export const revitalizeHook         = SCRIPT_ID + "-revitalize";
@@ -34,14 +34,17 @@ export default class RevitalizerCallbackHookRegister {
             }
             properties.forEach(property => {
                 try {
-                    info(`Property ${property} will be updated`);
         
-                    // if this is a special property, rather than a "normal" system property
                     const specialProperty = SPECIAL_ITEM_PROPERTIES.find(obj => obj.name === property);
-                    if (specialProperty)
+                    if (specialProperty) {                                                                  // if this is a special property, rather than a "normal" system property
+                        info(`Property ${property} will be updated`);
                         actor.items.find(i => i._id == actorItem._id).update({ [specialProperty.path]: sourceItem[specialProperty.path] });
-                    else
+                    } else if (IMPORTANT_ITEM_PROPERTIES.includes(property)) {                              // if this is an unrevitalizable property, skip it
+                        info(`Property ${property} will not be updated`);
+                    } else {
+                        info(`Property ${property} will be updated`);
                         actor.items.find(i => i._id == actorItem._id).update({ [`system.${property}`]: sourceItem.system[property] });
+                    }
                 } catch (error) {
                     console.error(error);
                     popup(`Something went wrong with revitalizing the property ${property}`);

@@ -12,7 +12,6 @@
                 <div class="pir-table-cell">Changed Property</div>
                 <div class="pir-table-cell">Actor Item Link</div>
                 <div class="pir-table-cell">Origin Item Link</div>
-                <div class="pir-table-cell">Notes</div>
             </div>
 
         {{#each items}}
@@ -30,8 +29,12 @@
                 <div class="pir-table-cell">{{{this.comparativeDataText}}}</div>
                 <div class="pir-table-cell">{{{this.actorItemLink}}}</div>
                 <div class="pir-table-cell">{{{this.originItemLink}}}</div>
-                <div class="pir-table-cell">{{this.notes}}</div>
             </div>
         {{/each}}
+        </div>
+        <div class="pir-legend">
+            <span>
+                *property which requires manual recreation of Item. Will be skipped during Revitalization
+            </span>
         </div>
     </section>

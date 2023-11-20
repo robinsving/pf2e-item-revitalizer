@@ -1,6 +1,6 @@
 import { title as SCRIPT_NAME } from "../module.json";
 import { popup, info, settings, resultsTemplate, getSettings, getNestedProperty } from "./utilities/RevitalizerUtilities.js";
-import { IMPORTANT_ITEM_TYPES } from "./utilities/RevitalizerSignificantProperties.js";
+import { IMPORTANT_ITEM_PROPERTIES } from "./utilities/RevitalizerSignificantProperties.js";
 import RevitalizerCallbacks, { hideHook, removeHook, revitalizeHook } from "./hooks/RevitalizerCallbacks.js";
 
 export default class RevitalizerPresenter {
@@ -8,27 +8,6 @@ export default class RevitalizerPresenter {
     constructor() {
         // Register callback Hooks for triggering Check result actions
         new RevitalizerCallbacks();
-    }
-
-    // List of Properties which require complete remaking
-    IMPORTANT_ITEM_PROPERTIES = ["traits", "slug", "rules", "heightening", "damage", "overlays", "type"];
-
-    #extrapolateNotes(changedItems) {
-        let notes = "";
-
-        const actorSourceId = changedItems.actorItem.sourceId;
-        if (actorSourceId.includes("bestiary-ability-glossary-srd") || actorSourceId.includes("bestiary-family-ability-glossary"))
-            notes = notes.concat("Bestiary abilities. ");
-
-        if (IMPORTANT_ITEM_TYPES.includes(changedItems.actorItem.type) && changedItems.comparativeData.filter(a => a != "icon-link").size > 0)
-            notes = notes.concat("Important Type. ");
-        else if (changedItems.comparativeData.some((value) => this.IMPORTANT_ITEM_PROPERTIES.includes(value)))
-            notes = notes.concat("Important Property. ");
-
-        if (notes)
-            notes = notes.concat("Use manual recreation. ");
-
-        return notes;
     }
 
     // Function to sort the changed items based on actorName, type, and name
@@ -62,14 +41,21 @@ export default class RevitalizerPresenter {
         return sortedItems;
     }
 
-    #getButtons(data, notes) {
+    #getButtons(data) {
         let unrevitalizable = getSettings(settings.revitalize.id) ? undefined : "Disabled in settings";
 
-        if (!unrevitalizable && data.actorItem.actor.type != "character")
-            unrevitalizable = "Only enabled for character Actors";
+        const revitalizableProperties = [...data.comparativeData].filter(item => !IMPORTANT_ITEM_PROPERTIES.includes(item));
+        if (!unrevitalizable && revitalizableProperties.length === 0)
+            unrevitalizable = "Revitalize will not recreate remaining properties";
 
-        if (!unrevitalizable && notes)
-            unrevitalizable = "See notes";
+        const actorSourceId = data.actorItem.sourceId;
+        if (!unrevitalizable && (actorSourceId.includes("bestiary-ability-glossary-srd") || actorSourceId.includes("bestiary-family-ability-glossary"))) {
+            unrevitalizable = "Bestiary abilities sometimes have purposeful changes from Compendium. Only change if you know what you are doing";
+        }
+
+        if (!unrevitalizable && data.actorItem.actor.type == "npc")
+        unrevitalizable = "Not available for NPC Actors";
+
 
         const csvSeparatedProperties = [...data.comparativeData].join(", ");
 
@@ -78,7 +64,7 @@ export default class RevitalizerPresenter {
                 disabled: unrevitalizable ? unrevitalizable : false,
                 icon: "fa-solid fa-code-compare",
                 click: `Hooks.call('${revitalizeHook}', this, '${data.actorItem.uuid}', '${csvSeparatedProperties}')`,
-                title: unrevitalizable
+                title: `Revitalize the following properties: ${revitalizableProperties.join(", ")}`
             },
             "hide": {
                 icon: "fa-regular fa-eye-slash",
@@ -126,20 +112,19 @@ export default class RevitalizerPresenter {
             const results = [];
 
             for (const data of this.#sortChangedItems(changedData)) {
-                const notes = this.#extrapolateNotes(data)
 
                 results.push({
-                    buttons: this.#getButtons(data, notes),
+                    buttons: this.#getButtons(data),
                     actorLink: await TextEditor.enrichHTML(data.actor.link, enrichOption),
                     type: this.#getType(data),
                     name: data.actorItem.name,
                     comparativeDataText: [...data.comparativeData].map((prop) => {
-                        return this.IMPORTANT_ITEM_PROPERTIES.includes(prop) ? `<strong>${prop}</strong>` : prop;
+                        return IMPORTANT_ITEM_PROPERTIES.includes(prop) ? `<strong>${prop}*</strong>` : prop;
                     }).join(", "),
                     actorItemLink: await TextEditor.enrichHTML(data.actorItem.link, enrichOption),
                     originItemLink: await TextEditor.enrichHTML(data.originItem.link, enrichOption),
-                    notes: notes,
                 });
+
             }
             output += await renderTemplate(resultsTemplate, { items: results });
         }

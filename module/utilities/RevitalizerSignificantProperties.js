@@ -1,4 +1,4 @@
-export { PROPERTY_ALLOW_LIST, PROPERTY_ALLOW_LIST_BASE, SPECIAL_ITEM_PROPERTIES, IMPORTANT_ITEM_TYPES, ALL_ITEM_TYPES };
+export { PROPERTY_ALLOW_LIST, PROPERTY_ALLOW_LIST_BASE, SPECIAL_ITEM_PROPERTIES, IMPORTANT_ITEM_PROPERTIES, ALL_ITEM_TYPES };
 
 const SPECIAL_ITEM_PROPERTIES = [
     { path: "img", name : "icon-link" },
@@ -6,8 +6,10 @@ const SPECIAL_ITEM_PROPERTIES = [
 ];
 
 // List of Types to locate
-const IMPORTANT_ITEM_TYPES = ["class", "ancestry", "heritage", "background"];
-const ALL_ITEM_TYPES = ["action", "armor", "backpack", "consumable", "deity", "equipment", "feat", "spell", "treasure", "weapon", ...IMPORTANT_ITEM_TYPES];
+const ALL_ITEM_TYPES = ["class", "ancestry", "heritage", "background", "action", "armor", "backpack", "consumable", "deity", "equipment", "feat", "spell", "treasure", "weapon"];
+
+// List of Properties which require complete remaking
+const IMPORTANT_ITEM_PROPERTIES = ["traits", "slug", "rules", "heightening", "damage", "overlays", "type"];
 
 const choiceSetRE = {
     key: true,
