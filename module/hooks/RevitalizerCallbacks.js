@@ -34,13 +34,12 @@ export default class RevitalizerCallbackHookRegister {
             }
             properties.forEach(property => {
                 try {
-        
                     const specialProperty = SPECIAL_ITEM_PROPERTIES.find(obj => obj.name === property);
-                    if (specialProperty) {                                                                  // if this is a special property, rather than a "normal" system property
+                    if (IMPORTANT_ITEM_PROPERTIES.includes(property)) {         // if this is an unrevitalizable property, skip it
+                        info(`Property ${property} will not be updated`);
+                    } else if (specialProperty) {                               // if this is a special property, rather than a "normal" system property
                         info(`Property ${property} will be updated`);
                         actor.items.find(i => i._id == actorItem._id).update({ [specialProperty.path]: sourceItem[specialProperty.path] });
-                    } else if (IMPORTANT_ITEM_PROPERTIES.includes(property)) {                              // if this is an unrevitalizable property, skip it
-                        info(`Property ${property} will not be updated`);
                     } else {
                         info(`Property ${property} will be updated`);
                         actor.items.find(i => i._id == actorItem._id).update({ [`system.${property}`]: sourceItem.system[property] });
