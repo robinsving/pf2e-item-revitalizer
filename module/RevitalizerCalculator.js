@@ -192,13 +192,21 @@ export default class RevitalizerCalculator {
 
             // If we find differences in the property
             if (actorJson !== originJson) {
+                // runes, ignore this since it is only used as a comparator for e.g. acBonus
+                if (key === "runes")
+                    continue;
 
                 // for traits, ignore if the origin only contains Spell Traditions
-                if (key == "traits") {
+                if (key === "traits") {
                     // iff the _only_ trait differences are the Traditions, then ignore this one
-                    if (this.#hasOnlyIgnorableTraits(actorItem[key].value, originItem[key].value)) {
+                    if (this.#hasOnlyIgnorableTraits(actorItem[key].value, originItem[key].value))
                         continue;
-                    }
+                }
+
+                if (key === "acBonus") {
+                    // if the difference is the potency rune, then ignore this one
+                    if (actorItem[key] - (getNestedProperty(actorItem, "runes.potency") || 0) == originItem[key])
+                        continue;
                 }
 
                 debug(`Found differences in ${key} for Item ${humanReadableName}:`);

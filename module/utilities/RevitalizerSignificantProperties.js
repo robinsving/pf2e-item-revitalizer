@@ -431,7 +431,7 @@ const PROPERTY_ALLOW_LIST = {
         group: true,
         bonus: true,
         damage: {
-            //dice: true, (auto-scaling from e.g. ABP causes this to increase)
+            //dice: true, (auto-scaling from e.g. ABP/runes causes this to increase)
             die: true,
             damageType: true,
             persistent: true,
@@ -456,6 +456,7 @@ const PROPERTY_ALLOW_LIST = {
         hardness: true,
         hp: true,
         strength: true,
+        runes: true,
         dexCap: true,
         checkPenalty: true,
         speedPenalty: true,
