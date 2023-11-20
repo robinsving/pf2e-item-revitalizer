@@ -7,7 +7,6 @@
             <div class="pir-table-header">
                 <div class="pir-table-cell">Actor</div>
                 <div class="pir-table-cell">Type</div>
-                <div class="pir-table-cell">Name</div>
                 <div class="pir-table-cell">Actions</div>
                 <div class="pir-table-cell">Changed Property</div>
                 <div class="pir-table-cell">Actor Item Link</div>
@@ -18,7 +17,6 @@
             <div class="pir-table-row">
                 <div class="pir-table-cell">{{{this.actorLink}}}</div>
                 <div class="pir-table-cell">{{this.type}}</div>
-                <div class="pir-table-cell">{{this.name}}</div>
                 <div class="pir-table-cell pir-button-holder">
                     {{#each this.buttons}}
                         <button class="pir-button" {{#if this.disabled}} disabled="true" {{/if}} title={{#if this.disabled}} "{{this.disabled}}" {{^}} "{{this.title}}" {{/if}} onclick="{{this.click}}">

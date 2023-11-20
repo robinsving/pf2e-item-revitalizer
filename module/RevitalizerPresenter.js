@@ -117,7 +117,6 @@ export default class RevitalizerPresenter {
                     buttons: this.#getButtons(data),
                     actorLink: await TextEditor.enrichHTML(data.actor.link, enrichOption),
                     type: this.#getType(data),
-                    name: data.actorItem.name,
                     comparativeDataText: [...data.comparativeData].map((prop) => {
                         return IMPORTANT_ITEM_PROPERTIES.includes(prop) ? `<strong>${prop}*</strong>` : prop;
                     }).join(", "),
