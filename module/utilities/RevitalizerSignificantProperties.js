@@ -177,6 +177,7 @@ const changingDegreeOfSuccessRE = {
 
 // Allowlists of properties to include in the Item clones
 const PROPERTY_ALLOW_LIST_BASE = {
+    publication: true,
     baseItem: true,
     description: {
         gm: true,
@@ -559,7 +560,6 @@ const PROPERTY_ALLOW_LIST = {
         level: true,
         location: false,
         overlays: true,
-        publication: true,
         range: true,
         requirements: true,
         spellType: {
