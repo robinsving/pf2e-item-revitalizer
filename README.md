@@ -3,6 +3,14 @@ Module for handling Item obsolesence after PF2e system updates.
 This module performs a likeness check between Items in the PF2e Compendium and the corresponding items (copies) on the Actors in your game.
 It compares certain properties of the items and identifies any differences or changes.
 
+There are three components:
+- Selection Dialog
+  - Lists available Actors to check on
+- Revitalizer Checker (Results Dialog)
+  - Checks for out-of-date Items
+- [Item Revitalizer](#automatic-item-updates)
+  - Fixes out-of-date Items by copying property data from Companion ([Turned off by default](#allow-updating-item-version-from-compendium)).
+
 ## Installation
 Add `https://raw.githubusercontent.com/robinsving/pf2e-item-revitalizer/main/module.json` or locate the **PF2e Item Revitalizer** in the modules menu
 
@@ -11,29 +19,22 @@ Add `https://raw.githubusercontent.com/robinsving/pf2e-item-revitalizer/main/mod
 ### From the Actor Tab
 1. Open up an Actor Tab
 2. Optionally, make a search
-3. Click the Revitalize link (<img src="assets/pir-main-icon.png" width="16"/>) to create a selection dialog with the current search results
+3. Click the Revitalize link (<img src="assets/pir-main-icon.png" width="16"/>) to create a ***Selection Dialog*** with the current search results
+4. Select Actors and click proceed to run the ***Revitalizer Checker*** for the selected Actors
 
 <img src="assets/pir-actors-tab-filter.png" width="240"/>  <img src="assets/pir-actors-tab-filter-selection.png" width="240"/>
 
 ### From the Scene Tab
 1. Open up an Scene Tab
-2. Click the Revitalize link (<img src="assets/pir-main-icon.png" width="16"/>) to create a selection dialog with the current Scene's Actors
+2. Click the Revitalize link (<img src="assets/pir-main-icon.png" width="16"/>) to create a ***Selection dialog*** with the current Scene's Actors
 
 <img src="assets/pir-scene-tab.png" width="240"/>
 
 ### From the Actor Sheet
 1. Open up an Actor Sheet
-2. Click the Revitalize link in the top bar
+2. Click the Revitalize link in the top bar to run ***Revitalizer Checker*** for this Actor
 
 <img src="assets/pir-sheet-title.png" width="460"/>
-
-### From the Scene Controls (Deprecated, to be removed)
-1. Open your game in Foundry VTT
-2. Navigate to the desired Scene where you want to perform the compatibility check
-3. Click the Revitalizer icon (<img src="assets/pir-main-icon.png" width="16"/>) in the Scene Control buttons and choose which selection mode to use (all, characters only)
-4. Select Actors *from the current scene*
-
-https://github.com/robinsving/pf2e-item-revitalizer/assets/3072502/f29a9951-07cc-44e8-aad9-6d863e8f3df9
 
 ## Features
 
@@ -51,7 +52,7 @@ https://github.com/robinsving/pf2e-item-revitalizer/assets/3072502/f29a9951-07cc
 
 ### Automatic Item updates
 - Perform an update of an old copy by clicking the Revitalize button when you see the check results
-- Handles many changes, but prevents updating of properties (e.g. Rule Engine changes) or item-types (e.g. class) that may cause issues (use manual update for these).
+- Handles many changes, but skips updating properties (e.g. Rule Engine changes) that may cause issues. Use manual update for these.
 
 [Turned off by default](#allow-updating-item-version-from-compendium).
 
@@ -71,10 +72,10 @@ If you want to [report an issue](#reporting-issues) you may want to [investigate
 ### Simplified Rule Element discovery
 Simpler Rule change discoveries. Gives fewer false positives, but also misses more true positives
 
-### Ignored Actor Items
+### Ignored Actor Items (client)
 The **Hide button** in the results dialog will allow GMs to hide Items on future runs.
 
-### Ignored Item properties
+### Ignored Item properties (client)
 Listing a property here will allow you to ignore certain properties, like "rules" or "icon-link". This will mean faster runs, and no [Automatic Item updates](#automatic-item-updates) for that property.
 
 ### Allow updating Item version from Compendium

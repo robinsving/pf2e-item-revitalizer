@@ -1,6 +1,5 @@
 import { info, isRunning, popup } from "../utilities/RevitalizerUtilities.js";
 import { selectionActorHook } from "../RevitalizerRunner";
-import { ActorSelection } from "./RevitalizerSceneControl.js";
 import AbstractSidebar from "./AbstractSidebar";
 
 export default class RevitalizerSceneSidebar extends AbstractSidebar {
@@ -14,22 +13,22 @@ export default class RevitalizerSceneSidebar extends AbstractSidebar {
             const searchHeader = section[0].querySelector('div.header-search');
 
             // Create the anchor
-            const anchor = this.createAnchor("Create Revitalizer Selection for Actors in Scene", () => Hooks.call(selectionActorHook, this.#callback(ActorSelection.All)));
+            const anchor = this.createAnchor("Create Revitalizer Selection for Actors in Scene", () => Hooks.call(selectionActorHook, this.#callback()));
 
             searchHeader.appendChild(anchor);
         });
     }
 
-    #callback(actorSelection) {
+    #callback() {
         // Don't start if already running
         if (isRunning())
             return;
         
         let actors = canvas.tokens.placeables
-            .filter(token => token.actor).map(token => token.actor) // Filter out actors
-            .filter(actorSelection)                                 // Filter out according to selection, e.g. ownership
-            .sort((a, b) => (a.name > b.name) ? 1 : -1)             // Sort by actor name
-
+            .filter(token => token.actor).map(token => token.actor)                     // Filter out actors
+            .filter((token) => ["character", "vehicle", "loot"].includes(token.type))   // Filter out according to selection, e.g. not familiars
+            .sort((a, b) => (a.name > b.name) ? 1 : -1)                                 // Sort by actor name
+            
         if (!actors.length) {
             popup(`No actors found matching selection`);
             return;
