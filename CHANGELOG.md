@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.18.0
+Allow GM running on new Sheet types
+  Vehicles, Loot, and Party sheets
+Bugfix: acBonus false positive when Runes were applied
+
 ## 1.17.1
 Adding "invested" as ignorable trait, as this is added by equipment becoming magical by runes
 
