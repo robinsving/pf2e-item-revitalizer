@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.20.0
+Ignoring Darkvision, Low-light Vision
+  With newer classes, these are no longer Feat Items
+  (just recreate the class to get it in the proper way)
+Add Publication as a common property
+
+Bugfix: Local copy of Ignore List overwrote global
+  This meant that someone adding "rules" to ignore, and then ran the Checker
+  would find that the Checker never checked the "rules" property even if
+  later removing if from the settings (until a browser refresh).
+Bugfix: Type property Revitalized in error
+  Fixed ordering of Revitalize Item updator so that it checks for negation
+  before it checks for special property inclusion (as Type is in both)
+
 ## 1.19.0
 Remove SceneController button
 Revitalize will now run for all properties that are not prohibited
