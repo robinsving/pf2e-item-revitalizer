@@ -110,22 +110,26 @@ export default class RevitalizerPresenter {
             output = "";
 
             const results = [];
-
+            let hasImportantProperty = false;
             for (const data of this.#sortChangedItems(changedData)) {
-
                 results.push({
                     buttons: this.#getButtons(data),
                     actorLink: await TextEditor.enrichHTML(data.actor.link, enrichOption),
                     type: this.#getType(data),
                     comparativeDataText: [...data.comparativeData].map((prop) => {
-                        return IMPORTANT_ITEM_PROPERTIES.includes(prop) ? `<strong>${prop}*</strong>` : prop;
+                        if (IMPORTANT_ITEM_PROPERTIES.includes(prop)) {
+                            hasImportantProperty = true;
+                            return `<strong>${prop}*</strong>`
+                        } else {
+                            return prop;
+                        }
                     }).join(", "),
                     actorItemLink: await TextEditor.enrichHTML(data.actorItem.link, enrichOption),
                     originItemLink: await TextEditor.enrichHTML(data.originItem.link, enrichOption),
                 });
 
             }
-            output += await renderTemplate(resultsTemplate, { items: results });
+            output += await renderTemplate(resultsTemplate, { items: results, hasImportantProperty: hasImportantProperty });
         }
 
         await new Dialog({
