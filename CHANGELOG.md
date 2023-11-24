@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.20.1
+No clarification text if not required
+
 ## 1.20.0
 Ignoring Darkvision, Low-light Vision
   With newer classes, these are no longer Feat Items
