@@ -588,16 +588,5 @@ const PROPERTY_ALLOW_LIST = {
         actionType: true,
         category: true,
         actions: true,
-
-        // investigate
-        requirements: {
-            value: true,
-        },
-        trigger: {
-            value: true,
-        },
-        weapon: {
-            value: true,
-        }
     }
 };
