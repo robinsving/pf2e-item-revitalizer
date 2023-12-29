@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.21.0
+Remove Action properties
+  trigger
+  requirements
+  weapon
+
 ## 1.20.1
 No clarification text if not required
 
