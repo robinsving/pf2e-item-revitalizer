@@ -7,13 +7,12 @@ export default defineConfig({
     },
     build: {
         outDir: "./dist",
-        sourcemap: false,
+        sourcemap: true,
         rollupOptions: {
             input: {
                 control: "./module/control.js"
             },
             output: {
-                sourcemap: true,
                 entryFileNames: 'module/entry-[name].js',
                 format: "es",
             },
