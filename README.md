@@ -44,6 +44,7 @@ Add `https://raw.githubusercontent.com/robinsving/pf2e-item-revitalizer/main/mod
 - Provides links to easily access the Compendium and Actor Items for further inspection
 - Button menu to select further options
 #### Resulting dialog with buttons
+  - Performs a complete Refresh from Compendium with the **Refresh button**
   - Performs an [Item update](#automatic-item-updates) with the **Revitalizer button**
   - Hides Items on future runs with the **Hide button**
   - Removes Items with the **Checkmark button**

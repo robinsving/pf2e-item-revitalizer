@@ -1,7 +1,7 @@
 import { title as SCRIPT_NAME } from "../module.json";
 import { popup, info, settings, resultsTemplate, getSettings, getNestedProperty } from "./utilities/RevitalizerUtilities.js";
 import { IMPORTANT_ITEM_PROPERTIES } from "./utilities/RevitalizerSignificantProperties.js";
-import RevitalizerCallbacks, { hideHook, removeHook, revitalizeHook } from "./hooks/RevitalizerCallbacks.js";
+import RevitalizerCallbacks, { hideHook, removeHook, revitalizeHook, refreshFromCompendiumHook } from "./hooks/RevitalizerCallbacks.js";
 
 export default class RevitalizerPresenter {
 
@@ -60,6 +60,12 @@ export default class RevitalizerPresenter {
         const csvSeparatedProperties = [...data.comparativeData].join(", ");
 
         return {
+            "refresh": {
+                disabled: !data.canRefreshFromCompendium,
+                icon: "fa-solid fa-sync-alt",
+                click: `Hooks.call('${refreshFromCompendiumHook}', this, '${data.actorItem.uuid}')`,
+                title: `Refresh entire object from Compendium using PF2e built-in method`
+            },
             "revitalize": {
                 disabled: unrevitalizable ? unrevitalizable : false,
                 icon: "fa-solid fa-code-compare",

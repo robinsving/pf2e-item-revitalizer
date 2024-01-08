@@ -6,6 +6,7 @@ export const toggleAllHook          = SCRIPT_ID + "-toggle-all-actors";
 export const revitalizeHook         = SCRIPT_ID + "-revitalize";
 export const hideHook               = SCRIPT_ID + "-hide";
 export const removeHook             = SCRIPT_ID + "-remove";
+export const refreshFromCompendiumHook = SCRIPT_ID + "-refresh";
 
 export default class RevitalizerCallbackHookRegister {
 
@@ -17,6 +18,12 @@ export default class RevitalizerCallbackHookRegister {
             for (var i = 0, n = checkboxes.length; i < n; i++) {
                 checkboxes[i].checked = source.checked;
             }
+        });
+
+        Hooks.on(refreshFromCompendiumHook, async (element, UUID) => {
+            var actorItem = await fromUuid(UUID);
+            await actorItem.refreshFromCompendium();
+            element.parentNode.parentNode.remove()
         });
 
         // A function to clone the data from Compendium source

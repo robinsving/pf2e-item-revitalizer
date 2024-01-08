@@ -254,6 +254,15 @@ export default class RevitalizerCalculator {
         return false;
     }
 
+    #canRefreshFromCompendium(actorItem) {
+        if (!actorItem.sourceId?.startsWith("Compendium.") || actorItem.system.rules.some(
+                (r) => typeof r.key === "string" && ["ChoiceSet", "GrantItem"].includes(r.key),
+        )) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Runs comparison for all Items in actors, comparing them to the Items in the PF2e Compendium
      * @param {_CharacterPF2e} actors 
@@ -309,6 +318,7 @@ export default class RevitalizerCalculator {
                         actorItem: actorItem,
                         originItem: originItem,
                         comparativeData: getCompareData,
+                        canRefreshFromCompendium: this.#canRefreshFromCompendium(actorItem),
                     });
                 }
             }
