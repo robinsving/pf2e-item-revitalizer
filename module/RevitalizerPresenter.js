@@ -61,7 +61,7 @@ export default class RevitalizerPresenter {
 
         return {
             "refresh": {
-                disabled: !data.canRefreshFromCompendium,
+                disabled: !data.canRefreshFromCompendium ? "Not available on this item" : false,
                 icon: "fa-solid fa-sync-alt",
                 click: `Hooks.call('${refreshFromCompendiumHook}', this, '${data.actorItem.uuid}')`,
                 title: `Refresh entire object from Compendium using PF2e built-in method`
