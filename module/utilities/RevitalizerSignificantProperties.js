@@ -324,6 +324,12 @@ const PROPERTY_ALLOW_LIST_BASE = {
         rarity: true,
         value: true
     },
+    subfeatures: {
+        keyOptions: true,
+        languages: true,
+        proficiencies: true,
+        senses: true,
+    },
 };
 
 const baseEquipment = {
