@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.22.1
+Clarification for disabled Refresh button
+
 ## 1.22.0
 Add property subfeatures
 Add Refresh from Compendium-button (the built-in PF2e refresher)
