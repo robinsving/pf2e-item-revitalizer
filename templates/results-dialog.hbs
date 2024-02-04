@@ -19,9 +19,11 @@
                 <div class="pir-table-cell">{{this.type}}</div>
                 <div class="pir-table-cell pir-button-holder">
                     {{#each this.buttons}}
-                        <button class="pir-button" {{#if this.disabled}} disabled="true" {{/if}} title={{#if this.disabled}} "{{this.disabled}}" {{^}} "{{this.title}}" {{/if}} onclick="{{this.click}}">
-                            <i class="{{this.icon}}"></i>
-                        </button>
+                        {{#unless this.hidden}} 
+                            <button class="pir-button" {{#if this.disabled}} disabled="true" {{/if}} title={{#if this.disabled}} "{{this.disabled}}" {{^}} "{{this.title}}" {{/if}} onclick="{{this.click}}">
+                                <i class="{{this.icon}}"></i>
+                            </button>
+                        {{/unless}}
                     {{/each}}
                 </div>
                 <div class="pir-table-cell">{{{this.comparativeDataText}}}</div>
@@ -33,7 +35,7 @@
         <div class="pir-legend">
             <span>
                 {{#if hasImportantProperty}}
-                *property which requires manual recreation of Item. Will be skipped during Revitalization
+                *property which may prevent certain refresh options
                 {{/if}}
             </span>
         </div>

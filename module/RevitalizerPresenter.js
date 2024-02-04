@@ -59,18 +59,23 @@ export default class RevitalizerPresenter {
 
         const csvSeparatedProperties = [...data.comparativeData].join(", ");
 
+        const isRefreshable = data.canRefreshFromCompendium;
+        const isRevitalizable = unrevitalizable === undefined;
+
         return {
             "refresh": {
-                disabled: !data.canRefreshFromCompendium ? "Not available on this item" : false,
+                disabled: !isRefreshable ? "Not available on this item" + (getSettings(settings.revitalize.id) ? "" : ". Recreate Item, or check the module settings for potential backup Refresh option") : false,
+                hidden: !isRefreshable && isRevitalizable,
                 icon: "fa-solid fa-sync-alt",
                 click: `Hooks.call('${refreshFromCompendiumHook}', this, '${data.actorItem.uuid}')`,
                 title: `Refresh entire object from Compendium using PF2e built-in method`
             },
             "revitalize": {
-                disabled: unrevitalizable ? unrevitalizable : false,
-                icon: "fa-solid fa-code-compare",
+                disabled: isRevitalizable ? false : true,
+                hidden: isRefreshable || !isRevitalizable,
+                icon: "fa-light fa-code-compare",
                 click: `Hooks.call('${revitalizeHook}', this, '${data.actorItem.uuid}', '${csvSeparatedProperties}')`,
-                title: `Revitalize the following properties: ${revitalizableProperties.join(", ")}`
+                title: `Not possible to Refresh whole item. Click to update the following properties: ${revitalizableProperties.join(", ")}`
             },
             "hide": {
                 icon: "fa-regular fa-eye-slash",

@@ -9,14 +9,20 @@ There are three components:
 - Revitalizer Checker (Results Dialog)
   - Checks for out-of-date Items
 - [Item Revitalizer](#automatic-item-updates)
-  - Fixes out-of-date Items by copying property data from Companion ([Turned off by default](#allow-updating-item-version-from-compendium)).
+  - Fixes out-of-date Items by Refreshing from Companion ([with backup solution for Items where Refresh is not allowed](#allow-updating-item-version-from-compendium)).
 
 ## Installation
 Add `https://raw.githubusercontent.com/robinsving/pf2e-item-revitalizer/main/module.json` or locate the **PF2e Item Revitalizer** in the modules menu
 
-## Usage
+## How to start Character selection
 
-### From the Actor Tab
+### Run from the Actor Sheet
+1. Open up an Actor Sheet
+2. Click the Revitalize link in the top bar to run ***Revitalizer Checker*** for this Actor
+
+<img src="assets/pir-sheet-title.png" width="460"/>
+
+### Run from the Actor Tab
 1. Open up an Actor Tab
 2. Optionally, make a search
 3. Click the Revitalize link (<img src="assets/pir-main-icon.png" width="16"/>) to create a ***Selection Dialog*** with the current search results
@@ -24,41 +30,41 @@ Add `https://raw.githubusercontent.com/robinsving/pf2e-item-revitalizer/main/mod
 
 <img src="assets/pir-actors-tab-filter.png" width="240"/>  <img src="assets/pir-actors-tab-filter-selection.png" width="240"/>
 
-### From the Scene Tab
+### Run from the Scene Tab
 1. Open up an Scene Tab
-2. Click the Revitalize link (<img src="assets/pir-main-icon.png" width="16"/>) to create a ***Selection dialog*** with the current Scene's Actors
+2. Click the Revitalize link (<img src="assets/pir-main-icon.png" width="16"/>) to create a ***Selection dialog*** with the **current** Scene's Actors
 
 <img src="assets/pir-scene-tab.png" width="240"/>
 
-### From the Actor Sheet
-1. Open up an Actor Sheet
-2. Click the Revitalize link in the top bar to run ***Revitalizer Checker*** for this Actor
-
-<img src="assets/pir-sheet-title.png" width="460"/>
-
 ## Features
 
-### Check Items
+### Check for outdated Items
 - Runs a comparison of the Items added to an Actor with the Compendium versions
 - Highlights any properties that differ between the Items
 - Provides links to easily access the Compendium and Actor Items for further inspection
 - Button menu to select further options
 #### Resulting dialog with buttons
-  - Performs a complete Refresh from Compendium with the **Refresh button**
-  - Performs an [Item update](#automatic-item-updates) with the **Revitalizer button**
+  - Performs a complete Refresh from Compendium with the **Refresh button** or
+  - Performs an [Item update](#automatic-item-updates) with the **Revitalizer button** (backup solution)
   - Hides Items on future runs with the **Hide button**
-  - Removes Items with the **Checkmark button**
+  - Removes Items with the **Checkmark button** from the results page
 
 <img src="assets/pir-check-results.png" width="460"/>
 
-### Automatic Item updates
-- Perform an update of an old copy by clicking the Revitalize button when you see the check results
-- Handles many changes, but skips updating properties (e.g. Rule Engine changes) that may cause issues. Use manual update for these.
+### Automatic Item updates using Refresh (<img src="assets/pir-refresh-icon.png" width="16"/>)
+- Perform an update of an old copy by clicking the Refresh button when you see the check results
+- Handles all changes, unless functionality is not available for the item
+- Same as clicking Refresh on the Item
 
-[Turned off by default](#allow-updating-item-version-from-compendium).
+### Automatic Item updates using Revitalize (<img src="assets/pir-main-icon.png" width="16"/>) as a backup
+- Perform an update of an old copy by clicking the Revitalize button when you see the check results
+- Handles many changes, but skips updating properties (e.g. Rule Engine changes) that may cause issues
+- *Only shown when the Refresh method is not available*
+- [Turned off by default](#allow-refreshing-using-backup-solution).
+
 
 ### Player mode
-- GMs can toggle this in Settings
+- GMs can toggle this in [Settings](#gm-only).
 - Allows your players to use this mod [from the Actor Sheet title bar](#from-the-actor-sheet)
 - Actor ownership is required to use the feature
 
@@ -66,6 +72,9 @@ Add `https://raw.githubusercontent.com/robinsving/pf2e-item-revitalizer/main/mod
 
 ### GM only
 By default, the GM is the only one who is allowed to run this module. They have the option to turn it on for Players, but it will be limited _only_ to Actors they own.
+
+### Allow Refreshing using backup solution
+Enables [Automatic Item updates](#automatic-item-updates). Off by default, as there is a slight risk that the Item (and in some cases Actor) will have issues.
 
 ### Debugging
 If you want to [report an issue](#reporting-issues) you may want to [investigate the issue](#using-debug-mode-to-find-issues) first. Turning this on will give you a lot of information on the console log.
@@ -79,14 +88,11 @@ The **Hide button** in the results dialog will allow GMs to hide Items on future
 ### Ignored Item properties (client)
 Listing a property here will allow you to ignore certain properties, like "rules" or "icon-link". This will mean faster runs, and no [Automatic Item updates](#automatic-item-updates) for that property.
 
-### Allow updating Item version from Compendium
-Enables [Automatic Item updates](#automatic-item-updates). Off by default, as there is a slight risk that the Item (and in some cases Actor) will have issues.
-
 ## Compatibility
 This module is designed for use with the PF2e system in Foundry VTT. It is not compatible with other game systems on Foundry VTT
 
 ## Limitations
-This module is a use-at-own-risk, as updates of Items may have unforseen consequences. There is of course a Setting to toggle the update, so that you can use this module with the listing-parts only.
+This module is a use-at-own-risk, as updates of Items may have unforseen consequences. There is of course a Setting to toggle the backup-solution, so that you can use this module with the Refresh-parts only.
 
 It should also be noted here that the changes may contain false positives, as well as a lack of true positives. 
 The reason for this is that it works on a subset of the real Items' properties, as many of the properties are modified when the Item is added to the Actor.
