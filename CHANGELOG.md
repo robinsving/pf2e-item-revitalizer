@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.23.0
+Default to built-in Refresh, with (settings) option for Revitalize as a backup
+
 ## 1.22.1
 Clarification for disabled Refresh button
 
