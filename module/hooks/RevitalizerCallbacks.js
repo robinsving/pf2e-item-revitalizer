@@ -22,7 +22,13 @@ export default class RevitalizerCallbackHookRegister {
 
         Hooks.on(refreshFromCompendiumHook, async (element, UUID) => {
             var actorItem = await fromUuid(UUID);
-            await actorItem.refreshFromCompendium();
+            let replaceName = true;
+            if (actorItem.name.includes("(At Will)")) {
+                replaceName = false;
+                popup(`Will not rename ${actorItem.name} as it contains vital information`);
+            }
+
+            await actorItem.refreshFromCompendium({name: replaceName});
             element.parentNode.parentNode.remove()
         });
 
