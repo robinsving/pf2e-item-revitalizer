@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.24.0
+Skip Refresh-rename of At-will spells
+
 ## 1.23.0
 Default to built-in Refresh, with (settings) option for Revitalize as a backup
 
