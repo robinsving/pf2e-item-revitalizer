@@ -6,7 +6,7 @@
     "authors": [{"name": "Robin Sving", "email":"robin.sving@gmail.com", "discord":"@.wigglemaster"}],
     "compatibility": {
         "minimum": "10",
-        "verified": "11"
+        "verified": "12"
     },
     "scripts": [
         "module/entry-control.js"
