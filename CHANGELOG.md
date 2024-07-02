@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.25.0
+Foundry V12 combatability verification
+
 ## 1.24.0
 Skip Refresh-rename of At-will spells
 
