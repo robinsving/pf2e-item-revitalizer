@@ -1,6 +1,7 @@
 import copy from "rollup-plugin-copy";
 import { defineConfig } from "vite";
 
+
 export default defineConfig({
     esbuild: {
         minifyIdentifiers: false, // Turning this on will cause mangling with Foundry
@@ -29,4 +30,14 @@ export default defineConfig({
             hook: "writeBundle",
         }),
     ],
+    test: {
+        // Vitest configuration options
+        include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)'],
+        exclude: ['**/node_modules/**', '**/dist/**'],
+        globals: true,
+        coverage: {
+          provider: 'v8',
+          reporter: ['text', 'json', 'html'],
+        },
+      },
 });

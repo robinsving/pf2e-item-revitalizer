@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID, title } from "../../module.json";
-export { debug, info, popup, settings, getSettings, selectionTemplate, resultsTemplate, getNestedProperty };
+export { debug, info, popup, settings, getSettings, selectionTemplate, resultsTemplate, getNestedProperty, isEmpty };
 
 const selectionTemplate = `modules/${SCRIPT_ID}/templates/selection-dialog.hbs`;
 const resultsTemplate = `modules/${SCRIPT_ID}/templates/results-dialog.hbs`;
@@ -25,6 +25,19 @@ function getNestedProperty(obj, path) {
     } catch (error) {
         return null;
     }
+}
+
+function isEmpty(obj) {
+    if (obj === 0 || obj === null || obj === undefined)
+        return true;
+
+    if (Array.isArray(obj))
+        return obj.every(item => isEmpty(item));
+    
+    if (typeof obj === 'object')
+        return Object.values(obj).every(value => isEmpty(value));
+    
+    return typeof obj === 'string' ? obj.trim() === '' : false;
 }
 
 function popup(message) {
