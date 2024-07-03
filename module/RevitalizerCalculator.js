@@ -1,5 +1,6 @@
 import { title as SCRIPT_NAME } from "../module.json";
 import { popup, info, debug, settings, getNestedProperty, getSettings } from "./utilities/RevitalizerUtilities.js";
+import { hasOnlyIgnorableTraits, isDeepEmpty, canRefreshFromCompendium } from "./utilities/RevitalizerCalculationUtilities.js";
 import { ALL_ITEM_TYPES, PROPERTY_ALLOW_LIST, PROPERTY_ALLOW_LIST_BASE, SPECIAL_ITEM_PROPERTIES } from "./utilities/RevitalizerSignificantProperties.js";
 
 export default class RevitalizerCalculator {
@@ -35,28 +36,28 @@ export default class RevitalizerCalculator {
 
     // Function to clone the allowed properties from an object
     #allowedPropertyClone(obj, allowList) {
-        return Object.keys(allowList).reduce((allowObj, key) => {
-            if (!obj || !obj.hasOwnProperty(key)) {
-                // Exclude properties not present in the object
-            } else if (allowList[key] === true) {
-                // Specific handling
-                allowObj[key] = obj[key];
-            } else if (Array.isArray(obj[key])) {
-                if (getSettings(settings.rulesElementArrayLengthOnly.id))
-                    allowObj[key] = obj[key].length;
-                else
-                    allowObj[key] = obj[key].map((i) => typeof i === "object" ? this.#allowedPropertyClone(i, allowList[key]) : i);
-            } else if (obj[key] === null) {
-                allowObj[key] = null;
-            } else if (typeof obj[key] === "object") {
-                allowObj[key] = this.#allowedPropertyClone(obj[key], allowList[key]);
-            } else {
-                allowObj[key] = obj[key];
-            }
+        return Object.keys(allowList)
+                     .filter(key => !isDeepEmpty(obj[key]))
+                     .reduce((filteredObject, key) => {
+                        if (!obj.hasOwnProperty(key)) {
+                            // Exclude empty properties
+                        } else if (allowList[key] === true) {
+                            // Specific handling
+                            filteredObject[key] = obj[key];
+                        } else if (Array.isArray(obj[key])) {
+                            if (getSettings(settings.rulesElementArrayLengthOnly.id))
+                                filteredObject[key] = obj[key].length;
+                            else
+                                filteredObject[key] = obj[key].map((i) => typeof i === "object" ? this.#allowedPropertyClone(i, allowList[key]) : i);
+                        } else if (typeof obj[key] === "object") {
+                            filteredObject[key] = this.#allowedPropertyClone(obj[key], allowList[key]);
+                        } else {
+                            filteredObject[key] = obj[key];
+                        }
 
-            return allowObj;
-        }, {});
-    }
+                        return filteredObject;
+                    }, {});
+                }
 
     // Function to include only allowed properties in the cloned items
     #createShallowClones(originItem, actorItem) {
@@ -76,7 +77,8 @@ export default class RevitalizerCalculator {
 
         for (let [key, value] of Object.entries(clones)) {
             // Filter out list based on settings
-            getSettings(settings.propertyIgnoreList.id).split(",")
+            getSettings(settings.propertyIgnoreList.id)
+                .split(",")
                 .forEach(key => delete propertyAllowList[key]);
 
             clones[key] = this.#allowedPropertyClone(value, propertyAllowList);
@@ -86,7 +88,7 @@ export default class RevitalizerCalculator {
     }
 
     // Function to get the properties that differ between two Items
-    #getDifferentiatingProperties(originItem, actorItem) {
+    #getDifferentiatingProperties(originItem, actorItem, humanReadableName) {
         const differentProperties = [];
 
         // Sort the JSON stringify ordering so that the properties does not matter
@@ -103,10 +105,12 @@ export default class RevitalizerCalculator {
         // Get all distinct keys in either Item
         const allKeys = [...Object.keys(actorItem), ...Object.keys(originItem)];
         for (const key of new Set(allKeys)) {
-            var humanReadableName = actorItem.slug || actorItem.name;
-
-            // Since we are looking for keys in the Item, the corresponding key may not even exist in the other Item
-            if (!originItem.hasOwnProperty(key) || !actorItem.hasOwnProperty(key)) {
+            // runes, ignore this since it is only used as a comparator for e.g. acBonus
+            if (key === "runes")
+                continue;
+            
+            // Since we are looking for keys in the Item, the corresponding key may not even exist in the other Item, or be filled with garbage
+            if (isDeepEmpty(actorItem[key]) != isDeepEmpty(originItem[key])) {
                 debug(`Found differences in ${key} for Item ${humanReadableName}:`);
                 debug(`Actor's ${humanReadableName} (${key}) is: ${JSON.stringify(actorItem[key])}`);
                 debug(`Compendium's ${humanReadableName} (${key}) is: ${JSON.stringify(originItem[key])}`);
@@ -116,6 +120,8 @@ export default class RevitalizerCalculator {
                     differentProperties.push(key);
                 else
                     debug(`Ignored due to no value set (null, 0)`)
+                continue;
+            } else if (originItem[key] === undefined) {
                 continue;
             }
             
@@ -194,14 +200,10 @@ export default class RevitalizerCalculator {
 
             // If we find differences in the property
             if (actorJson !== originJson) {
-                // runes, ignore this since it is only used as a comparator for e.g. acBonus
-                if (key === "runes")
-                    continue;
-
                 // for traits, ignore if the origin only contains Spell Traditions
                 if (key === "traits") {
                     // iff the _only_ trait differences are the Traditions, then ignore this one
-                    if (this.#hasOnlyIgnorableTraits(actorItem[key].value, originItem[key].value))
+                    if (hasOnlyIgnorableTraits(actorItem[key].value, originItem[key].value))
                         continue;
                 }
 
@@ -222,45 +224,17 @@ export default class RevitalizerCalculator {
     }
 
     // Function to compare two items and find their differences
-    #compareItems(originItem, actorItem) {
-        debug(`Parsing item ${actorItem.name}`);
+    #compareItems(clones, properties, humanReadableName) {
+        debug(`Parsing item ${humanReadableName}`);
 
-        const clones = this.#createShallowClones(originItem, actorItem);
+        const differences = new Set(this.#getDifferentiatingProperties(clones.origin, clones.actor, humanReadableName));
 
-        const differences = new Set(this.#getDifferentiatingProperties(clones.origin, clones.actor));
-
-        // Special property handler
-        // if there is a non-system property we need to handle, e.g. "item.img", then check the similarities for these as well
-        const ignorePropertySettings = getSettings(settings.propertyIgnoreList.id).split(",");
-        const specialPropertiesFiltered = SPECIAL_ITEM_PROPERTIES.filter((value) => !ignorePropertySettings.includes(value.name));
-
-        specialPropertiesFiltered.forEach(specialProperty => {
-            if (getNestedProperty(originItem, specialProperty.path) != getNestedProperty(actorItem, specialProperty.path))
+        properties.forEach(specialProperty => {
+            if (getNestedProperty(clones.origin, specialProperty.path) != getNestedProperty(clones.actor, specialProperty.path))
                 differences.add(specialProperty.name);
         });
 
         return differences;
-    }
-
-    #hasOnlyIgnorableTraits(actorItemTraits, originItemTraits) {
-        const traitIgnoreList = ["magical", "invested", "good", "evil", "arcane","divine","occult","primal"]
-        const differencesInActor = actorItemTraits.filter(item => !originItemTraits.includes(item));
-        const differencesInOrigin = originItemTraits.filter(item => !actorItemTraits.includes(item));
-
-        // iff the _only_ trait differences are the Traditions, then ignore this one
-        if (differencesInActor.every(item => traitIgnoreList.includes(item)) && differencesInOrigin.every(item => traitIgnoreList.includes(item))) {
-            return true;
-        }
-        return false;
-    }
-
-    #canRefreshFromCompendium(actorItem) {
-        if (!actorItem.sourceId?.startsWith("Compendium.") || actorItem.system.rules.some(
-                (r) => typeof r.key === "string" && ["ChoiceSet", "GrantItem"].includes(r.key),
-        )) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -277,11 +251,11 @@ export default class RevitalizerCalculator {
         // Start a simple timer
         const start = Date.now();
 
+        const ignoreList = getSettings(settings.itemIgnoreList.id).split(",");
+
         // Iterate over the actors
         for (const actor of actors) {
             popup(`Parsing actor ${actor.name} (${actor.items.size} Items). Please be patient`);
-
-            const ignoreList = getSettings(settings.itemIgnoreList.id).split(",");
 
             // Iterate over the equipment
             for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && ALL_ITEM_TYPES.includes(item.type) && item.sourceId && item.sourceId !== null)) {
@@ -310,7 +284,14 @@ export default class RevitalizerCalculator {
                     continue;
                 }
 
-                const getCompareData = this.#compareItems(originItem, actorItem);
+                const clones = this.#createShallowClones(originItem, actorItem);
+
+                // Special property lister
+                // if there is a non-system property we need to handle, e.g. "item.img", then check the similarities for these as well
+                const ignorePropertySettings = getSettings(settings.propertyIgnoreList.id).split(",");
+                const specialPropertiesFiltered = SPECIAL_ITEM_PROPERTIES.filter((value) => !ignorePropertySettings.includes(value.name));
+
+                const getCompareData = this.#compareItems(clones, specialPropertiesFiltered, humanReadableName);
 
                 if (getCompareData.size > 0) {
                     changedData.push({
@@ -318,7 +299,7 @@ export default class RevitalizerCalculator {
                         actorItem: actorItem,
                         originItem: originItem,
                         comparativeData: getCompareData,
-                        canRefreshFromCompendium: this.#canRefreshFromCompendium(actorItem),
+                        canRefreshFromCompendium: canRefreshFromCompendium(actorItem.sourceId, actorItem.system.rules),
                     });
                 }
             }
