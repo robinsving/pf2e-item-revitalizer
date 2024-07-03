@@ -68,8 +68,8 @@ export default class RevitalizerCalculator {
 
         // Clone the items
         const clones = {
-            origin: structuredClone(originItem.system),
-            actor: structuredClone(actorItem.system),
+            origin: structuredClone(originItem.toObject().system),
+            actor: structuredClone(actorItem.toObject().system),
         };
 
         //debug(JSON.stringify(clones.actor));
