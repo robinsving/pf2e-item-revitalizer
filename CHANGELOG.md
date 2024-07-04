@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.26.0
+Change in Calculation Item base
+  Now PIR uses the build-in toObject() of the Actor/Origin Item
+  This means that there will be more false positives,
+  but also less true positives,
+  as well as faster difference calculations.
+Internal structural changes
+
 ## 1.25.0
 Foundry V12 combatability verification
 
