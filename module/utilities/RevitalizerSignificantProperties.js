@@ -74,7 +74,7 @@ const grantItemRE = {
 };
 
 const rollOptionRE = {
-    domain: true,
+    //domain: false,
     option: true,
     toggleable: true,
     suboptions: {
@@ -326,7 +326,10 @@ const PROPERTY_ALLOW_LIST_BASE = {
     },
     subfeatures: {
         keyOptions: true,
-        languages: true,
+        languages: {
+            granted: true,
+            slots: true
+        },
         proficiencies: true,
         senses: true,
     },
@@ -356,10 +359,7 @@ const baseEquipment = {
     "usage": {
         "value": true,
     },
-    "bulk": {
-        "worn": true,
-        "per": true,
-    }
+    //"bulk": false
 };
 
 const PROPERTY_ALLOW_LIST = {
@@ -371,7 +371,7 @@ const PROPERTY_ALLOW_LIST = {
             1: {value: true},
             2: {value: true},
         },
-        flaws: false,
+        //flaws: false,
         hp: true,
         languages: true,
         additionalLanguages: true,
@@ -399,7 +399,7 @@ const PROPERTY_ALLOW_LIST = {
             1: {value: true},
             2: {value: true},
         },
-        items: false, // covered by rule GrantItem
+        //items: false, // covered by rule GrantItem
         trainedLore: true,
         trainedSkills: true,
     },
@@ -506,9 +506,9 @@ const PROPERTY_ALLOW_LIST = {
             max: true,
             per: true,
         },
-        level: false,        // level differs due to level of feats being bound to the lowest applicable value, e.g. Resolve is level 7, but some classes gets it at level 11
-        maxTakable: false,
-        onlyLevel1: true,
+        //level: false,        // level differs due to level of feats being bound to the lowest applicable value, e.g. Resolve is level 7, but some classes gets it at level 11
+        //maxTakable: false,
+        //onlyLevel1: false,
         prerequisites: {
             value: true,
         },
@@ -564,7 +564,7 @@ const PROPERTY_ALLOW_LIST = {
         duration: true,
         heightening: true,
         level: true,
-        location: false,
+        //location: false,
         overlays: true,
         range: true,
         requirements: true,
@@ -591,8 +591,12 @@ const PROPERTY_ALLOW_LIST = {
 
     action: {
         ...PROPERTY_ALLOW_LIST_BASE,
-        actionType: true,
+        actionType: {
+            value: true,
+        },
         category: true,
-        actions: true,
+        actions: {
+            value: true,
+        },
     }
 };
