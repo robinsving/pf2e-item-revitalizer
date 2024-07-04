@@ -224,12 +224,12 @@ export default class RevitalizerCalculator {
     }
 
     // Function to compare two items and find their differences
-    #compareItems(clones, properties, humanReadableName) {
+    #compareItems(clones, specialProperties, humanReadableName) {
         debug(`Parsing item ${humanReadableName}`);
 
         const differences = new Set(this.#getDifferentiatingProperties(clones.origin, clones.actor, humanReadableName));
 
-        properties.forEach(specialProperty => {
+        specialProperties.forEach(specialProperty => {
             if (getNestedProperty(clones.origin, specialProperty.path) != getNestedProperty(clones.actor, specialProperty.path))
                 differences.add(specialProperty.name);
         });
@@ -251,7 +251,7 @@ export default class RevitalizerCalculator {
         // Start a simple timer
         const start = Date.now();
 
-        const ignoreList = getSettings(settings.itemIgnoreList.id).split(",");
+        const ignoredItemsFromSettings = getSettings(settings.itemIgnoreList.id).split(",");
 
         // Iterate over the actors
         for (const actor of actors) {
@@ -259,10 +259,10 @@ export default class RevitalizerCalculator {
 
             // Iterate over the equipment
             for (const actorItem of actor.items.filter((item) => item.hasOwnProperty("type") && ALL_ITEM_TYPES.includes(item.type) && item.sourceId && item.sourceId !== null)) {
-                var humanReadableName = actorItem.slug || actorItem.name;
+                const humanReadableName = actorItem.slug || actorItem.name;
 
                 // Sanity check: ignore items in ignore list
-                if (ignoreList.includes(actorItem.uuid)) {
+                if (ignoredItemsFromSettings.includes(actorItem.uuid)) {
                     debug(`Ignoring item ${humanReadableName} due to settings ignore list`)
                     continue;
                 }
@@ -279,8 +279,14 @@ export default class RevitalizerCalculator {
 
                 // Sanity check: If the original UUID didn't exists, it was either a creation from the player
                 //   or the UUID has been changed by the PF2e creators.
+                if (originItem === null) {
+                    debug(`Ignoring item ${humanReadableName} due to no origin item`)
+                    continue;
+                }
+
                 // Sanity check: If the Item should be ignored, ignore it.
-                if (originItem === null || this.IGNORABLE_ITEM_UUIDS.includes(originItem.sourceId)) {
+                if (this.IGNORABLE_ITEM_UUIDS.includes(originItem.sourceId)) {
+                    debug(`Ignoring item ${humanReadableName} due to internal ignore list (Wands, Scrolls, etc.)`)
                     continue;
                 }
 
