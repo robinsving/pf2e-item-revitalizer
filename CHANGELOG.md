@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.27.0
+New Rule Elements
+  Special Statistics
+  Effect Spinoff
+  Creature Size
+Minor adjustments to Rule Elements
+  Adjust Modifier
+
 ## 1.26.0
 Change in Calculation Item base
   Now PIR uses the build-in toObject() of the Actor/Origin Item
