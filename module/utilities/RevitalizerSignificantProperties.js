@@ -113,8 +113,20 @@ const senseRE = {
     acuity: true,
 };
 
+const specialStatisticsRE = {
+    extends: true,
+    itemCasting: true
+};
+
+const effectSpinoffRE = {
+    activation: true
+};
+
+
 const adjustModifierRE = {
     relabel: true,
+    maxApplications: true,
+    suppress: true
 };
 
 const criticalSpecializationRE = {
@@ -129,6 +141,12 @@ const substituteRollRE = {
 
 const tokenImageRE = {
     scale: true,
+};
+
+const creatureSizeRE = {
+    minimumSize: true,
+    maximumSize: true,
+    resizeEquipment: true
 };
 
 const actorTraitRE = {
@@ -216,6 +234,12 @@ const PROPERTY_ALLOW_LIST_BASE = {
         // Sense
         ...senseRE,
 
+        // Special Statistics
+        ...specialStatisticsRE,
+
+        // Effect-spinoff
+        ...effectSpinoffRE,
+
         // Weapon Potency and Striking
         // no new properties
         
@@ -277,7 +301,7 @@ const PROPERTY_ALLOW_LIST_BASE = {
         ...tokenImageRE,
 
         // Creature Size
-        // no new properties
+        ...creatureSizeRE,
 
         // Adding Actor Traits
         ...actorTraitRE,
