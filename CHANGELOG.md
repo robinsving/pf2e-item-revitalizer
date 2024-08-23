@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.27.1
+Bump build dependencies
+
 ## 1.27.0
 New Rule Elements
   Special Statistics
