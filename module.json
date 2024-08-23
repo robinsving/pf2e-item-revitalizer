@@ -15,10 +15,6 @@
         "styles/buttons.css",
         "styles/table.css"
     ],
-    "templates": [
-        "templates/selection-dialog.hbs",
-        "templates/results-dialog.hbs"
-    ],
     "languages": [
         {
             "lang": "en",
