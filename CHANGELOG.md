@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.28.0
+New config
+  Show Revitalizer for NPCs
+
 ## 1.27.1
 Bump build dependencies
 
