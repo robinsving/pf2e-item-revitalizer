@@ -1,6 +1,6 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../../module.json";
 import { revitalizerCheckHook } from "../RevitalizerRunner";
-import { info } from "../utilities/RevitalizerUtilities";
+import { getSettings, info, settings } from "../utilities/RevitalizerUtilities";
 import { getNestedProperty } from "../utilities/RevitalizerUtilities.js";
 
 export default class RevitalizerSheet {
@@ -46,6 +46,11 @@ export default class RevitalizerSheet {
                 .map((sheetClass) => sheetClass.cls)
                 .map((sheet) => sheet.name)
                 .forEach((sheet) => { this.#registerHook(sheet) });
+
+            // Skip NPCs for GMs pending on settings
+            if (!getSettings(settings.showSheetButtonNPC.id)) {
+                return;
+            }
 
             /**
              * Register hooks for all NPC sheets

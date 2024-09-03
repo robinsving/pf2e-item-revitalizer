@@ -29,6 +29,17 @@ export default class RevitalizerSettings {
             return;
         }
 
+        // Show/hide the top bar button for NPC Sheets
+        game.settings.register(SCRIPT_ID, settings.showSheetButtonNPC.id, {
+            name: settings.showSheetButtonNPC.name,
+            hint: settings.showSheetButtonNPC.hint,
+            scope: 'world',
+            config: true,
+            default: true,
+            requiresReload: true,
+            type: Boolean,
+        });
+        
         // Print out debug to console.
         game.settings.register(SCRIPT_ID, settings.debug.id, {
             name: settings.debug.name,
