@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.28.1
+Bugfix
+  Issue when Compendium Item had defined properties,
+  but the Actor Item property was set to "undefined"
+  by the system (e.g. Deity Ketephys' Traits)
+
 ## 1.28.0
 New config
   Show Revitalizer for NPCs

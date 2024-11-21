@@ -1,6 +1,6 @@
 {
     "name": "pf2e-item-revitalizer",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "description": "",
     "license": "MIT",
     "private": true,
@@ -11,8 +11,8 @@
     },
     "devDependencies": {
         "rollup-plugin-copy": "^3.5.0",
-        "vite": "^5.4.2",
-        "vite-plugin-singlefile": "^2.0.2",
-        "vitest": "^2.0.5"
+        "vite": "^5.4.11",
+        "vite-plugin-singlefile": "^2.0.3",
+        "vitest": "^2.1.5"
     }
 }

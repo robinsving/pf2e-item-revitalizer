@@ -121,7 +121,7 @@ export default class RevitalizerCalculator {
                 else
                     debug(`Ignored due to no value set (null, 0)`)
                 continue;
-            } else if (originItem[key] === undefined) {
+            } else if (originItem[key] === undefined || actorItem[key] === undefined) {
                 continue;
             }
             
