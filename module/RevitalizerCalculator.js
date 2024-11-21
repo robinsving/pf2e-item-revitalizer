@@ -1,5 +1,5 @@
-import { title as SCRIPT_NAME } from "../module.json";
-import { popup, info, debug, settings, getNestedProperty, getSettings } from "./utilities/RevitalizerUtilities.js";
+import { title as SCRIPT_NAME, url } from "../module.json";
+import { popup, warn, info, debug, settings, getNestedProperty, getSettings } from "./utilities/RevitalizerUtilities.js";
 import { hasOnlyIgnorableTraits, isDeepEmpty, canRefreshFromCompendium } from "./utilities/RevitalizerCalculationUtilities.js";
 import { ALL_ITEM_TYPES, PROPERTY_ALLOW_LIST, PROPERTY_ALLOW_LIST_BASE, SPECIAL_ITEM_PROPERTIES } from "./utilities/RevitalizerSignificantProperties.js";
 
@@ -297,7 +297,17 @@ export default class RevitalizerCalculator {
                 const ignorePropertySettings = getSettings(settings.propertyIgnoreList.id).split(",");
                 const specialPropertiesFiltered = SPECIAL_ITEM_PROPERTIES.filter((value) => !ignorePropertySettings.includes(value.name));
 
-                const getCompareData = this.#compareItems(clones, specialPropertiesFiltered, humanReadableName);
+
+                let getCompareData;
+                try {
+                    getCompareData = this.#compareItems(clones, specialPropertiesFiltered, humanReadableName);
+                } catch (exception) {
+                    warn(
+                        `Trouble parsing Item "${humanReadableName}". Continuing. See console log for more info`,
+                        `Trouble parsing "${humanReadableName}"\nError was ${exception}\n\nPlease file an issue at ${url}, include this message, and attach the character sheet`
+                    );
+                    continue;
+                }
 
                 if (getCompareData.size > 0) {
                     changedData.push({

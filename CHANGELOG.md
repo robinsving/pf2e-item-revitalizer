@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.29.0
+Feature
+  Errors during Item parsing now leads to skipping the item
+  so that all the other items still get parsed
+  Adding warning messages when this occurs
+
 ## 1.28.1
 Bugfix
   Issue when Compendium Item had defined properties,

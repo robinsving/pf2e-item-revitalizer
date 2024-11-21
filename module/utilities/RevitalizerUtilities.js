@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID, title } from "../../module.json";
-export { debug, info, popup, settings, getSettings, selectionTemplate, resultsTemplate, getNestedProperty };
+export { debug, info, popup, warn, settings, getSettings, selectionTemplate, resultsTemplate, getNestedProperty };
 
 const selectionTemplate = `modules/${SCRIPT_ID}/templates/selection-dialog.hbs`;
 const resultsTemplate = `modules/${SCRIPT_ID}/templates/results-dialog.hbs`;
@@ -30,6 +30,13 @@ function getNestedProperty(obj, path) {
 
 function popup(message) {
     ui.notifications.info(`${title}: ${message}`);
+}
+
+function warn(popup, consoleMessage) {
+    ui.notifications.warn(`${title}: ${popup}`);
+
+    if (consoleMessage)
+        console.warn(`${title}: ${consoleMessage}`);
 }
 
 function debug(message) {
