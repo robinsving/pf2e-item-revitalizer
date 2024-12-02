@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.30.0
+Feature
+  Prevents non-Characters (NPC/Vehicle/Familiar/etc.) from running Refresh or Revitalize
+  See https://github.com/foundryvtt/pf2e/issues/17573 for more info
+
 ## 1.29.0
 Feature
   Errors during Item parsing now leads to skipping the item

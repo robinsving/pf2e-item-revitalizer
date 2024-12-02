@@ -53,18 +53,17 @@ export default class RevitalizerPresenter {
             unrevitalizable = "Bestiary abilities sometimes have purposeful changes from Compendium. Only change if you know what you are doing";
         }
 
-        if (!unrevitalizable && data.actorItem.actor.type == "npc")
-        unrevitalizable = "Not available for NPC Actors";
-
+        if (!unrevitalizable && data.actorItem.actor.type !== "character")
+            unrevitalizable = "Only available for Character Actors (PCs)";
 
         const csvSeparatedProperties = [...data.comparativeData].join(", ");
 
-        const isRefreshable = data.canRefreshFromCompendium;
+        const isRefreshable = data.canRefreshFromCompendium && data.actorItem.actor.type == "character";
         const isRevitalizable = unrevitalizable === undefined;
 
         return {
             "refresh": {
-                disabled: !isRefreshable ? "Not available on this item" + (getSettings(settings.revitalize.id) ? "" : ". Recreate Item, or check the module settings for potential backup Refresh option") : false,
+                disabled: !isRefreshable ? "Not available on this Item (Rule Engine or Actor Type prevents Refresh)" + (getSettings(settings.revitalize.id) ? "" : ". Recreate Item, or check the module settings for potential backup Refresh option") : false,
                 hidden: !isRefreshable && isRevitalizable,
                 icon: "fa-solid fa-sync-alt",
                 click: `Hooks.call('${refreshFromCompendiumHook}', this, '${data.actorItem.uuid}')`,
