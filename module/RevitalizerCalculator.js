@@ -137,6 +137,9 @@ export default class RevitalizerCalculator {
             const uuidNamePattern = /\{[\s\w-':()]+\}/gm;
             const uuidCompendiumFix = "@UUID[Compendium.";
             const uuidItemFix = ".Item.";
+            
+            const check = /\@Check[^\]]+\]/gm
+            const reach = /\d+ feet/gm
 
             // Fix null-issues
             const nullFix = ":0";
@@ -162,6 +165,10 @@ export default class RevitalizerCalculator {
                 .replaceAll(uuidNamePattern, "")
                 .replaceAll(uuidCompendiumFix, "@Compendium[")
                 .replaceAll(uuidItemFix, ".")
+
+                .replaceAll(check, "@Check")
+                .replaceAll(reach, "X reach")
+
                 .replaceAll(nullFix, ":null")
                 .replaceAll(nullFix2, "null")
                 .replaceAll(nullFix3, "")
@@ -183,6 +190,10 @@ export default class RevitalizerCalculator {
                 .replaceAll(uuidNamePattern, "")
                 .replaceAll(uuidCompendiumFix, "@Compendium[")
                 .replaceAll(uuidItemFix, ".")
+
+                .replaceAll(check, "@Check")
+                .replaceAll(reach, "X reach")
+
                 .replaceAll(nullFix, ":null")
                 .replaceAll(nullFix2, "null")
                 .replaceAll(nullFix3, "")
