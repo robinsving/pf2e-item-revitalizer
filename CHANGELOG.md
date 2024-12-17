@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.31.0
+Bugfix
+  NPC tokens in a scene did not Refresh properly. When Revitalizer checked for the state
+    it was checking the corresponding Actor's state, meaning that anything added to that
+    Token's sheet did not show up.
+  Will no longer match @Check in the descriptions: DC is not set in the Compendium
+
+Feature
+  Re-allow non-Characters from running Refresh provided that the Origin Source is not the Bestiary
+  Adding feedback to user, if such is the case.
+  See https://github.com/robinsving/pf2e-item-revitalizer/issues/26 for more info
+
 ## 1.30.0
 Feature
   Prevents non-Characters (NPC/Vehicle/Familiar/etc.) from running Refresh or Revitalize
