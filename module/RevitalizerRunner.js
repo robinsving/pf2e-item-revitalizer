@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
-import { popup, debug, selectionTemplate, resultsTemplate } from "./utilities/RevitalizerUtilities";
+import { popup, debug, selectionTemplate, resultsTemplate, getNestedProperty, isTokenUUID } from "./utilities/RevitalizerUtilities";
 import RevitalizerCalculator from "./RevitalizerCalculator.js";
 import RevitalizerSheet from "./hooks/RevitalizerSheet";
 import RevitalizerPresenter from "./RevitalizerPresenter";
@@ -20,7 +20,7 @@ export default class RevitalizerRunner {
         // Register Sheet link for everyone
         new RevitalizerSheet();
 
-        Hooks.on(revitalizerCheckHook, (actorIds) => this.#revitalizerCheckForActorIds(actorIds));
+        Hooks.on(revitalizerCheckHook, (actorIds) => this.#revitalizerCheckForActorUuids(actorIds));
 
         // The rest is for GM's eyes only
         if (!game.user.isGM)
@@ -65,6 +65,31 @@ export default class RevitalizerRunner {
         });
     }
     
+    /**
+     * Runs Revitalizer Check for a list of Actor UUIDs
+     * @param String[] actorIds
+     * @returns 
+     */
+    async #revitalizerCheckForActorUuids(uuids) {
+        if (!uuids)
+            return;
+
+        const actors = [];
+        for(const uuid of uuids) {
+            if (isTokenUUID(uuid)) {
+                actors.push((await fromUuid(uuid)).actor);
+            } else {
+                actors.push(this.#getActorsFromIds([uuid])[0]);
+            }
+        };
+        
+        if (actors.filter(actor => actor).length > 0)
+            return this.#runRevitalizerCheckForActors(actors);
+        
+        debug("No valid actors found");
+        return;
+    }
+
     /**
      * Runs Revitalizer Check for a list of Actor IDs
      * @param String[] actorIds

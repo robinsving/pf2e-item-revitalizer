@@ -69,7 +69,11 @@ export default class RevitalizerSheet {
             if (!game.user.isGM && !data.actor.ownership.hasOwnProperty(game.userId))
                 return;
 
-            const actorId = getNestedProperty(data, "actor._id");
+            let actorId;
+            if (app.object.type === "character")
+                actorId = getNestedProperty(data, "actor._id")
+            else 
+                actorId = app.object._sheet.token.uuid;
 
             if (!actorId)
                 return;
@@ -84,7 +88,7 @@ export default class RevitalizerSheet {
             );
 
             // add onclick event to start a Revitalizer run for Actor Id
-            button.click(() => Hooks.call(revitalizerCheckHook, [data.actor._id]));
+            button.click(() => Hooks.call(revitalizerCheckHook, [actorId]));
 
             // remove any existing versions of button
             html.closest('.app').find(`.${className}`).remove();
