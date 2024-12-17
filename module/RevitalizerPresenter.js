@@ -40,30 +40,47 @@ export default class RevitalizerPresenter {
 
         return sortedItems;
     }
+    
+    #sourceIsBestiary(actorSourceId) {
+        return actorSourceId.includes("bestiary-ability-glossary-srd") || actorSourceId.includes("bestiary-family-ability-glossary");
+    }
 
-    #getButtons(data) {
-        let unrevitalizable = getSettings(settings.revitalize.id) ? undefined : "Disabled in settings";
+    #hasUnrevitalizableReason(data, revitalizableProperties) {
+        if (!getSettings(settings.revitalize.id))
+            return "Disabled in settings";
 
-        const revitalizableProperties = [...data.comparativeData].filter(item => !IMPORTANT_ITEM_PROPERTIES.includes(item));
-        if (!unrevitalizable && revitalizableProperties.length === 0)
-            unrevitalizable = "Revitalize will not recreate remaining properties";
+        if (revitalizableProperties.length === 0)
+            return "Revitalize will not recreate remaining properties";
 
-        const actorSourceId = data.actorItem.sourceId;
-        if (!unrevitalizable && (actorSourceId.includes("bestiary-ability-glossary-srd") || actorSourceId.includes("bestiary-family-ability-glossary"))) {
-            unrevitalizable = "Bestiary abilities sometimes have purposeful changes from Compendium. Only change if you know what you are doing";
+        if (this.#sourceIsBestiary(data.actorItem.sourceId))
+            return "Bestiary abilities sometimes have purposeful changes from Compendium. Only change if you know what you are doing";
+
+        return "";
+    }
+
+    #isRefreshable(data) {
+        let isRefreshable = data.canRefreshFromCompendium;
+
+        if (isRefreshable && this.#sourceIsBestiary(data.actorItem.sourceId)) {
+            isRefreshable = false;
         }
 
-        if (!unrevitalizable && data.actorItem.actor.type !== "character")
-            unrevitalizable = "Only available for Character Actors (PCs)";
+        return isRefreshable;
+    }
 
+    #getButtons(data) {
         const csvSeparatedProperties = [...data.comparativeData].join(", ");
+        const revitalizableProperties = [...data.comparativeData].filter(item => !IMPORTANT_ITEM_PROPERTIES.includes(item));
 
-        const isRefreshable = data.canRefreshFromCompendium && data.actorItem.actor.type == "character";
-        const isRevitalizable = unrevitalizable === undefined;
+        const unrevitalizableReason = this.#hasUnrevitalizableReason(data, revitalizableProperties);
+        
+        const isRevitalizable = unrevitalizableReason === "";
+
+        const isRefreshable = this.#isRefreshable(data)
 
         return {
             "refresh": {
-                disabled: !isRefreshable ? "Not available on this Item (Rule Engine or Actor Type prevents Refresh)" + (getSettings(settings.revitalize.id) ? "" : ". Recreate Item, or check the module settings for potential backup Refresh option") : false,
+                disabled: isRefreshable ? false : "Not available on this Item (Rule Engine or Bestiary Item Source prevents Refresh)" + (getSettings(settings.revitalize.id) ? "" : ". Recreate Item, or check the module settings for potential backup Refresh option"),
                 hidden: !isRefreshable && isRevitalizable,
                 icon: "fa-solid fa-sync-alt",
                 click: `Hooks.call('${refreshFromCompendiumHook}', this, '${data.actorItem.uuid}')`,
@@ -94,6 +111,7 @@ export default class RevitalizerPresenter {
             switch(data.actorItem.type) {
                 case "spell":       return getNestedProperty(data, "actorItem.system.traits.value").includes("focus") ? "spell\u00A0(focus)" : "spell\u00A0(rank\u00A0" +  getNestedProperty(data, "actorItem.system.level.value") + ")";
                 case "feat":        return "feat\u00A0(" + getNestedProperty(data, "actorItem.system.category").replace("feature", "") + ")";
+                case "action":      return "action\u00A0" + (this.#sourceIsBestiary(data.actorItem.sourceId) ? "(bestiary)" : "");
                 default:            return data.actorItem.type;
             }
         } catch (_ignore) {
