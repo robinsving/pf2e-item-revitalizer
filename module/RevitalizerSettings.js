@@ -76,7 +76,7 @@ export default class RevitalizerSettings {
             hint: settings.propertyIgnoreList.hint,
             scope: 'client',
             config: true,
-            default: "",
+            default: "publication",
             type: String
         });
 
