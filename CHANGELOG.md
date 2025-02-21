@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.32.0
+Feature
+  Popup upon Revitalization completion, to remind users to purge loaded data
+
 ## 1.31.1
 Bugfix
   NPC Sheets in Actor's tab, and Party Sheet gave an error in the logs
