@@ -115,6 +115,14 @@ If you discover any issues with this module, please create an issue in the Githu
   - Filter the log by the Item slug (name) and you will get both the Actor Item's property and the Origin Items property
 - Compare these and to see any differences
 
+## FAQ
+
+### Q. Why can I not use Revitalize on my NPC's sheet?
+A. There are limitations to the **PF2e system**, where it comes to Refreshing NPC Items (e.g. Feats).
+See [PF2e issue#17573](https://github.com/foundryvtt/pf2e/issues/17573) for more information.
+
+There is still a way to do this, that has been left in the module, by [starting from the Actors' tab](#run-from-the-actor-tab)
+
 ## License
 This module is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information
 

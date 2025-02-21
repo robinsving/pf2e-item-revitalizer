@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.31.1
+Bugfix
+  NPC Sheets in Actor's tab, and Party Sheet gave an error in the logs
+    Party Sheet is now Revitalizable (as it has a Stash)
+    NPC Sheet in Actor's tab is now properly not Revitalizable
+
 ## 1.31.0
 Bugfix
   NPC tokens in a scene did not Refresh properly. When Revitalizer checked for the state

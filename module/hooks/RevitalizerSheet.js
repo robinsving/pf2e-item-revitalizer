@@ -53,7 +53,7 @@ export default class RevitalizerSheet {
             }
 
             /**
-             * Register hooks for all NPC sheets
+             * Register hooks for all NPC sheets (e.g. for tokens in the Scene)
              */
             Object.values(CONFIG.Actor.sheetClasses.npc)
                 .map((sheetClass) => sheetClass.cls)
@@ -70,10 +70,17 @@ export default class RevitalizerSheet {
                 return;
 
             let actorId;
-            if (app.object.type === "character")
-                actorId = getNestedProperty(data, "actor._id")
-            else 
-                actorId = app.object._sheet.token.uuid;
+            switch (getNestedProperty(app, "object.type")) {
+                case "party":
+                    // Falls trough
+                case "character":
+                    actorId = getNestedProperty(data, "actor._id")
+                    break;
+                default:
+                    // Does it have a token? If not, then don't display this
+                    actorId = getNestedProperty(app, "object._sheet.token.uuid");
+                    break;
+            }
 
             if (!actorId)
                 return;
