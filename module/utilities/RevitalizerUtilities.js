@@ -28,9 +28,10 @@ function getNestedProperty(obj, path) {
     }
 }
 
-function popup(message) {
-    ui.notifications.info(`${title}: ${message}`);
+function popup(message, options = {}) {
+    ui.notifications.info(`${title}: ${message}`, options);
 }
+
 
 function warn(popup, consoleMessage) {
     ui.notifications.warn(`${title}: ${popup}`);

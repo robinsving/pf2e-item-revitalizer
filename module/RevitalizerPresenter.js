@@ -167,6 +167,7 @@ export default class RevitalizerPresenter {
                 ok: {
                     icon: '<i class="fas fa-selection"></i>',
                     label: "Done",
+                    callback: () => popup("Don't forget to Reload Application to clear Companion data from memory", { permanent: true, console: false })
                 },
             },
             default: 'ok',
