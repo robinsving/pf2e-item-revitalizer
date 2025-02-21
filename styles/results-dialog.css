@@ -1,0 +1,18 @@
+
+.pir-legend {
+    font-weight: bold;
+    font-style: italic;
+}
+
+.pir-results-container {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding-bottom: 5px;
+}
+
+.pir-results-header, .pir-results-footer {
+    padding: 5px;
+}
+
+.pir-results-body {
+    padding: 5px;
+}

@@ -13,6 +13,7 @@
     ],
     "styles": [
         "styles/buttons.css",
+        "styles/results-dialog.css",
         "styles/table.css"
     ],
     "languages": [
