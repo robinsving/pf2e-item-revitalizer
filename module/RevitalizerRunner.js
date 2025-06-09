@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
-import { popup, debug, selectionTemplate, resultsTemplate, getNestedProperty, isTokenUUID } from "./utilities/RevitalizerUtilities";
+import { popup, debug, selectionTemplate, resultsTemplate, isTokenUUID } from "./utilities/RevitalizerUtilities";
 import RevitalizerCalculator from "./RevitalizerCalculator.js";
 import RevitalizerSheet from "./hooks/RevitalizerSheet";
 import RevitalizerPresenter from "./RevitalizerPresenter";
@@ -15,7 +15,7 @@ export default class RevitalizerRunner {
 
     constructor() {
         // Load HTML templates for everyone
-        loadTemplates([selectionTemplate, resultsTemplate]);
+        foundry.applications.handlebars.loadTemplates([selectionTemplate, resultsTemplate]);
 
         // Register Sheet link for everyone
         new RevitalizerSheet();
@@ -201,7 +201,7 @@ export default class RevitalizerRunner {
             pirSelectionElement.appendChild(document.createElement("br")); // Add a line break element
         });
 
-        const rendered_html = await renderTemplate(selectionTemplate, {
+        const rendered_html = await foundry.applications.handlebars.renderTemplate(selectionTemplate, {
             body: pirSelectionElement.innerHTML,
             click: `Hooks.call('${toggleAllHook}', this)`,
         });

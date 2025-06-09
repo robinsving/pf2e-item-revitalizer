@@ -142,7 +142,7 @@ export default class RevitalizerPresenter {
             for (const data of this.#sortChangedItems(changedData)) {
                 results.push({
                     buttons: this.#getButtons(data),
-                    actorLink: await TextEditor.enrichHTML(data.actor.link, enrichOption),
+                    actorLink: await foundry.applications.ux.TextEditor.implementation.enrichHTML(data.actor.link, enrichOption),
                     type: this.#getType(data),
                     comparativeDataText: [...data.comparativeData].map((prop) => {
                         if (IMPORTANT_ITEM_PROPERTIES.includes(prop)) {
@@ -152,12 +152,12 @@ export default class RevitalizerPresenter {
                             return prop;
                         }
                     }).join(", "),
-                    actorItemLink: await TextEditor.enrichHTML(data.actorItem.link, enrichOption),
-                    originItemLink: await TextEditor.enrichHTML(data.originItem.link, enrichOption),
+                    actorItemLink: await foundry.applications.ux.TextEditor.implementation.enrichHTML(data.actorItem.link, enrichOption),
+                    originItemLink: await foundry.applications.ux.TextEditor.implementation.enrichHTML(data.originItem.link, enrichOption),
                 });
 
             }
-            output += await renderTemplate(resultsTemplate, { items: results, hasImportantProperty: hasImportantProperty });
+            output += await foundry.applications.handlebars.renderTemplate(resultsTemplate, { items: results, hasImportantProperty: hasImportantProperty });
         }
 
         await new Dialog({

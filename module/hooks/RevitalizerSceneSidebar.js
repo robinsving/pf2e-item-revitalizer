@@ -10,7 +10,7 @@ export default class RevitalizerSceneSidebar extends AbstractSidebar {
             info("Registering Scene Directory button");
 
             // Get the Actors field we want to add ourselves in
-            const searchHeader = section[0].querySelector('div.header-search');
+            const searchHeader = section.querySelector('search');
 
             // Create the anchor
             const anchor = this.createAnchor("Create Revitalizer Selection for Actors in Scene", () => Hooks.call(selectionActorHook, this.#callback()));

@@ -4,13 +4,13 @@ export default class AbstractSidebar {
 
     createAnchor(title, callback) {
         // Create the anchor
-        const anchor = document.createElement("a");
-        anchor.role = "button";
-        anchor.classList.add("header-control");
+        const anchor = document.createElement("button");
+        anchor.type = "button";
+        anchor.classList.add("inline-control", "icon", "fa-solid", "fa-code-compare");
         anchor.onclick = callback;
-        anchor.title = title;
         anchor.ariaLabel = title;
-        anchor.innerHTML = "<i class=\"fa-solid fa-code-compare\"></i>"
+        anchor.setAttribute("data-tooltip", ""); 
+        anchor.ariaDescribedby = "tooltip";
     
         return anchor;
     }
