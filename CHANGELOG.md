@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.0
+Feature
+  New HTML handling for Foundry v13 and PF2e 7.1.0+
+
 ## 1.32.0
 Feature
   Popup upon Revitalization completion, to remind users to purge loaded data
