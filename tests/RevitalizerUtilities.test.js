@@ -26,10 +26,13 @@ describe('RevitalizerUtilities.hasOnlyIgnorableTraits', () => {
     })
 
     it('should work with ignorable traits', () => {
-        let result = hasOnlyIgnorableTraits(["magical", "invested", "good", "evil", "arcane","divine","occult","primal"], []);
+        let result = hasOnlyIgnorableTraits(["magical", "invested", "good", "evil", "arcane","divine","occult","primal", "skill", "general", "move"], []);
         expect(result).toBe(true);
 
-        result = hasOnlyIgnorableTraits([], ["magical", "invested", "good", "evil", "arcane","divine","occult","primal"]);
+        result = hasOnlyIgnorableTraits([], ["magical", "invested", "good", "evil", "arcane", "divine", "occult", "primal", "skill", "general", "move"]);
+        expect(result).toBe(true);
+
+        result = hasOnlyIgnorableTraits(["alchemist", "animist", "barbarian", "bard", "champion", "cleric", "druid", "fighter", "investigator", "kineticist", "magus", "monk", "oracle", "psychic", "ranger", "rogue", "sorcerer", "summoner", "swashbuckler", "thaumaturge", "witch", "wizard", "gunslinger", "inventor", "exemplar"]);
         expect(result).toBe(true);
     })
 

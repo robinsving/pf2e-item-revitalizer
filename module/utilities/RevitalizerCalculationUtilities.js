@@ -30,7 +30,14 @@ function hasOnlyIgnorableTraits(actorItemTraits, originItemTraits) {
         return false;
     }
 
-    const traitIgnoreList = ["magical", "invested", "good", "evil", "arcane", "divine", "occult", "primal"];
+    const traitIgnoreList = [
+        "magical", "invested", "good", "evil", "arcane", "divine", "occult", "primal", "skill", "general", "move",
+
+        // All the classes
+        "alchemist", "animist", "barbarian", "bard", "champion", "cleric", "druid", "fighter", "investigator",
+        "kineticist", "magus", "monk", "oracle", "psychic", "ranger", "rogue", "sorcerer", "summoner", "swashbuckler",
+        "thaumaturge", "witch", "wizard", "gunslinger", "inventor", "exemplar",
+    ];
 
     const differencesInActor = originItemTraits 
         ? actorItemTraits.filter(item => !originItemTraits.includes(item))
