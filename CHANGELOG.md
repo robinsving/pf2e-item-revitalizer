@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0
+Feature
+  Using ApplicationV2
+Bugfix
+  Improved trait handling for class names and skill/general traits
+
 ## 2.0.0
 Feature
   New HTML handling for Foundry v13 and PF2e 7.1.0+
