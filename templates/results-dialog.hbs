@@ -1,7 +1,5 @@
 <div class="pir-results-container">
-    <section class="pir-results-header">
-        <h1>Compatibility Check Results</h1>
-    </section>
+    {{#if items}}
     <section class="pir-results-body">
         <div class="pir-table">
             <div class="pir-table-header">
@@ -20,7 +18,7 @@
                 <div class="pir-table-cell pir-button-holder">
                     {{#each this.buttons}}
                         {{#unless this.hidden}} 
-                            <button class="pir-button" {{#if this.disabled}} disabled="true" {{/if}} title={{#if this.disabled}} "{{this.disabled}}" {{^}} "{{this.title}}" {{/if}} onclick="{{this.click}}">
+                            <button class="pir-button" {{#if this.disabled}} disabled="true" {{/if}} title={{#if this.disabled}} "{{this.disabled}}" {{^}} "{{this.title}}" {{/if}} data-action="{{this.action}}" value="{{this.value}}">
                                 <i class="{{this.icon}}"></i>
                             </button>
                         {{/unless}}
@@ -33,12 +31,7 @@
         {{/each}}
         </div>
     </section>
-    <section class="pir-results-footer">
-        <div class="pir-legend">
-            <span>
-                {{#if hasImportantProperty}}
-                *property which may prevent certain refresh options
-                {{/if}}
-            </span>
-        </div>
-    </section>
+    {{else}}
+    <h2>✅ No changed items found</h2><p>Searched through the following actors:<br>{{this.actorIds}}</p>
+    {{/if}}
+</div>

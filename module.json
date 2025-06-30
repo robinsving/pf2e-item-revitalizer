@@ -13,6 +13,7 @@
     ],
     "styles": [
         "styles/buttons.css",
+        "styles/section-dialog.css",
         "styles/results-dialog.css",
         "styles/table.css"
     ],

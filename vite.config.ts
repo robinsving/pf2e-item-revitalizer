@@ -11,7 +11,7 @@ export default defineConfig({
         sourcemap: true,
         rollupOptions: {
             input: {
-                control: "./module/control.js"
+                control: "./module/revitalizer.js"
             },
             output: {
                 entryFileNames: 'module/entry-[name].js',

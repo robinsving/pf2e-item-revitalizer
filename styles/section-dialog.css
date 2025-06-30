@@ -1,0 +1,19 @@
+
+.pir-legend {
+    font-weight: bold;
+    font-style: italic;
+}
+
+.pir-section-container {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding-bottom: 5px;
+    overflow: auto;
+}
+
+.pir-section-header, .pir-section-footer {
+    padding: 5px;
+}
+
+.pir-section-body {
+    padding: 5px;
+}

@@ -1,15 +1,20 @@
-<section id="pir-container">
-    <header id="pir-container-header">
+<section class="pir-section-container">
+    <header class="pir-section-container-header">
         <h1>
             Select which Actors you want to run the check on
         </h1>
     </header>
     <section id="pir-container-body">
         <label>
-            <input style="accent-color: #54166e;" type="checkbox" onclick="{{click}}" checked/>
+            <input type="checkbox" data-action="toggleAll" {{#if toggleAll}}checked{{/if}}>
             Toggle All
         </label>
         <hr>
-        {{{body}}}
+        {{#each actors}}
+            <label>
+                <input type="checkbox" name="pir-actors" value="{{this.actor.id}}" {{#if this.isChecked}}checked{{/if}}>
+                {{this.actor.name}}
+            </label><br>
+        {{/each}}
     </section>
 </section>
