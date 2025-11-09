@@ -1,0 +1,26 @@
+{
+    "PIR": {
+        "settings": {
+            "forGmOnly": {
+                "name": "对全体用户显示模组",
+                "hint": "关闭以使模组仅对GM可见"
+            },
+            "debug": {
+                "hint": " ",
+                "name": "向控制台日志发送调试信息"
+            }
+        },
+        "script": {
+            "actor": "角色",
+            "item_type": "类型",
+            "item_name": "名称",
+            "origin_item": "原物品",
+            "actor_item": "角色物品",
+            "close_button": "关闭",
+            "results_title": "结果",
+            "name": "PF2E Item Revitalizer",
+            "title": "重制检查",
+            "changed_property": "已变更属性"
+        }
+    }
+}
