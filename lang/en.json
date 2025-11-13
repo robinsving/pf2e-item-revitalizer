@@ -45,22 +45,28 @@
             "revitalize_button": "Revitalize"
         },
 
-        "presented": {
-            "parsing_complete": "Parsing complete. Rendering results",
-            "reload_application": "Don't forget to Reload Application to clear Companion data from memory",
-            "disabled_in_settings": "Disabled in settings",
-            "revitalize_will_not_recreate": "Revitalize will not recreate remaining properties",
-            "bestiary_warning": "Bestiary abilities sometimes have purposeful changes from Compendium. Only change if you know what you are doing",
-            "refresh_not_available": "Not available on this Item (Rule Element or Bestiary Item Source prevents Refresh)",
-            "refresh_not_available_revitalize_hint": ". Recreate Item, or check the module settings for potential backup Refresh option",
-            "refresh_title": "Refresh entire object from Compendium using PF2e built-in method",
-            "revitalize_title_prefix": "Not possible to Refresh whole item. Click to update the following properties:",
-            "hide_title": "Hide this Item in the future",
-            "remove_title": "Remove Item from list",
-            "error_find_uuid": "Something went wrong with finding the UUID or the sourceId",
-            "error_revitalize_property": "Something went wrong with revitalizing the property {property}",
-            "item_success_revitalized": "Item {name} successfully Revitalized",
-            "will_not_rename": "Will not rename {name} as it contains vital information"
+        "presenter": {
+            "buttons": {
+                "refresh": "Refresh entire object from Compendium using PF2e built-in method",
+                "refresh_not_available": "Not available on this Item (Rule Element or Bestiary Item Source prevents Refresh)",
+                "refresh_not_available_hint": ". Recreate Item, or check the module settings for potential backup Refresh option",
+                "revitalize": "Not possible to Refresh whole item. Click to update the following properties:",
+                "hide": "Hide this Item in the future",
+                "remove": "Remove Item from list"
+            },
+            "popup": {
+                "error_find_uuid": "Something went wrong with finding the UUID or the sourceId",
+                "error_revitalize_property": "Something went wrong with revitalizing the property {property}",
+                "item_success_revitalized": "Item {name} successfully Revitalized",
+                "parsing_complete": "Parsing complete. Rendering results",
+                "reload": "Don't forget to Reload Application to clear Companion data from memory",
+                "will_not_rename": "Will not rename {name} as it contains vital information"
+            },
+            "unrevitalizable": {
+                "disabled_in_settings": "Disabled in settings",
+                "revitalize_will_not_recreate": "Revitalize will not recreate remaining properties",
+                "bestiary_warning": "Bestiary abilities sometimes have purposeful changes from Compendium. Only change if you know what you are doing"
+            }          
         },
 
         "dialog": {
