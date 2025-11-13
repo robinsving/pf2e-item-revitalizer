@@ -87,10 +87,12 @@ export default class RevitalizerSheet {
             
             // add a "button" to the title bar of the sheet
             const className = `${SCRIPT_ID}-initiate-single-actor`;
+            const tooltip = game.i18n.format("PIR.sheet.check_actor_items_tooltip", { name: game.i18n.localize("PIR.revitalizer.name") });
+            const buttonLabel = game.i18n.localize("PIR.sheet.revitalize_button");
             const button = $(`
-                <a class="${className}" title="Check for new versions of this Actor's Items using ${SCRIPT_NAME}">
+                <a class="${className}" title="${tooltip}">
                     <i class="fas fa-solid fa-code-compare"></i>
-                    Revitalize
+                    ${buttonLabel}
                 </a>`
             );
 

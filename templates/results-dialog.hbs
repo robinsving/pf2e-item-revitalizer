@@ -3,12 +3,12 @@
     <section class="pir-results-body">
         <div class="pir-table">
             <div class="pir-table-header">
-                <div class="pir-table-cell">Actor</div>
-                <div class="pir-table-cell">Type</div>
-                <div class="pir-table-cell">Actions</div>
-                <div class="pir-table-cell">Changed Property</div>
-                <div class="pir-table-cell">Actor Item Link</div>
-                <div class="pir-table-cell">Origin Item Link</div>
+                <div class="pir-table-cell">{{localize "PIR.dialog.results.table.actor"}}</div>
+                <div class="pir-table-cell">{{localize "PIR.dialog.results.table.item_type"}}</div>
+                <div class="pir-table-cell">{{localize "PIR.dialog.results.table.actions"}}</div>
+                <div class="pir-table-cell">{{localize "PIR.dialog.results.table.changed_property"}}</div>
+                <div class="pir-table-cell">{{localize "PIR.dialog.results.table.actor_item"}}</div>
+                <div class="pir-table-cell">{{localize "PIR.dialog.results.table.origin_item"}}</div>
             </div>
 
         {{#each items}}
@@ -32,6 +32,7 @@
         </div>
     </section>
     {{else}}
-    <h2>✅ No changed items found</h2><p>Searched through the following actors:<br>{{this.actorIds}}</p>
+    <h2>{{localize "PIR.dialog.results.no_changed_items"}}</h2>
+    <p>{{localize "PIR.dialog.results.searched_actors"}}<br>{{this.actorIds}}</p>
     {{/if}}
 </div>
