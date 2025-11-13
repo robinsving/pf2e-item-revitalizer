@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.0
+Feature
+  Allow localization
+
 ## 3.0.0
 Feature
   Using ApplicationV2
