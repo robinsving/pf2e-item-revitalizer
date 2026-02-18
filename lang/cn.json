@@ -8,6 +8,30 @@
             "debug": {
                 "hint": " ",
                 "name": "向控制台日志发送调试信息"
+            },
+            "itemIgnoreList": {
+                "name": "更新时忽略的角色资源",
+                "hint": "用户的自定义忽略资源项目列表（以半角逗号分隔）"
+            },
+            "propertyIgnoreList": {
+                "name": "更新时忽略的资源属性",
+                "hint": "以文本形式列出忽略项，并用半角逗号分隔。在查找资源项目时，这些属性将被忽略。例如：出版物，图标链接（输入英文）"
+            },
+            "rulesElementArrayLengthOnly": {
+                "name": "规则元素检索简化",
+                "hint": "通过数组长度进行规则元素比较。这能够减少误报情况，但也会导致遗漏更多需要变更的资源项目"
+            },
+            "showSheetButtonNPC": {
+                "name": "在NPC卡添加更新图标",
+                "hint": "在NPC卡的标题栏添加一个可点击的更新按钮。请注意，刷新NPC资源项目的操作并不被推荐"
+            },
+            "revitalize": {
+                "name": "允许使用备份方案进行刷新",
+                "hint": "只有在内置的刷新功能不可用的情况下，才可能执行这一操作。它只会更新某些特定属性，且这些属性的更新是安全的"
+            },
+            "completedMigration": {
+                "name": "上次迁移的追踪记录",
+                "hint": " "
             }
         },
         "script": {
@@ -21,6 +45,61 @@
             "name": "PF2E Item Revitalizer",
             "title": "重制检查",
             "changed_property": "已变更属性"
+        },
+        "dialog": {
+            "results": {
+                "table": {
+                    "actor": "角色",
+                    "item_type": "类型",
+                    "actions": "操作",
+                    "actor_item": "角色资源链接",
+                    "origin_item": "原始资源链接",
+                    "changed_property": "变更属性"
+                },
+                "footer": {
+                    "important_property_legend": "*该属性可能会限制某些刷新操作的使用"
+                },
+                "header": {
+                    "title": "兼容性检测结果"
+                },
+                "no_changed_items": "✅ 未发现需要变更的资源项目",
+                "searched_actors": "搜索了下列角色："
+            },
+            "selection": {
+                "select_actors_title": "选择你想要运行资源检测的角色",
+                "toggle_all": "全选"
+            }
+        },
+        "presenter": {
+            "popup": {
+                "item_success_revitalized": "{name}资源项目已成功更新",
+                "error_find_uuid": "在查找UUID或源ID时出现了问题",
+                "error_revitalize_property": "在更新{property}属性时出现了问题",
+                "parsing_complete": "解析完毕。显示结果中",
+                "reload": "不要忘记重载应用以清除内存中的配套数据",
+                "will_not_rename": "将不会重命名{name}，因为其中包含重要信息"
+            },
+            "buttons": {
+                "refresh": "使用PF2e内置方式对照合集包资源刷新整个资源项目",
+                "refresh_not_available": "该资源项目不可刷新（由于规则元素或怪物图鉴资源的限制）",
+                "refresh_not_available_hint": "重新创建资源项目，或检查模组设置以查找是否存在可能的备份刷新项",
+                "revitalize": "无法刷新整个资源项目。请点击以更新下列属性：",
+                "hide": "未来检测时忽略该资源项目",
+                "remove": "从列表移除该资源项目"
+            },
+            "unrevitalizable": {
+                "disabled_in_settings": "已在设置中禁用更新",
+                "revitalize_will_not_recreate": "更新操作不会重新创建剩余的属性",
+                "bestiary_warning": "怪物数据中的能力有时与合集包中的资源存在差异。只有在你清楚自己在做什么的情况下才能进行更新"
+            }
+        },
+        "sheet": {
+            "revitalize_button": "更新",
+            "check_actor_items_tooltip": "检测该角色所使用资源项目{name}的最新版本"
+        },
+        "revitalizer": {
+            "name": "PF2E 资源更新者",
+            "selection_already_ongoing": "所选项目已开始进行更新"
         }
     }
 }
