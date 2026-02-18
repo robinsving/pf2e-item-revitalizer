@@ -1,13 +1,11 @@
 <section class="pir-section-container">
     <header class="pir-section-container-header">
-        <h1>
-            Select which Actors you want to run the check on
-        </h1>
+    <h1>{{localize "PIR.dialog.selection.select_actors_title"}}</h1>
     </header>
     <section id="pir-container-body">
         <label>
             <input type="checkbox" data-action="toggleAll" {{#if toggleAll}}checked{{/if}}>
-            Toggle All
+            {{localize "PIR.dialog.selection.toggle_all"}}
         </label>
         <hr>
         {{#each actors}}

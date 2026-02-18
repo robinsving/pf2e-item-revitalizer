@@ -5,6 +5,7 @@ import { defineConfig } from "vite";
 export default defineConfig({
     esbuild: {
         minifyIdentifiers: false, // Turning this on will cause mangling with Foundry
+        charset: 'utf8',
     },
     build: {
         outDir: "./dist",
@@ -34,6 +35,7 @@ export default defineConfig({
         // Vitest configuration options
         include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)'],
         exclude: ['**/node_modules/**', '**/dist/**'],
+        silent: false, // Allow console logs to be printed
         globals: true,
         coverage: {
           provider: 'v8',

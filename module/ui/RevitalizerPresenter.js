@@ -91,13 +91,13 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
 
     #hasUnrevitalizableReason(data, revitalizableProperties) {
         if (!getSettings(settings.revitalize.id))
-            return "Disabled in settings";
+            return game.i18n.localize("PIR.presenter.unrevitalizable.disabled_in_settings");
 
         if (revitalizableProperties.length === 0)
-            return "Revitalize will not recreate remaining properties";
+            return game.i18n.localize("PIR.presenter.unrevitalizable.revitalize_will_not_recreate");
 
         if (this.#sourceIsBestiary(data.actorItem.sourceId))
-            return "Bestiary abilities sometimes have purposeful changes from Compendium. Only change if you know what you are doing";
+            return game.i18n.localize("PIR.presenter.unrevitalizable.bestiary_warning");
 
         return "";
     }
@@ -124,12 +124,12 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
 
         return {
             "refresh": {
-                disabled: isRefreshable ? false : "Not available on this Item (Rule Engine or Bestiary Item Source prevents Refresh)" + (getSettings(settings.revitalize.id) ? "" : ". Recreate Item, or check the module settings for potential backup Refresh option"),
+                disabled: isRefreshable ? false : (game.i18n.localize("PIR.presenter.buttons.refresh_not_available") + (getSettings(settings.revitalize.id) ? "" : game.i18n.localize("PIR.presenter.buttons.refresh_not_available_hint"))),
                 hidden: !isRefreshable && isRevitalizable,
                 icon: "fa-solid fa-sync-alt",
                 action: "refresh",
                 value: data.actorItem.uuid,
-                title: `Refresh entire object from Compendium using PF2e built-in method`
+                title: game.i18n.localize("PIR.presenter.buttons.refresh")
             },
             "revitalize": {
                 disabled: isRevitalizable ? false : true,
@@ -137,19 +137,19 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
                 icon: "fa-light fa-code-compare",
                 action: "revitalize",
                 value: [data.actorItem.uuid, csvSeparatedProperties].join("|"),
-                title: `Not possible to Refresh whole item. Click to update the following properties: ${revitalizableProperties.join(", ")}`
+                title: `${game.i18n.localize("PIR.presenter.buttons.revitalize")} ${revitalizableProperties.join(", ")}`
             },
             "hide": {
                 icon: "fa-regular fa-eye-slash",
                 action: "hide",
                 value: data.actorItem.uuid,
-                title: "Hide this Item in the future"
+                title: game.i18n.localize("PIR.presenter.buttons.hide")
             },
             "remove": {
                 icon: "fa-regular fa-check",
                 action: "remove",
                 value: '',
-                title: "Remove Item from list"
+                title: game.i18n.localize("PIR.presenter.buttons.remove")
             },
         }
     }
@@ -168,11 +168,11 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
     }
 
     async present(changedData, actors) {
-        popup(`Parsing complete. Rendering results`);
+        popup(game.i18n.localize("PIR.presenter.popup.parsing_complete"));
 
         // Check if any changed items are found
         if (changedData.length == 0) {
-            this._output = { actorIds: actors.map(actor => actor.name).join(', ') || "none" };
+            this._output = { actorIds: actors.map(actor => actor.name).join(', ') };
         } else {
             const enrichOption = { async: true };
 
@@ -209,7 +209,7 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
 
     close() {
         super.close();
-        popup("Don't forget to Reload Application to clear Companion data from memory", { permanent: true, console: false });
+        popup(game.i18n.localize("PIR.presenter.popup.reload"), { permanent: true, console: false });
     }
 
     // Actions handlers
@@ -227,7 +227,7 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
             var sourceItem = await fromUuid(actorItem.sourceId);
         } catch (error) {
             console.error(error);
-            popup(`Something went wrong with finding the UUID or the sourceId`);
+            popup(game.i18n.localize("PIR.presenter.popup.error_find_uuid"));
             return false;
         }
         properties.forEach(property => {
@@ -244,11 +244,11 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
                 }
             } catch (error) {
                 console.error(error);
-                popup(`Something went wrong with revitalizing the property ${property}`);
+                popup(game.i18n.format("PIR.presenter.popup.error_revitalize_property", { property }));
                 return false;
             }
         });
-        popup(`Item ${actorItem.slug} successfully Revitalized`);
+        popup(game.i18n.format("PIR.presenter.popup.item_success_revitalized", { name: actorItem.slug }));
         target.parentNode.parentNode.remove()
     };
 
@@ -258,7 +258,7 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
         let replaceName = true;
         if (actorItem.name.includes("(At Will)")) {
             replaceName = false;
-            popup(`Will not rename ${actorItem.name} as it contains vital information`);
+            popup(game.i18n.format("PIR.presenter.popup.will_not_rename", { name: actorItem.name }));
         }
 
         await actorItem.refreshFromCompendium({name: replaceName});

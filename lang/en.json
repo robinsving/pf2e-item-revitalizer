@@ -8,19 +8,90 @@
             "debug": {
                 "name": "Print debug to console log",
                 "hint": ""
+            },
+            "rulesElementArrayLengthOnly": {
+                "name": "Simplified Rule Element discovery",
+                "hint": "Performs RE comparisons using array length. This gives fewer false positives, but also misses more true positives"
+            },
+            "itemIgnoreList": {
+                "name": "Ignored Actor Items",
+                "hint": "User-expanded Item ignore list, comma-separated"
+            },
+            "propertyIgnoreList": {
+                "name": "Ignored Item properties",
+                "hint": "Insert text separated by commas (,).  Each of these Item Properties will be ignored when finding items. E.g. publication,icon-link"
+            },
+            "revitalize": {
+                "name": "Allow Refreshing using backup solution",
+                "hint": "This will only be possible if the built-in Refresh is not available. It will only update certain properties, where it is safe to do"
+            },
+            "showSheetButtonNPC": {
+                "name": "Show Revitalize Icon in the NPC Sheet",
+                "hint": "Shows a clickable button in the top bar of NPC Sheets. Note that refreshing NPC Items is not recommended"
+            },
+            "completedMigration": {
+                "name": "Tracker for last migration",
+                "hint": ""
             }
         },
-        "script": {
+
+        "revitalizer": {
             "name": "PF2E Item Revitalizer",
-            "title": "Revitalizer Check",
-            "close_button": "Close",
-            "results_title": "Results",
-            "actor": "Actor",
-            "item_type": "Type",
-            "item_name": "Name",
-            "changed_property": "Changed Property",
-            "origin_item": "Origin Item",
-            "actor_item": "Actor's Item"
+            "selection_already_ongoing": "Selection already ongoing"
+        },
+
+        "sheet": {
+            "check_actor_items_tooltip": "Check for new versions of this Actor's Items using {name}",
+            "revitalize_button": "Revitalize"
+        },
+
+        "presenter": {
+            "buttons": {
+                "refresh": "Refresh entire object from Compendium using PF2e built-in method",
+                "refresh_not_available": "Not available on this Item (Rule Element or Bestiary Item Source prevents Refresh)",
+                "refresh_not_available_hint": ". Recreate Item, or check the module settings for potential backup Refresh option",
+                "revitalize": "Not possible to Refresh whole item. Click to update the following properties:",
+                "hide": "Hide this Item in the future",
+                "remove": "Remove Item from list"
+            },
+            "popup": {
+                "error_find_uuid": "Something went wrong with finding the UUID or the sourceId",
+                "error_revitalize_property": "Something went wrong with revitalizing the property {property}",
+                "item_success_revitalized": "Item {name} successfully Revitalized",
+                "parsing_complete": "Parsing complete. Rendering results",
+                "reload": "Don't forget to Reload Application to clear Companion data from memory",
+                "will_not_rename": "Will not rename {name} as it contains vital information"
+            },
+            "unrevitalizable": {
+                "disabled_in_settings": "Disabled in settings",
+                "revitalize_will_not_recreate": "Revitalize will not recreate remaining properties",
+                "bestiary_warning": "Bestiary abilities sometimes have purposeful changes from Compendium. Only change if you know what you are doing"
+            }          
+        },
+
+        "dialog": {
+            "results": {
+                "header": {
+                    "title": "Compatibility Check Results"
+                },
+                "no_changed_items": "✅ No changed items found",
+                "searched_actors": "Searched through the following actors:",
+                "table": {
+                    "actor": "Actor",
+                    "item_type": "Type",
+                    "actions": "Actions",
+                    "changed_property": "Changed Property",
+                    "actor_item": "Actor Item Link",
+                    "origin_item": "Origin Item Link"
+                },
+                "footer": {
+                    "important_property_legend": "*property which may prevent certain refresh options"
+                }
+            },
+            "selection": {
+                "select_actors_title": "Select which Actors you want to run the check on",
+                "toggle_all": "Toggle All"
+            }
         }
     }
 }
