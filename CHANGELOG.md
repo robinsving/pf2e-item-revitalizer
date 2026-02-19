@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.0
+Feature
+  Adding Chinese localization (thanks Kuroni)
+
 ## 3.1.0
 Feature
   Allow localization
@@ -54,19 +58,22 @@ Bugfix
   by the system (e.g. Deity Ketephys' Traits)
 
 ## 1.28.0
-New config
-  Show Revitalizer for NPCs
+Feature
+  New config - Show Revitalizer for NPCs
 
 ## 1.27.1
-Bump build dependencies
+Chore
+  Bump build dependencies
 
 ## 1.27.0
-New Rule Elements
-  Special Statistics
-  Effect Spinoff
-  Creature Size
-Minor adjustments to Rule Elements
-  Adjust Modifier
+Feature
+  New Rule Elements
+    Special Statistics
+    Effect Spinoff
+    Creature Size
+Bugfix
+  Minor adjustments to Rule Elements
+    Adjust Modifier
 
 ## 1.26.0
 Change in Calculation Item base
