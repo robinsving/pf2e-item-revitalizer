@@ -8,7 +8,7 @@
         "minimum": "13",
         "verified": "13"
     },
-    "scripts": [
+    "esmodules": [
         "module/entry-control.js"
     ],
     "styles": [
