@@ -1,84 +1,73 @@
-import { describe, it, expect } from 'vitest'
-import { hasOnlyIgnorableTraits, isDeepEmpty, canRefreshFromCompendium} from "../module/utilities/RevitalizerCalculationUtilities.js";
+import { describe, it, expect } from "vitest";
+import { hasOnlyIgnorableTraits, isDeepEmpty, canRefreshFromCompendium } from "../module/utilities/RevitalizerCalculationUtilities.js";
 
+describe("RevitalizerUtilities.isDeepEmpty", () => {
+    it("returns true for empty structures", () => {
+        expect(isDeepEmpty({})).toBe(true);
+        expect(isDeepEmpty({ a: [{}, { b: {} }] })).toBe(true);
+        expect(isDeepEmpty("   ")).toBe(true);
+        expect(isDeepEmpty(0)).toBe(true);
+        expect(isDeepEmpty(undefined)).toBe(true);
+    });
 
-describe('RevitalizerUtilities.isDeepEmpty', () => {
-    it('should work', () => {
-        const object = {};
-        const result = isDeepEmpty(object);
-        expect(result).toBe(true);
-    })
+    it("returns false when nested values are present", () => {
+        expect(isDeepEmpty({ a: [{}, { b: { c: 1 } }] })).toBe(false);
+        expect(isDeepEmpty({ a: ["", "x"] })).toBe(false);
+        expect(isDeepEmpty(false)).toBe(false);
+    });
+});
 
-    it('should work with nested empties', () => {
-        const object = {a:[{}, {b:{}}]};
-        const result = isDeepEmpty(object);
-        expect(result).toBe(true);
-    })
-})
+describe("RevitalizerUtilities.hasOnlyIgnorableTraits", () => {
+    it("returns true for identical empty arrays", () => {
+        expect(hasOnlyIgnorableTraits([], [])).toBe(true);
+    });
 
-describe('RevitalizerUtilities.hasOnlyIgnorableTraits', () => {
-    //["magical", "invested", "good", "evil", "arcane","divine","occult","primal"]
-
-    it('should work', () => {
-        const object = [];
-        const result = hasOnlyIgnorableTraits(object, []);
-        expect(result).toBe(true);
-    })
-
-    it('should work with ignorable traits', () => {
-        let result = hasOnlyIgnorableTraits(["magical", "invested", "good", "evil", "arcane","divine","occult","primal", "skill", "general", "move"], []);
-        expect(result).toBe(true);
-
-        result = hasOnlyIgnorableTraits([], ["magical", "invested", "good", "evil", "arcane", "divine", "occult", "primal", "skill", "general", "move"]);
-        expect(result).toBe(true);
-
-        result = hasOnlyIgnorableTraits(["alchemist", "animist", "barbarian", "bard", "champion", "cleric", "druid", "fighter", "investigator", "kineticist", "magus", "monk", "oracle", "psychic", "ranger", "rogue", "sorcerer", "summoner", "swashbuckler", "thaumaturge", "witch", "wizard", "gunslinger", "inventor", "exemplar"]);
-        expect(result).toBe(true);
-    })
-
-    it('should work with non-ignorable traits', () => {
-        let result = hasOnlyIgnorableTraits([], ["a", "magical", "place"]);
-        expect(result).toBe(false);
-
-        result = hasOnlyIgnorableTraits(["a", "magical", "place"], []);
-        expect(result).toBe(false);
-    })
-})
-
-describe('RevitalizerUtilities.canRefreshFromCompendium', () => {
-
-    it('should work with refreshables', () => {
+    it("returns true when all differences are ignorable in either direction", () => {
         expect(
-            canRefreshFromCompendium("Compendium.banana", [{key: "Damage"}])
-        ).toBe(true);
-    })
-
-    it('should work with non-refreshable', () => {
-        expect(
-            canRefreshFromCompendium("Compendium.banana", [{key: "ChoiceSet"}])
-        ).toBe(false);
-
-        expect(
-            canRefreshFromCompendium("Compendium.banana", [{key: "GrantItem"}])
-        ).toBe(false);
-
-        expect(
-            canRefreshFromCompendium("Source.banana", [{key: "Damage"}])
-        ).toBe(false);
-
-        expect(
-            canRefreshFromCompendium("Compendium.banana", [])
+            hasOnlyIgnorableTraits(
+                ["magical", "invested", "good", "evil", "arcane", "divine", "occult", "primal", "skill", "general", "move"],
+                []
+            )
         ).toBe(true);
 
-    })
-
-    it('should handle erroneous input', () => {
         expect(
-            canRefreshFromCompendium(undefined, [{key: "Damage"}])
-        ).toBe(false);
+            hasOnlyIgnorableTraits(
+                [],
+                ["magical", "invested", "good", "evil", "arcane", "divine", "occult", "primal", "skill", "general", "move"]
+            )
+        ).toBe(true);
+    });
 
+    it("returns true for class-only trait differences", () => {
         expect(
-            canRefreshFromCompendium("Compendium.banana", undefined)
-        ).toBe(false);
-    })
-})
+            hasOnlyIgnorableTraits(
+                ["alchemist", "fighter", "wizard", "exemplar"],
+                ["fighter"]
+            )
+        ).toBe(true);
+    });
+
+    it("returns false when any difference is non-ignorable", () => {
+        expect(hasOnlyIgnorableTraits([], ["rare", "magical"])).toBe(false);
+        expect(hasOnlyIgnorableTraits(["rare", "magical"], [])).toBe(false);
+        expect(hasOnlyIgnorableTraits(undefined, ["magical"])).toBe(false);
+    });
+});
+
+describe("RevitalizerUtilities.canRefreshFromCompendium", () => {
+    it("returns true for valid compendium source and non-special rules", () => {
+        expect(canRefreshFromCompendium("Compendium.banana", [{ key: "Damage" }])).toBe(true);
+        expect(canRefreshFromCompendium("Compendium.banana", [])).toBe(true);
+    });
+
+    it("returns false for blocked rule keys", () => {
+        expect(canRefreshFromCompendium("Compendium.banana", [{ key: "ChoiceSet" }])).toBe(false);
+        expect(canRefreshFromCompendium("Compendium.banana", [{ key: "GrantItem" }])).toBe(false);
+    });
+
+    it("returns false for invalid source or undefined rules", () => {
+        expect(canRefreshFromCompendium("Source.banana", [{ key: "Damage" }])).toBe(false);
+        expect(canRefreshFromCompendium(undefined, [{ key: "Damage" }])).toBe(false);
+        expect(canRefreshFromCompendium("Compendium.banana", undefined)).toBe(false);
+    });
+});

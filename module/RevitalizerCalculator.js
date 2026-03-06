@@ -88,7 +88,7 @@ export default class RevitalizerCalculator {
     }
 
     // Function to get the properties that differ between two Items
-    #getDifferentiatingProperties(originItem, actorItem, humanReadableName) {
+    #getDifferentiatingProperties(originItem, actorItem, humanReadableName, candidateKeys = undefined) {
         const differentProperties = [];
 
         // Sort the JSON stringify ordering so that the properties does not matter
@@ -103,7 +103,7 @@ export default class RevitalizerCalculator {
                 value;
 
         // Get all distinct keys in either Item
-        const allKeys = [...Object.keys(actorItem), ...Object.keys(originItem)];
+        const allKeys = candidateKeys ?? [...Object.keys(actorItem), ...Object.keys(originItem)];
         for (const key of new Set(allKeys)) {
             // runes, ignore this since it is only used as a comparator for e.g. acBonus
             if (key === "runes")
@@ -234,11 +234,32 @@ export default class RevitalizerCalculator {
         return differentProperties;
     }
 
+    #getCandidateSystemKeys(originItem, actorItem) {
+        const fallbackKeys = [...new Set([...Object.keys(actorItem), ...Object.keys(originItem)])];
+        const foundryUtilities = globalThis.foundry?.utils;
+
+        if (!foundryUtilities || typeof foundryUtilities.diffObject !== "function")
+            return fallbackKeys;
+
+        const diff = foundryUtilities.diffObject(originItem, actorItem, { deletionKeys: true });
+        const hasNoDiff = typeof foundryUtilities.isEmpty === "function"
+            ? foundryUtilities.isEmpty(diff)
+            : Object.keys(diff).length === 0;
+
+        if (hasNoDiff)
+            return [];
+
+        return Object.keys(diff);
+    }
+
     // Function to compare two items and find their differences
     #compareItems(clones, specialProperties, humanReadableName) {
         debug(`Parsing item ${humanReadableName}`);
+        const candidateKeys = this.#getCandidateSystemKeys(clones.origin, clones.actor);
+        debug(`Candidate system keys for ${humanReadableName}: ${candidateKeys.length}`);
 
-        const differences = new Set(this.#getDifferentiatingProperties(clones.origin, clones.actor, humanReadableName));
+        const differences = new Set(this.#getDifferentiatingProperties(clones.origin, clones.actor, humanReadableName, candidateKeys));
+        debug(`Final semantic differences for ${humanReadableName}: ${differences.size}`);
 
         specialProperties.forEach(specialProperty => {
             if (getNestedProperty(clones.origin, specialProperty.path) != getNestedProperty(clones.actor, specialProperty.path))
