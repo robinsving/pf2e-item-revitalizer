@@ -15,7 +15,7 @@ export default defineConfig({
                 control: "./module/revitalizer.js"
             },
             output: {
-                entryFileNames: 'module/entry-[name].js',
+                entryFileNames: 'revitalizer/entry-[name].js',
                 format: "es",
             },
         },

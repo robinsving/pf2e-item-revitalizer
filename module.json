@@ -9,7 +9,7 @@
         "verified": "13"
     },
     "esmodules": [
-        "module/entry-control.js"
+        "revitalizer/entry-control.js"
     ],
     "styles": [
         "styles/buttons.css",
