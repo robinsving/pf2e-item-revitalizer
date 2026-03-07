@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.3.0
+Feature
+  Add clickable properies to show diff between actor and origin items
+  Faster comparison times by using foundrys built-in methods
+Bugfix
+  Make the module an ES-module instead of script to prevent global pollution
+
 ## 3.2.0
 Feature
   Adding Chinese localization (thanks Kuroni)
