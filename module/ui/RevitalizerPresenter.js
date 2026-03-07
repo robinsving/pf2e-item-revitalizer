@@ -20,6 +20,7 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
              revitalize: RevitalizerPresenter.revitalize,
              hide: RevitalizerPresenter.hideItem,
              remove: RevitalizerPresenter.removeItem,
+             closeDiff: RevitalizerPresenter.closeDiff,
         },
 
         position: {
@@ -113,8 +114,9 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
     }
 
     #getButtons(data) {
-        const csvSeparatedProperties = [...data.comparativeData].join(", ");
-        const revitalizableProperties = [...data.comparativeData].filter(item => !IMPORTANT_ITEM_PROPERTIES.includes(item));
+        const comparativeProperties = Object.keys(data.comparativeDiff || {});
+        const csvSeparatedProperties = comparativeProperties.join(", ");
+        const revitalizableProperties = comparativeProperties.filter(item => !IMPORTANT_ITEM_PROPERTIES.includes(item));
 
         const unrevitalizableReason = this.#hasUnrevitalizableReason(data, revitalizableProperties);
         
@@ -179,18 +181,27 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
             const results = [];
             let hasImportantProperty = false;
             for (const data of this.#sortChangedItems(changedData)) {
+                const comparativeDiff = Object.keys(data.comparativeDiff || {})
+                    .map((property) => {
+                        const important = IMPORTANT_ITEM_PROPERTIES.includes(property);
+                        if (important) {
+                            hasImportantProperty = true;
+                        }
+
+                        const value = data.comparativeDiff?.[property] || {};
+                        return {
+                            property,
+                            important,
+                            actorText: typeof value.actor === "string" ? value.actor : JSON.stringify(value.actor, undefined, 2),
+                            originText: typeof value.origin === "string" ? value.origin : JSON.stringify(value.origin, undefined, 2),
+                        };
+                    });
+
                 results.push({
                     buttons: this.#getButtons(data),
                     actorLink: await enrichHTML(data.actor.link, enrichOption),
                     type: this.#getType(data),
-                    comparativeDataText: [...data.comparativeData].map((prop) => {
-                        if (IMPORTANT_ITEM_PROPERTIES.includes(prop)) {
-                            hasImportantProperty = true;
-                            return `<strong>${prop}*</strong>`
-                        } else {
-                            return prop;
-                        }
-                    }).join(", "),
+                    comparativeDiff: comparativeDiff,
                     actorItemLink: await enrichHTML(data.actorItem.link, enrichOption),
                     originItemLink: await enrichHTML(data.originItem.link, enrichOption),
                 });
@@ -282,5 +293,21 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
     // A function to remove Item from the list
     static async removeItem(event, target) {
         target.parentNode.parentNode.remove();
+    }
+
+    static closeDiff(event, target) {
+        // if the user holds control or command key while clicking, copy the content of the diff to clipboard instead of closing it
+        if (event.ctrlKey || event.metaKey) {
+            // find the content element within the diff details, but since we can click on different elements within the details, we need to traverse up the DOM tree until we find the content element or reach the details element
+            const content = target.closest(".pir-diff-details")?.querySelector(".pir-diff-pair");
+            if (content) {
+                navigator.clipboard.writeText(content.innerText);
+                popup(game.i18n.localize("PIR.dialog.results.diff.copy"), { console: false });
+            }
+            return;
+        }
+        const details = target.closest(".pir-diff-details");
+        if (details)
+            details.open = false;
     }
 }

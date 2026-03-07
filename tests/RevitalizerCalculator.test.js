@@ -112,7 +112,9 @@ describe("RevitalizerCalculator.runRevitalizerCheck", () => {
         expect(result[0].actorItem).toBe(actorItem);
         expect(result[0].originItem).toBe(originItem);
         expect(result[0].canRefreshFromCompendium).toBe(true);
-        expect(result[0].comparativeData.has("description")).toBe(true);
+        expect(Object.keys(result[0].comparativeDiff)).toContain("description");
+        expect(result[0].comparativeDiff.description.actor).toContain("Actor text");
+        expect(result[0].comparativeDiff.description.origin).toContain("Origin text");
     });
 
     it("returns no changes when diffObject reports an empty system diff", async () => {
@@ -158,6 +160,7 @@ describe("RevitalizerCalculator.runRevitalizerCheck", () => {
         const result = await calculator.runRevitalizerCheck([actor]);
 
         expect(result).toHaveLength(1);
-        expect(result[0].comparativeData.has("description")).toBe(true);
+        expect(Object.keys(result[0].comparativeDiff)).toContain("description");
+        expect(result[0].comparativeDiff.description.actor).toContain("Actor text");
     });
 });

@@ -84,6 +84,12 @@
                     "actor_item": "Actor Item Link",
                     "origin_item": "Origin Item Link"
                 },
+                "diff": {
+                    "actor": "Actor property",
+                    "origin": "Origin property",
+                    "copy": "Property Diff copied to clipboard",
+                    "note": "Click to close. Hold Ctrl/Cmd while clicking to copy the diff content to clipboard"
+                },
                 "footer": {
                     "important_property_legend": "*property which may prevent certain refresh options"
                 }

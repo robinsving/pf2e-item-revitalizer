@@ -24,7 +24,31 @@
                         {{/unless}}
                     {{/each}}
                 </div>
-                <div class="pir-table-cell">{{{this.comparativeDataText}}}</div>
+                <div class="pir-table-cell">
+                    {{#if this.comparativeDiff}}
+                        <div class="pir-diff-block">
+                            {{#each this.comparativeDiff}}
+                                <details class="pir-diff-details" name="pir-diff-group">
+                                    <summary><span class="pir-diff-trigger">{{this.property}}{{#if this.important}}*{{/if}}</span></summary>
+                                    <div class="pir-diff-content" data-action="closeDiff">
+                                        <div class="pir-diff-title">{{this.property}}</div>
+                                        <div class="pir-diff-pair">
+                                            <div>
+                                                <strong>{{localize "PIR.dialog.results.diff.actor"}}</strong>
+                                                <pre>{{this.actorText}}</pre>
+                                            </div>
+                                            <div>
+                                                <strong>{{localize "PIR.dialog.results.diff.origin"}}</strong>
+                                                <pre>{{this.originText}}</pre>
+                                            </div>
+                                        </div>
+                                        <p class="pir-diff-note">{{localize "PIR.dialog.results.diff.note"}}</p>
+                                    </div>
+                                </details>
+                            {{/each}}
+                        </div>
+                    {{/if}}
+                </div>
                 <div class="pir-table-cell">{{{this.actorItemLink}}}</div>
                 <div class="pir-table-cell">{{{this.originItemLink}}}</div>
             </div>

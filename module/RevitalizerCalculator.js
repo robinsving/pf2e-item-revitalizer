@@ -89,7 +89,7 @@ export default class RevitalizerCalculator {
 
     // Function to get the properties that differ between two Items
     #getDifferentiatingProperties(originItem, actorItem, humanReadableName, candidateKeys = undefined) {
-        const differentProperties = [];
+        const differenceValues = {};
 
         // Sort the JSON stringify ordering so that the properties does not matter
         const sorter = (_key, value) =>
@@ -116,51 +116,75 @@ export default class RevitalizerCalculator {
                 debug(`Compendium's ${humanReadableName} (${key}) is: ${JSON.stringify(originItem[key])}`);
 
                 // sometimes Foundry adds default values
-                if (actorItem[key] !== null && actorItem[key] !== 0)
-                    differentProperties.push(key);
-                else
+                if (actorItem[key] !== null && actorItem[key] !== 0) {
+                    differenceValues[key] = {
+                        actor: JSON.stringify(actorItem[key]),
+                        origin: JSON.stringify(originItem[key]),
+                    };
+                } else
                     debug(`Ignored due to no value set (null, 0)`)
                 continue;
             } else if (originItem[key] === undefined || actorItem[key] === undefined) {
                 continue;
             }
-            
-            /**
-            * Create the JSON strings, but replace style formatting, as that may adjust spaces in browsers
-            * e.g. the differences of the following lines:
-            *   <span style=\"float:right\">  ->   <span style=\"float: right;\">
-            *   @UUID[Compendium.pf2e.actionspf2e.KAVf7AmRnbCAHrkT]{Attack of Opportunity} -> @UUID[Compendium.pf2e.actionspf2e.KAVf7AmRnbCAHrkT]
-            *   @UUID[Compendium.pf2e.actionspf2e.KAVf7AmRnbCAHrkT]  -> @Compendium[pf2e.actionspf2e.KAVf7AmRnbCAHrkT]    -- Common with e.g. items from Adventure Paths
-            *   @UUID[Compendium.pf2e.actionspf2e.KAVf7AmRnbCAHrkT]  -> @Compendium[pf2e.actionspf2e.Item.KAVf7AmRnbCAHrkT]    -- A renaming recently done by the PF2e devs
-            */
-            const inlineStylePattern = /style=\\".*\\"/gm;
-            const uuidNamePattern = /\{[\s\w-':()]+\}/gm;
-            const uuidCompendiumFix = "@UUID[Compendium.";
-            const uuidItemFix = ".Item.";
-            
-            const check = /\@Check[^\]]+\]/gm
-            const reach = /\d+ feet/gm
 
-            // Fix null-issues
-            const nullFix = ":0";
-            const nullFix2 = "\"\"";
-            const nullFix3 = /\"[^\"]+\":null/gm;
+            const actorJson = this.#normalizeForComparison(actorItem[key], sorter)
+            const originJson = this.#normalizeForComparison(originItem[key], sorter)
 
-            // Fix properties which are added by Foundry
-            const allEmptyArrays = /\"\w+\"\:\[\]/gm;
-            const applyMod = '"applyMod":false';
-            const removeAfterRoll = '"removeAfterRoll":false';
-            const anythingFalse = /"\w+":false/gm;
-            const selectorToArray = /"selector":"([^\"]*)"/gm;
-            const typeUntyped = '"type":"untyped"';
-            const typeToArray = /"type":"([^\"]*)"/gm;
+            // If we find differences in the property
+            if (actorJson !== originJson) {
+                // for traits, ignore if the origin only contains Spell Traditions
+                if (key === "traits") {
+                    // iff the _only_ trait differences are the Traditions, then ignore this one
+                    if (hasOnlyIgnorableTraits(actorItem[key].value, originItem[key].value))
+                        continue;
+                }
 
-            // Fix problems with JSON after replacements
-            const postFix = "{,";
-            const postFix2 = ",}";
-            const postFix3 = /,{2,}/gm;
+                if (key === "acBonus") {
+                    // if the difference is the potency rune, then ignore this one
+                    if (actorItem[key] - (getNestedProperty(actorItem, "runes.potency") || 0) == originItem[key])
+                        continue;
+                }
 
-            const actorJson = JSON.stringify(actorItem[key], sorter)
+                debug(`Found differences in ${key} for Item ${humanReadableName}:`);
+                debug(`Actor's ${humanReadableName} (${key}) is: ${actorJson}`);
+                debug(`Compendium's ${humanReadableName} (${key}) is: ${originJson}`);
+                differenceValues[key] = {
+                    actor: actorJson,
+                    origin: originJson,
+                };
+            }
+        }
+
+        return differenceValues;
+    }
+
+    #normalizeForComparison(itemValue, sorter) {
+        const inlineStylePattern = /style=\\".*\\"/gm;
+        const uuidNamePattern = /\{[\s\w-':()]+\}/gm;
+        const uuidCompendiumFix = "@UUID[Compendium.";
+        const uuidItemFix = ".Item.";
+        
+        const check = /\@Check[^\]]+\]/gm;
+        const reach = /\d+ feet/gm;
+
+        const nullFix = ":0";
+        const nullFix2 = "\"\"";
+        const nullFix3 = /\"[^\"]+\":null/gm;
+
+        const allEmptyArrays = /\"\w+\"\:\[\]/gm;
+        const applyMod = '"applyMod":false';
+        const removeAfterRoll = '"removeAfterRoll":false';
+        const anythingFalse = /"\w+":false/gm;
+        const selectorToArray = /"selector":"([^\"]*)"/gm;
+        const typeUntyped = '"type":"untyped"';
+        const typeToArray = /"type":"([^\"]*)"/gm;
+
+        const postFix = "{,";
+        const postFix2 = ",}";
+        const postFix3 = /,{2,}/gm;
+
+        return JSON.stringify(itemValue, sorter)
                 .replaceAll(inlineStylePattern, "")
                 .replaceAll(uuidNamePattern, "")
                 .replaceAll(uuidCompendiumFix, "@Compendium[")
@@ -184,54 +208,6 @@ export default class RevitalizerCalculator {
                 .replaceAll(postFix3, ",")
                 .replaceAll(postFix, "{")
                 .replaceAll(postFix2, "}")
-
-            const originJson = JSON.stringify(originItem[key], sorter)
-                .replaceAll(inlineStylePattern, "")
-                .replaceAll(uuidNamePattern, "")
-                .replaceAll(uuidCompendiumFix, "@Compendium[")
-                .replaceAll(uuidItemFix, ".")
-
-                .replaceAll(check, "@Check")
-                .replaceAll(reach, "X reach")
-
-                .replaceAll(nullFix, ":null")
-                .replaceAll(nullFix2, "null")
-                .replaceAll(nullFix3, "")
-                .replaceAll(applyMod, "")
-                .replaceAll(allEmptyArrays, "")
-                .replaceAll(removeAfterRoll, "")
-                .replaceAll(typeUntyped, "")
-                .replaceAll(anythingFalse, "")
-                .replaceAll(selectorToArray, '"selector":["$1"]')
-                .replaceAll(typeToArray, '"type":["$1"]')
-
-                .replaceAll(postFix3, ",")
-                .replaceAll(postFix, "{")
-                .replaceAll(postFix2, "}")
-
-            // If we find differences in the property
-            if (actorJson !== originJson) {
-                // for traits, ignore if the origin only contains Spell Traditions
-                if (key === "traits") {
-                    // iff the _only_ trait differences are the Traditions, then ignore this one
-                    if (hasOnlyIgnorableTraits(actorItem[key].value, originItem[key].value))
-                        continue;
-                }
-
-                if (key === "acBonus") {
-                    // if the difference is the potency rune, then ignore this one
-                    if (actorItem[key] - (getNestedProperty(actorItem, "runes.potency") || 0) == originItem[key])
-                        continue;
-                }
-
-                debug(`Found differences in ${key} for Item ${humanReadableName}:`);
-                debug(`Actor's ${humanReadableName} (${key}) is: ${actorJson}`);
-                debug(`Compendium's ${humanReadableName} (${key}) is: ${originJson}`);
-                differentProperties.push(key);
-            }
-        }
-
-        return differentProperties;
     }
 
     #getCandidateSystemKeys(originItem, actorItem) {
@@ -258,15 +234,18 @@ export default class RevitalizerCalculator {
         const candidateKeys = this.#getCandidateSystemKeys(clones.origin, clones.actor);
         debug(`Candidate system keys for ${humanReadableName}: ${candidateKeys.length}`);
 
-        const differences = new Set(this.#getDifferentiatingProperties(clones.origin, clones.actor, humanReadableName, candidateKeys));
-        debug(`Final semantic differences for ${humanReadableName}: ${differences.size}`);
+        const differenceValues = this.#getDifferentiatingProperties(clones.origin, clones.actor, humanReadableName, candidateKeys);
 
         specialProperties.forEach(specialProperty => {
-            if (getNestedProperty(clones.origin, specialProperty.path) != getNestedProperty(clones.actor, specialProperty.path))
-                differences.add(specialProperty.name);
+            if (getNestedProperty(clones.origin, specialProperty.path) != getNestedProperty(clones.actor, specialProperty.path)) {
+                differenceValues[specialProperty.name] = {
+                    actor: JSON.stringify(getNestedProperty(clones.actor, specialProperty.path)),
+                    origin: JSON.stringify(getNestedProperty(clones.origin, specialProperty.path)),
+                };
+            }
         });
 
-        return differences;
+        return differenceValues;
     }
 
     /**
@@ -341,12 +320,12 @@ export default class RevitalizerCalculator {
                     continue;
                 }
 
-                if (getCompareData.size > 0) {
+                if (Object.keys(getCompareData).length > 0) {
                     changedData.push({
                         actor: actor,
                         actorItem: actorItem,
                         originItem: originItem,
-                        comparativeData: getCompareData,
+                        comparativeDiff: getCompareData,
                         canRefreshFromCompendium: canRefreshFromCompendium(actorItem.sourceId, actorItem.system.rules),
                     });
                 }
