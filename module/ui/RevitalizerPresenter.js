@@ -241,9 +241,10 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
             popup(game.i18n.localize("PIR.presenter.popup.error_find_uuid"));
             return false;
         }
+        const specialPropertyMap = new Map(SPECIAL_ITEM_PROPERTIES.map(obj => [obj.name, obj]));
         properties.forEach(property => {
             try {
-                const specialProperty = SPECIAL_ITEM_PROPERTIES.find(obj => obj.name === property);
+                const specialProperty = specialPropertyMap.get(property);
                 if (IMPORTANT_ITEM_PROPERTIES.includes(property)) {         // if this is an unrevitalizable property, skip it
                     info(`Property ${property} will not be updated`);
                 } else if (specialProperty) {                               // if this is a special property, rather than a "normal" system property

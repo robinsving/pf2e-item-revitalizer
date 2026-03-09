@@ -60,22 +60,21 @@ export default class RevitalizerCalculator {
                 }
 
     // Function to include only allowed properties in the cloned items
-    #createShallowClones(originItem, actorItem) {
+    #createShallowClones(originItem, actorItem, ignoreKeys) {
         const type = actorItem.type;
 
         // Create a local allowlist based on possible Item type
         var propertyAllowList = PROPERTY_ALLOW_LIST.hasOwnProperty(type) ? structuredClone(PROPERTY_ALLOW_LIST[type]) : structuredClone(PROPERTY_ALLOW_LIST_BASE);
 
-        // Clone the items
+        // Get raw system objects; #allowedPropertyClone builds new filtered objects from these
         const clones = {
-            origin: structuredClone(originItem.toObject().system),
-            actor: structuredClone(actorItem.toObject().system),
+            origin: originItem.toObject().system,
+            actor: actorItem.toObject().system,
         };
 
         //debug(JSON.stringify(clones.actor));
         //debug(JSON.stringify(clones.origin));
 
-        const ignoreKeys = getSettings(settings.propertyIgnoreList.id).split(",");
         ignoreKeys.forEach(key => delete propertyAllowList[key]);
 
         for (let [key, value] of Object.entries(clones)) {
@@ -101,8 +100,7 @@ export default class RevitalizerCalculator {
                 value;
 
         // Get all distinct keys in either Item
-        const allKeys = candidateKeys ?? [...Object.keys(actorItem), ...Object.keys(originItem)];
-        for (const key of new Set(allKeys)) {
+        for (const key of new Set(candidateKeys ?? [...Object.keys(actorItem), ...Object.keys(originItem)])) {
             // runes, ignore this since it is only used as a comparator for e.g. acBonus
             if (key === "runes")
                 continue;
@@ -261,6 +259,8 @@ export default class RevitalizerCalculator {
         const start = Date.now();
 
         const ignoredItemsFromSettings = getSettings(settings.itemIgnoreList.id).split(",");
+        const ignorePropertySettings = getSettings(settings.propertyIgnoreList.id).split(",");
+        const specialPropertiesFiltered = SPECIAL_ITEM_PROPERTIES.filter((value) => !ignorePropertySettings.includes(value.name));
 
         // Iterate over the actors
         for (const actor of actors) {
@@ -299,13 +299,7 @@ export default class RevitalizerCalculator {
                     continue;
                 }
 
-                const clones = this.#createShallowClones(originItem, actorItem);
-
-                // Special property lister
-                // if there is a non-system property we need to handle, e.g. "item.img", then check the similarities for these as well
-                const ignorePropertySettings = getSettings(settings.propertyIgnoreList.id).split(",");
-                const specialPropertiesFiltered = SPECIAL_ITEM_PROPERTIES.filter((value) => !ignorePropertySettings.includes(value.name));
-
+                const clones = this.#createShallowClones(originItem, actorItem, ignorePropertySettings);
 
                 let getCompareData;
                 try {
