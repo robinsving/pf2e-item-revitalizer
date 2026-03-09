@@ -97,7 +97,7 @@ export default class RevitalizerSheet {
             );
 
             // add onclick event to start a Revitalizer run for Actor Id
-            button.click(() => Hooks.call(revitalizerCheckHook, [actorId]));
+            button.click(() => Hooks.call(revitalizerCheckHook, actorId));
 
             // remove any existing versions of button
             html.closest('.app').find(`.${className}`).remove();

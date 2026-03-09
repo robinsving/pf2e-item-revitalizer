@@ -1,5 +1,5 @@
 import { id as SCRIPT_ID, title as SCRIPT_NAME } from "../module.json";
-import { popup, debug, isTokenUUID } from "./utilities/RevitalizerUtilities";
+import { popup, debug, isSceneToken } from "./utilities/RevitalizerUtilities";
 import RevitalizerCalculator from "./RevitalizerCalculator.js";
 
 import RevitalizerPresenter from "./ui/RevitalizerPresenter.js";
@@ -19,7 +19,7 @@ export default class RevitalizerRunner {
         // Register Sheet link for everyone
         new RevitalizerSheet();
 
-        Hooks.on(revitalizerCheckHook, (actorIds) => this.#revitalizerCheckForActorUuids(actorIds));
+        Hooks.on(revitalizerCheckHook, (actorId) => this.#revitalizerCheckForActorUuid(actorId));
 
         // The rest is for GM's eyes only
         if (!game.user.isGM)
@@ -40,29 +40,24 @@ export default class RevitalizerRunner {
     revitalizerPresenter = new RevitalizerPresenter();
     
     /**
-     * Runs Revitalizer Check for a list of Actor UUIDs
-     * @param String[] actorIds
-     * @returns 
+     * Runs Revitalizer Check for a single Actor UUID or ID
+     * @param {string} uuid
      */
-    //TODO. Is this still needed?
-    async #revitalizerCheckForActorUuids(uuids) {
-        if (!uuids)
+    async #revitalizerCheckForActorUuid(uuid) {
+        if (!uuid)
             return;
 
-        const actors = [];
-        for(const uuid of uuids) {
-            if (isTokenUUID(uuid)) {
-                actors.push((await fromUuid(uuid)).actor);
-            } else {
-                actors.push(this.#getActorsFromIds([uuid])[0]);
-            }
-        };
-        
-        if (actors.filter(actor => actor).length > 0)
-            return this.#runRevitalizerCheckForActors(actors);
-        
-        debug("No valid actors found");
-        return;
+        let actor;
+        if (isSceneToken(uuid)) {
+            actor = (await fromUuid(uuid)).actor;
+        } else {
+            actor = this.#getActorsFromIds([uuid])[0];
+        }
+
+        if (actor)
+            return this.#runRevitalizerCheckForActors([actor]);
+
+        debug("No valid actor found");
     }
 
     /**

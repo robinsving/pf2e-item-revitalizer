@@ -1,5 +1,5 @@
-import { id as SCRIPT_ID, title } from "../../module.json";
-export { debug, info, popup, warn, settings, getSettings, selectionTemplate, resultsTemplate, getNestedProperty, isTokenUUID };
+import { id as SCRIPT_ID } from "../../module.json";
+export { debug, info, popup, warn, settings, getSettings, selectionTemplate, resultsTemplate, getNestedProperty, isSceneToken };
 
 const selectionTemplate = `modules/${SCRIPT_ID}/templates/selection-dialog.hbs`;
 const resultsTemplate = `modules/${SCRIPT_ID}/templates/results-dialog.hbs`;
@@ -59,7 +59,7 @@ export const isRunning = () => {
     return false;
 }
 
-function isTokenUUID(uuid) {
+function isSceneToken(uuid) {
     if (typeof uuid !== "string") return false;
     try {
         const parsed = foundry.utils.parseUuid(uuid);
