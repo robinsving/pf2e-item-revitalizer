@@ -2,6 +2,8 @@ import { info, isRunning, popup } from "../utilities/RevitalizerUtilities.js";
 import { selectionActorHook } from "../RevitalizerRunner";
 import AbstractSidebar from "./AbstractSidebar";
 
+const ALLOWED_ACTOR_TYPES = ["character", "vehicle", "loot"];
+
 export default class RevitalizerSceneSidebar extends AbstractSidebar {
 
     constructor() {
@@ -26,7 +28,7 @@ export default class RevitalizerSceneSidebar extends AbstractSidebar {
         
         let actors = canvas.tokens.placeables
             .filter(token => token.actor).map(token => token.actor)                     // Filter out actors
-            .filter((token) => ["character", "vehicle", "loot"].includes(token.type))   // Filter out according to selection, e.g. not familiars
+            .filter((token) => ALLOWED_ACTOR_TYPES.includes(token.type))                 // Filter out according to selection, e.g. not familiars
             .sort((a, b) => (a.name > b.name) ? 1 : -1)                                 // Sort by actor name
             
         if (!actors.length) {

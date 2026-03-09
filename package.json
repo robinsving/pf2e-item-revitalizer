@@ -7,6 +7,7 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
+        "build-and-apply": "vite build && cp -r dist/. ../foundryuserdata/Data/modules/pf2e-item-revitalizer/",
         "test": "vitest run",
         "commitlint": "commitlint --config commitlint.config.js --from-last-tag"
     },

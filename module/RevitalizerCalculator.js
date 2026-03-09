@@ -75,12 +75,10 @@ export default class RevitalizerCalculator {
         //debug(JSON.stringify(clones.actor));
         //debug(JSON.stringify(clones.origin));
 
-        for (let [key, value] of Object.entries(clones)) {
-            // Filter out list based on settings
-            getSettings(settings.propertyIgnoreList.id)
-                .split(",")
-                .forEach(key => delete propertyAllowList[key]);
+        const ignoreKeys = getSettings(settings.propertyIgnoreList.id).split(",");
+        ignoreKeys.forEach(key => delete propertyAllowList[key]);
 
+        for (let [key, value] of Object.entries(clones)) {
             clones[key] = this.#allowedPropertyClone(value, propertyAllowList);
         }
 

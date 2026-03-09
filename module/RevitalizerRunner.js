@@ -89,14 +89,7 @@ export default class RevitalizerRunner {
     }
 
     #getActorsFromIds(actorIds) {
-        const actors = [];
-        actorIds.forEach((actorId) => {
-            const actor = game.actors.get(actorId);
-            
-            if (actor)
-                actors.push(actor);
-        });
-        return actors;
+        return actorIds.map(id => game.actors.get(id)).filter(Boolean);
     }
 
     /**
