@@ -88,7 +88,8 @@
                     "actor": "Actor property",
                     "origin": "Origin property",
                     "copy": "Property Diff copied to clipboard",
-                    "note": "Click to close. Hold Ctrl/Cmd while clicking to copy the diff content to clipboard"
+                    "note": "Click to close. Hold Ctrl/Cmd while clicking to copy the diff content to clipboard",
+                    "note_unavailable": "(if allowed by browser settings)"
                 },
                 "footer": {
                     "important_property_legend": "*property which may prevent certain refresh options"

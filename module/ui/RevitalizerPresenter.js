@@ -1,5 +1,5 @@
 import { title as SCRIPT_NAME, id as SCRIPT_ID } from "../../module.json";
-import { popup, info, settings, getSettings, getNestedProperty } from "../utilities/RevitalizerUtilities.js";
+import { popup, info, settings, getSettings, getNestedProperty, warn } from "../utilities/RevitalizerUtilities.js";
 import { IMPORTANT_ITEM_PROPERTIES, SPECIAL_ITEM_PROPERTIES } from "../utilities/RevitalizerSignificantProperties.js";
 
 const resultsDialogTemplate = "modules/pf2e-item-revitalizer/templates/results-dialog.hbs";
@@ -302,8 +302,12 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
             // find the content element within the diff details, but since we can click on different elements within the details, we need to traverse up the DOM tree until we find the content element or reach the details element
             const content = target.closest(".pir-diff-details")?.querySelector(".pir-diff-pair");
             if (content) {
-                navigator.clipboard.writeText(content.innerText);
-                popup(game.i18n.localize("PIR.dialog.results.diff.copy"), { console: false });
+                try {
+                    navigator.clipboard.writeText(content.innerText);
+                    popup(game.i18n.localize("PIR.dialog.results.diff.copy"), { console: false });
+                } catch(_) {
+                    warn("Clipboard write failed");
+                }
             }
             return;
         }

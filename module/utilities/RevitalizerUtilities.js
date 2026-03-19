@@ -33,7 +33,6 @@ function popup(message, options = {}) {
     ui.notifications.info(`${localizedTitle}: ${message}`, options);
 }
 
-
 function warn(popup, consoleMessage) {
     const localizedTitle = game.i18n.localize("PIR.revitalizer.name");
     ui.notifications.warn(`${localizedTitle}: ${popup}`);
