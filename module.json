@@ -2,8 +2,14 @@
     "id": "pf2e-item-revitalizer",
     "title": "PF2e Item Revitalizer",
     "description": "A module for checking obsolesense between PF2e Compendium and Actor Items.",
-    "version": "3.3.0",
-    "authors": [{"name": "Robin Sving", "email":"robin.sving@gmail.com", "discord":"@.wigglemaster"}],
+    "version": "3.3.1",
+    "authors": [
+        {
+            "name": "Robin Sving",
+            "email": "robin.sving@gmail.com",
+            "discord": "@.wigglemaster"
+        }
+    ],
     "compatibility": {
         "minimum": "13",
         "verified": "13"

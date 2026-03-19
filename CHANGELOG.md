@@ -1,5 +1,12 @@
 # Changelog
 
+## v3.3.1 (2026-03-19)
+
+- fix: handle clipboard permission issues in browser (46420de)
+- fix: better handling of actor sheet hook (56a6f94)
+- fix: speed up the calculation (a196a1e)
+- refactor: nicer code (d9f6123)
+
 ## 3.3.0
 Feature
   Add clickable properies to show diff between actor and origin items
