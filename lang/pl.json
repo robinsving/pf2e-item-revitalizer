@@ -1,0 +1,104 @@
+{
+    "PIR": {
+        "settings": {
+            "forGmOnly": {
+                "name": "Pokaż moduł wszystkim użytkownikom",
+                "hint": "Wyłącz tę opcję, aby moduł był widoczny tylko dla MG"
+            },
+            "debug": {
+                "name": "Wypisz informacje debugowania do dziennika konsoli",
+                "hint": ""
+            },
+            "rulesElementArrayLengthOnly": {
+                "name": "Uproszczone wyszukiwanie elementów reguł",
+                "hint": "Przeprowadza porównania RE na podstawie długości tablicy. Daje to mniej wyników fałszywie pozytywnych, ale powoduje też pominięcie większej liczby wyników prawdziwie pozytywnych"
+            },
+            "itemIgnoreList": {
+                "name": "Zignorowane przedmioty aktora",
+                "hint": "Lista pomijanych przedmiotów rozszerzona przez użytkownika, rozdzielona przecinkami"
+            },
+            "propertyIgnoreList": {
+                "name": "Zignorowane właściwości przedmiotu",
+                "hint": "Wprowadź tekst oddzielony przecinkami (,). Każda z tych właściwości pozycji zostanie pominięta podczas wyszukiwania pozycji. Np. publikacja,ikona-link"
+            },
+            "revitalize": {
+                "name": "Zezwól na odświeżanie przy użyciu rozwiązania do tworzenia kopii zapasowych",
+                "hint": "Będzie to możliwe tylko wtedy, gdy wbudowana funkcja odświeżania nie jest dostępna. Zostaną zaktualizowane tylko niektóre właściwości, w przypadku których jest to bezpieczne"
+            },
+            "showSheetButtonNPC": {
+                "name": "Pokaż ikonę „Odnowa” w karcie BN",
+                "hint": "Wyświetla przycisk, który można kliknąć, na górnym pasku okna kart BN. Należy pamiętać, że odświeżanie elementów BN nie jest zalecane"
+            },
+            "completedMigration": {
+                "name": "Narzędzie do śledzenia ostatniej migracji",
+                "hint": ""
+            }
+        },
+
+        "revitalizer": {
+            "name": "PF2E Item Revitalizer",
+            "selection_already_ongoing": "Trwa już selekcja"
+        },
+
+        "sheet": {
+            "check_actor_items_tooltip": "Sprawdź, czy są dostępne nowe wersje przedmiotów tego aktora o nazwie {name}",
+            "revitalize_button": "Odnowa"
+        },
+
+        "presenter": {
+            "buttons": {
+                "refresh": "Odśwież cały obiekt z Kompendium przy użyciu wbudowanej metody PF2e",
+                "refresh_not_available": "Ta pozycja jest niedostępna (element reguł lub źródło pozycji w bestiariuszu uniemożliwia odświeżenie)",
+                "refresh_not_available_hint": ". Odtwórz przedmiot lub sprawdź ustawienia modułu pod kątem ewentualnej opcji odświeżania kopii zapasowej",
+                "revitalize": "Nie można odświeżyć całego przedmiotu. Kliknij, aby zaktualizować następujące właściwości:",
+                "hide": "Ukryj ten przedmiot w przyszłości",
+                "remove": "Usuń przedmiot z listy"
+            },
+            "popup": {
+                "error_find_uuid": "Wystąpił błąd podczas wyszukiwania identyfikatora UUID lub sourceId",
+                "error_revitalize_property": "Wystąpił błąd podczas odświeżania strony {property}",
+                "item_success_revitalized": "Element {name} został pomyślnie odnowiony",
+                "parsing_complete": "Analiza zakończona. Wyświetlanie wyników",
+                "reload": "Nie zapomnij odświeżyć aplikacji, aby usunąć dane Towarzysza z pamięci",
+                "will_not_rename": "Nie zmienię nazwy pliku {name}, ponieważ zawiera on istotne informacje"
+            },
+            "unrevitalizable": {
+                "disabled_in_settings": "Wyłączone w ustawieniach",
+                "revitalize_will_not_recreate": "Odnowienie nie odtworzy pozostałych obiektów",
+                "bestiary_warning": "Umiejętności z Bestiariusza są czasami celowo zmienione w stosunku do Kompendium. Zmieniaj je tylko wtedy, gdy wiesz, co robisz"
+            }          
+        },
+
+        "dialog": {
+            "results": {
+                "header": {
+                    "title": "Wyniki sprawdzania zgodności"
+                },
+                "no_changed_items": "✅ Nie znaleziono żadnych zmienionych przedmiotów",
+                "searched_actors": "Przeszukałem następujących aktorów:",
+                "table": {
+                    "actor": "Aktor",
+                    "item_type": "Typ",
+                    "actions": "Akcje",
+                    "changed_property": "Zmieniona właściwość",
+                    "actor_item": "Link do przedmiotu aktora",
+                    "origin_item": "Link do oryginalnego przedmiotu"
+                },
+                "diff": {
+                    "actor": "Właściwość aktora",
+                    "origin": "Właściwość źródła",
+                    "copy": "Różnice w właściwościach skopiowano do schowka",
+                    "note": "Kliknij, aby zamknąć. Przytrzymaj klawisz Ctrl/Cmd podczas klikania, aby skopiować zawartość pliku diff do schowka",
+                    "note_unavailable": "(o ile pozwalają na to ustawienia przeglądarki)"
+                },
+                "footer": {
+                    "important_property_legend": "*właściwość, która może uniemożliwić korzystanie z niektórych opcji odświeżania"
+                }
+            },
+            "selection": {
+                "select_actors_title": "Wybierz aktorów, dla których chcesz przeprowadzić weryfikację",
+                "toggle_all": "Zaznacz wszystko"
+            }
+        }
+    }
+}
