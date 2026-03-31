@@ -34,7 +34,7 @@ const Configuration = {
    * To see full list, check https://github.com/conventional-changelog/commitlint/blob/master/%40commitlint/is-ignored/src/defaults.ts.
    * To disable those ignores and run rules always, set `defaultIgnores: false` as shown below.
    */
-  ignores: [(commit) => commit === "New version"],
+  ignores: [(commit) => commit.startsWith("New version")],
   /*
    * Whether commitlint uses the default ignore rules, see the description above.
    */
