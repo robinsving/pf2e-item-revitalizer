@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.4.0 (2026-03-31)
+
+- feat: added polish language (5dafc84) (thanks Lioheart)
+
+
 ## v3.3.1 (2026-03-19)
 
 - fix: handle clipboard permission issues in browser (46420de)
