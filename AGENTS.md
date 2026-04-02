@@ -5,6 +5,15 @@ applyTo: '**/*.js, **/*.mjs, **/*.cjs'
 
 # Code Generation Guidelines
 
+# Commands
+- Run tests with `npm test`
+
+## Project Guardrails
+- Prefer the simplest change that satisfies the request; avoid broadening scope without confirmation
+- Keep tests aligned to the current data format unless the user explicitly asks for legacy coverage
+- Do not remove or replace requested tests; adjust them to the current format instead
+- When a change might alter behavior outside the asked scope, pause and confirm
+
 ## Coding standards
 - Use JavaScript with ES2022 features and Node.js (20+) ESM modules
 - Use Node.js built-in modules and avoid external dependencies where possible
