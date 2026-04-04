@@ -1,9 +1,12 @@
 # Changelog
 
+## v3.5.0 (2026-04-04)
+
+- feat: implement item and property ignore lists with UI menus (9357956)
+
 ## v3.4.0 (2026-03-31)
 
 - feat: added polish language (5dafc84) (thanks Lioheart)
-
 
 ## v3.3.1 (2026-03-19)
 
