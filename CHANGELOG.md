@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.5.1 (2026-04-04)
+
+- fix: add migration for csv-related issues (2d86ee4)
+
+
 ## v3.5.0 (2026-04-04)
 
 - feat: implement item and property ignore lists with UI menus (9357956)
