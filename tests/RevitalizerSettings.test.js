@@ -43,7 +43,7 @@ describe("RevitalizerSettings migration path", () => {
         delete globalThis.Hooks;
     });
 
-    it("marks settings from v0 as migrated without changes", async () => {
+    it("migrates settings from v0 through v3", async () => {
         const { game, state } = createGameState();
         state.set("migration", 0);
         state.set(
@@ -64,7 +64,7 @@ describe("RevitalizerSettings migration path", () => {
         new RevitalizerSettings();
         await readyCallback();
 
-        expect(game.settings.get(SCRIPT_ID, "migration")).toBe(2);
+        expect(game.settings.get(SCRIPT_ID, "migration")).toBe(3);
         expect(game.settings.get(SCRIPT_ID, settings.propertyIgnoreList.id)).toEqual(["publication", "rarity"]);
         expect(game.settings.get(SCRIPT_ID, settings.itemIgnoreList.id)).toEqual([
             "Actor.bpZQLYUoLQvuhhyt.Item.a62H9dU3HHLiZhxg",
@@ -72,7 +72,7 @@ describe("RevitalizerSettings migration path", () => {
         ]);
     });
 
-    it("migrates itemIgnoreList CSV entries from v1 to v2", async () => {
+    it("migrates itemIgnoreList CSV entries from v1 to v3", async () => {
         const { game, state } = createGameState();
         state.set("migration", 1);
         state.set("userIgnoreList", "Actor.bpZQLYUoLQvuhhyt.Item.a62H9dU3HHLiZhxg,Actor.bpZQLYUoLQvuhhyt.Item.hzty7RhC21wYBEyz");
@@ -89,7 +89,7 @@ describe("RevitalizerSettings migration path", () => {
         new RevitalizerSettings();
         await readyCallback();
 
-        expect(game.settings.get(SCRIPT_ID, "migration")).toBe(2);
+        expect(game.settings.get(SCRIPT_ID, "migration")).toBe(3);
         expect(game.settings.get(SCRIPT_ID, settings.itemIgnoreList.id)).toEqual([
             "Actor.bpZQLYUoLQvuhhyt.Item.a62H9dU3HHLiZhxg",
             "Actor.bpZQLYUoLQvuhhyt.Item.hzty7RhC21wYBEyz",
@@ -116,10 +116,40 @@ describe("RevitalizerSettings migration path", () => {
         new RevitalizerSettings();
         await readyCallback();
 
-        expect(game.settings.get(SCRIPT_ID, "migration")).toBe(2);
+        expect(game.settings.get(SCRIPT_ID, "migration")).toBe(3);
         expect(game.settings.get(SCRIPT_ID, settings.itemIgnoreList.id)).toEqual([
             "Actor.bpZQLYUoLQvuhhyt.Item.a62H9dU3HHLiZhxg",
             "Actor.bpZQLYUoLQvuhhyt.Item.hzty7RhC21wYBEyz",
+        ]);
+    });
+
+    it("splits comma-separated strings inside arrays during v3", async () => {
+        const { game, state } = createGameState();
+        state.set("migration", 2);
+        state.set("userIgnoreList", ["Actor.a,Actor.b,Actor.c"]);
+        state.set("propertyIgnoreList", ["publication,rarity"]);
+
+        let readyCallback;
+        globalThis.Hooks = {
+            once: vi.fn((event, callback) => {
+                if (event === "ready") readyCallback = callback;
+            }),
+        };
+
+        globalThis.game = game;
+        const { default: RevitalizerSettings } = await import("../module/RevitalizerSettings.js");
+        new RevitalizerSettings();
+        await readyCallback();
+
+        expect(game.settings.get(SCRIPT_ID, "migration")).toBe(3);
+        expect(game.settings.get(SCRIPT_ID, settings.itemIgnoreList.id)).toEqual([
+            "Actor.a",
+            "Actor.b",
+            "Actor.c",
+        ]);
+        expect(game.settings.get(SCRIPT_ID, settings.propertyIgnoreList.id)).toEqual([
+            "publication",
+            "rarity",
         ]);
     });
 

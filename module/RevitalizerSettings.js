@@ -139,6 +139,22 @@ export default class RevitalizerSettings {
                             await game.settings.set(SCRIPT_ID, id, arr);
                         }
                     }
+                    
+                }
+
+                // Migration 3: Arrays adjustment for arrays that contain commas
+                if (getSettings(settings.completedMigration.id) === 2) {                    
+                    await game.settings.set(SCRIPT_ID, settings.completedMigration.id, 3);
+                    for (const id of [settings.itemIgnoreList.id, settings.propertyIgnoreList.id]) {
+                        const setting = getSettings(id);
+                        if (Array.isArray(setting)) {
+                            const updated = setting
+                                .flatMap(entry => typeof entry === "string" ? entry.split(",") : [])
+                                .map(entry => entry.trim())
+                                .filter(entry => entry.length > 0);
+                            await game.settings.set(SCRIPT_ID, id, updated);
+                        }
+                    }
                 }
             } catch (_error) {}
         });
