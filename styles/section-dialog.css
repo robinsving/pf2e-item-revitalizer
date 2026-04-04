@@ -1,4 +1,32 @@
 
+.pir-property-list {
+    list-style: none;
+    margin: 0 0 8px 0;
+    padding: 0;
+}
+
+.pir-property-list li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 0;
+}
+
+.pir-property-list li span {
+    flex: 1;
+}
+
+.pir-add-property {
+    display: flex;
+    gap: 6px;
+    padding-bottom: 3px;
+}
+
+.pir-add-property input {
+    flex: 1;
+    
+}
+
 .pir-legend {
     font-weight: bold;
     font-style: italic;

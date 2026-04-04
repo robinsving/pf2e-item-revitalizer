@@ -1,0 +1,31 @@
+<section class="pir-section-container">
+    <section class="pir-section-body" id="pir-container-body">
+        <div class="pir-table-wrapper">
+            <div class="pir-table">
+                <div class="pir-table-header">
+                    <div class="pir-table-cell">{{localize "PIR.dialog.results.table.actor_item"}}</div>
+                    <div class="pir-table-cell">{{ localize "PIR.dialog.results.table.item_type" }}</div>
+                    <div class="pir-table-cell">{{ localize "PIR.dialog.results.table.actor" }}</div>
+                    <div class="pir-table-cell"></div>
+                </div>
+                {{#each items}}
+                <div class="pir-table-row">
+                    <div class="pir-table-cell">{{{this.itemLink}}}</div>
+                    <div class="pir-table-cell">{{this.type}}</div>
+                    <div class="pir-table-cell">{{{this.actorLink}}}</div>
+                    <div class="pir-table-cell">
+                        <button type="button" class="pir-button" data-action="removeItem" data-uuid="{{this.uuid}}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        <footer class="sheet-footer flexrow">
+            <button type="button" data-action="close">
+                <i class="fas fa-x"></i> {{localize "PIR.settings.menu.close"}}
+            </button>
+        </footer>
+    </section>
+</section>

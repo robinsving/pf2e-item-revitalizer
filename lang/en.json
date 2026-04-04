@@ -15,11 +15,14 @@
             },
             "itemIgnoreList": {
                 "name": "Ignored Actor Items",
-                "hint": "User-expanded Item ignore list, comma-separated"
+                "hint": "Item ignore list",
+                "label": "View"
             },
             "propertyIgnoreList": {
-                "name": "Ignored Item properties",
-                "hint": "Insert text separated by commas (,).  Each of these Item Properties will be ignored when finding items. E.g. publication,icon-link"
+                "name": "Ignored Item Properties",
+                "hint": "Each of these Item Properties will be ignored when finding items. E.g. publication, icon-link",
+                "label": "Configure",
+                "add": "Add"
             },
             "revitalize": {
                 "name": "Allow Refreshing using backup solution",
@@ -32,6 +35,9 @@
             "completedMigration": {
                 "name": "Tracker for last migration",
                 "hint": ""
+            },
+            "menu": {
+                "close": "Close"
             }
         },
 

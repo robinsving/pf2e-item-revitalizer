@@ -1,0 +1,25 @@
+<section class="pir-section-container">
+    <section class="pir-section-body" id="pir-container-body">
+        <ul class="pir-property-list">
+            {{#each properties}}
+            <li>
+                <span>{{this}}</span>
+                <button type="button" class="pir-button" data-action="removeProperty" data-property="{{this}}">
+                    <i class="fas fa-times"></i>
+                </button>
+            </li>
+            {{/each}}
+        </ul>
+        <div class="pir-add-property">
+            <input type="text" id="pir-new-property" placeholder="e.g. publication">
+            <button type="button" data-action="addProperty" data-input="#pir-new-property">
+                <i class="fas fa-plus"></i> {{localize "PIR.settings.propertyIgnoreList.add"}}
+            </button>
+        </div>
+        <footer class="sheet-footer flexrow">
+            <button type="button" data-action="close">
+                <i class="fas fa-x"></i> {{localize "PIR.settings.menu.close"}}
+            </button>
+        </footer>
+    </section>
+</section>

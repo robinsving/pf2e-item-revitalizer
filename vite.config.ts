@@ -37,6 +37,7 @@ export default defineConfig({
         exclude: ['**/node_modules/**', '**/dist/**'],
         silent: false, // Allow console logs to be printed
         globals: true,
+        setupFiles: "./vitest.setup.js",
         coverage: {
           provider: 'v8',
           reporter: ['text', 'json', 'html'],

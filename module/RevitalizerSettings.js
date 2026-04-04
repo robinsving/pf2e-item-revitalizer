@@ -1,5 +1,7 @@
 import { id as SCRIPT_ID } from "../module.json";
 import { getSettings, settings } from "./utilities/RevitalizerUtilities.js";
+import RevitalizerPropertyIgnoreMenu from "./ui/RevitalizerPropertyIgnoreMenu.js";
+import RevitalizerItemIgnoreMenu from "./ui/RevitalizerItemIgnoreMenu.js";
 
 export default class RevitalizerSettings {
     
@@ -60,27 +62,47 @@ export default class RevitalizerSettings {
             type: Boolean
         });
 
-        // List of ignored Items
-        game.settings.register(SCRIPT_ID,  settings.itemIgnoreList.id, {
+        // Register the ignored items list data
+        game.settings.register(SCRIPT_ID, settings.itemIgnoreList.id, {
             name: game.i18n.localize(settings.itemIgnoreList.name),
             hint: game.i18n.localize(settings.itemIgnoreList.hint),
             scope: 'client',
-            config: true,
-            default: "",
-            type: String
+            config: false,
+            default: [],
+            type: Array
         });
 
-        // List of ignored properties
-        game.settings.register(SCRIPT_ID,  settings.propertyIgnoreList.id, {
+        // Settings menu to view/remove ignored items
+        game.settings.registerMenu(SCRIPT_ID, settings.itemIgnoreList.id, {
+            name: game.i18n.localize(settings.itemIgnoreList.name),
+            hint: game.i18n.localize(settings.itemIgnoreList.hint),
+            label: game.i18n.localize(settings.itemIgnoreList.label),
+            icon: "fas fa-eye-slash",
+            type: RevitalizerItemIgnoreMenu,
+            restricted: false,
+        });
+
+        // Register the ignored properties list data
+        game.settings.register(SCRIPT_ID, settings.propertyIgnoreList.id, {
             name: game.i18n.localize(settings.propertyIgnoreList.name),
             hint: game.i18n.localize(settings.propertyIgnoreList.hint),
             scope: 'client',
-            config: true,
-            default: "publication",
-            type: String
+            config: false,
+            default: ["publication"],
+            type: Array
         });
 
-        // Last migration, in case I will need to run 
+        // Settings menu to configure the ignored properties list
+        game.settings.registerMenu(SCRIPT_ID, settings.propertyIgnoreList.id, {
+            name: game.i18n.localize(settings.propertyIgnoreList.name),
+            hint: game.i18n.localize(settings.propertyIgnoreList.hint),
+            label: game.i18n.localize(settings.propertyIgnoreList.label),
+            icon: "fas fa-list",
+            type: RevitalizerPropertyIgnoreMenu,
+            restricted: false,
+        });
+
+        // Tracks last migration, in case I will need to run update scripts
         game.settings.register(SCRIPT_ID,  settings.completedMigration.id, {
             name: game.i18n.localize(settings.completedMigration.name),
             hint: game.i18n.localize(settings.completedMigration.hint),
@@ -90,10 +112,10 @@ export default class RevitalizerSettings {
             type: Number
         });
 
-        // Migrate settings from Arrays (which was the original) to CSV-Strings. Also, remove duplicates
-        Hooks.once("ready", async () =>{
+        // Migration settings
+        Hooks.once("ready", async () => {
             try {
-                // Migration 1
+                // Migration 1: Stringified Arrays → CSV strings
                 if (getSettings(settings.completedMigration.id) === 0) {
                     await game.settings.set(SCRIPT_ID, settings.completedMigration.id, 1);
                     // Validate settings
@@ -106,8 +128,19 @@ export default class RevitalizerSettings {
                         await game.settings.set(SCRIPT_ID, id, setting)
                     });
                 }
-            } catch (_error) {}
 
+                // Migration 2: CSV strings → Arrays
+                if (getSettings(settings.completedMigration.id) === 1) {
+                    await game.settings.set(SCRIPT_ID, settings.completedMigration.id, 2);
+                    for (const id of [settings.itemIgnoreList.id, settings.propertyIgnoreList.id]) {
+                        const setting = getSettings(id);
+                        if (typeof setting === "string") {
+                            const arr = setting.split(",").map(s => s.trim()).filter(s => s.length > 0);
+                            await game.settings.set(SCRIPT_ID, id, arr);
+                        }
+                    }
+                }
+            } catch (_error) {}
         });
     }
 }

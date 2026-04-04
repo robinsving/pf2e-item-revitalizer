@@ -15,11 +15,11 @@
             },
             "itemIgnoreList": {
                 "name": "Zignorowane przedmioty aktora",
-                "hint": "Lista pomijanych przedmiotów rozszerzona przez użytkownika, rozdzielona przecinkami"
+                "hint": "Lista pomijanych przedmiotów rozszerzona przez użytkownika"
             },
             "propertyIgnoreList": {
                 "name": "Zignorowane właściwości przedmiotu",
-                "hint": "Wprowadź tekst oddzielony przecinkami (,). Każda z tych właściwości pozycji zostanie pominięta podczas wyszukiwania pozycji. Np. publikacja,ikona-link"
+                "hint": "Każda z tych właściwości pozycji zostanie pominięta podczas wyszukiwania pozycji. Np. publikacja,ikona-link"
             },
             "revitalize": {
                 "name": "Zezwól na odświeżanie przy użyciu rozwiązania do tworzenia kopii zapasowych",

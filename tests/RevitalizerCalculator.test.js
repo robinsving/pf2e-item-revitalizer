@@ -12,8 +12,8 @@ vi.mock("../module/utilities/RevitalizerUtilities.js", () => {
     const state = {
         [settings.debug.id]: false,
         [settings.rulesElementArrayLengthOnly.id]: false,
-        [settings.itemIgnoreList.id]: "",
-        [settings.propertyIgnoreList.id]: "",
+        [settings.itemIgnoreList.id]: [],
+        [settings.propertyIgnoreList.id]: [],
     };
 
     return {

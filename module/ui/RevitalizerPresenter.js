@@ -279,16 +279,14 @@ export default class RevitalizerPresenter extends HandlebarsApplicationMixin(App
 
     // A function to store Actor Item UUID to Settings
     static async hideItem(event, target) {
-        const currentIgnoreSetting = await getSettings(settings.itemIgnoreList.id);
-        
-        var currentIgnoreList = currentIgnoreSetting ? new Set(currentIgnoreSetting.split(",")) : new Set();
+        const uuid = target.value;
+        const current = getSettings(settings.itemIgnoreList.id);
 
-        // Add to list, unless it exists
-        currentIgnoreList.add(target.value);
+        if (!current.includes(uuid)) {
+            await game.settings.set(SCRIPT_ID, settings.itemIgnoreList.id, [...current, uuid]);
+        }
 
-        // Save to settings
-        game.settings.set(SCRIPT_ID, settings.itemIgnoreList.id, [...currentIgnoreList].join(","));
-        target.parentNode.parentNode.remove()
+        target.parentNode.parentNode.remove();
     };
 
     // A function to remove Item from the list

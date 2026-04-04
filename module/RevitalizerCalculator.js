@@ -258,8 +258,16 @@ export default class RevitalizerCalculator {
         // Start a simple timer
         const start = Date.now();
 
-        const ignoredItemsFromSettings = getSettings(settings.itemIgnoreList.id).split(",");
-        const ignorePropertySettings = getSettings(settings.propertyIgnoreList.id).split(",");
+        // Get the ignore lists from settings
+        const ignoredItemsFromSettings = getSettings(settings.itemIgnoreList.id);
+        const ignoredItems = Array.isArray(ignoredItemsFromSettings)
+            ? ignoredItemsFromSettings
+            : String(ignoredItemsFromSettings ?? "")
+                .split(",")
+                .map((entry) => entry.trim())
+                .filter((entry) => entry.length > 0);
+
+        const ignorePropertySettings = getSettings(settings.propertyIgnoreList.id);
         const specialPropertiesFiltered = SPECIAL_ITEM_PROPERTIES.filter((value) => !ignorePropertySettings.includes(value.name));
 
         // Iterate over the actors
@@ -271,7 +279,7 @@ export default class RevitalizerCalculator {
                 const humanReadableName = actorItem.slug || actorItem.name;
 
                 // Sanity check: ignore items in ignore list
-                if (ignoredItemsFromSettings.includes(actorItem.uuid)) {
+                if (ignoredItems.some((entry) => (entry?.uuid ?? entry) === actorItem.uuid)) {
                     debug(`Ignoring item ${humanReadableName} due to settings ignore list`)
                     continue;
                 }
