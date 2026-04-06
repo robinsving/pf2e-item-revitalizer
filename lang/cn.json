@@ -11,11 +11,14 @@
             },
             "itemIgnoreList": {
                 "name": "更新时忽略的角色资源",
-                "hint": "用户的自定义忽略资源项目列表"
+                "hint": "忽略的资源项目列表",
+                "label": "查看"
             },
             "propertyIgnoreList": {
                 "name": "更新时忽略的资源属性",
-                "hint": "在查找资源项目时，这些属性将被忽略。例如：出版物，图标链接（输入英文）"
+                "hint": "在查找资源项目时，这些属性将被忽略。例如：出版物，图标链接（输入英文）",
+                "label": "配置",
+                "add": "添加"
             },
             "rulesElementArrayLengthOnly": {
                 "name": "规则元素检索简化",
@@ -32,6 +35,9 @@
             "completedMigration": {
                 "name": "上次迁移的追踪记录",
                 "hint": " "
+            },
+            "menu": {
+                "close": "关闭"
             }
         },
         "dialog": {
@@ -51,7 +57,14 @@
                     "title": "兼容性检测结果"
                 },
                 "no_changed_items": "✅ 未发现需要变更的资源项目",
-                "searched_actors": "搜索了下列角色："
+                "searched_actors": "搜索了下列角色：",
+                "diff": {
+                    "actor": "角色属性",
+                    "origin": "原始属性",
+                    "copy": "属性差异已复制到剪贴板",
+                    "note": "点击窗口任意位置关闭。点击时长按Ctrl/Cmd键可将差异内容复制到剪贴板上",
+                    "note_unavailable": "（若浏览器设置允许）"
+                }
             },
             "selection": {
                 "select_actors_title": "选择你想要运行资源检测的角色",
