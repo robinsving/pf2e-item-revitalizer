@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.5.2 (2026-04-09)
+
+- fix: updated cn.json for 3.5.1 (thanks Kuroni)
+
 ## v3.5.1 (2026-04-04)
 
 - fix: add migration for csv-related issues (2d86ee4)
