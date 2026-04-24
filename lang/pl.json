@@ -15,11 +15,14 @@
             },
             "itemIgnoreList": {
                 "name": "Zignorowane przedmioty aktora",
-                "hint": "Lista pomijanych przedmiotów rozszerzona przez użytkownika"
+                "hint": "Lista ignorowanych przedmiotów",
+                "label": "Widok"
             },
             "propertyIgnoreList": {
-                "name": "Zignorowane właściwości przedmiotu",
-                "hint": "Każda z tych właściwości pozycji zostanie pominięta podczas wyszukiwania pozycji. Np. publikacja,ikona-link"
+                "name": "Lista zignorowanych właściwości przedmiotów",
+                "hint": "Każda z tych właściwości przedmiotu zostanie pominięta podczas wyszukiwania przedmiotów. Np. publikacja, ikona-link",
+                "label": "Konfiguracja",
+                "add": "Dodaj"
             },
             "revitalize": {
                 "name": "Zezwól na odświeżanie przy użyciu rozwiązania do tworzenia kopii zapasowych",
@@ -32,6 +35,9 @@
             "completedMigration": {
                 "name": "Narzędzie do śledzenia ostatniej migracji",
                 "hint": ""
+            },
+            "menu": {
+                "close": "Zamknij"
             }
         },
 
