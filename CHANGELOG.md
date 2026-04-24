@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.5.3 (2026-04-24)
+
+- fix: updated pl.json for 3.5.0 (thanks Lioheart)
+
+
 ## v3.5.2 (2026-04-09)
 
 - fix: updated cn.json for 3.5.1 (thanks Kuroni)
