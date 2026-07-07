@@ -90,7 +90,7 @@ export default class RevitalizerSheet {
             const tooltip = game.i18n.format("PIR.sheet.check_actor_items_tooltip", { name: game.i18n.localize("PIR.revitalizer.name") });
             const buttonLabel = game.i18n.localize("PIR.sheet.revitalize_button");
             const button = $(`
-                <a class="${className}" title="${tooltip}">
+                <a class="${className}" data-tooltip="${tooltip}" data-tooltip-direction="UP">
                     <i class="fas fa-solid fa-code-compare"></i>
                     ${buttonLabel}
                 </a>`
