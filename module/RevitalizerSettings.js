@@ -122,7 +122,7 @@ export default class RevitalizerSettings {
                     [settings.itemIgnoreList.id, settings.propertyIgnoreList.id].forEach(async id => {
                         var setting = getSettings(id);
                         // fix move from Array to String
-                        setting = setting.replaceAll(/[\]\[\"\s]/gm, "");
+                        setting = setting.replace(/[\]\[\"\s]/gm, "");
                         setting = Array.from(new Set(setting.split(","))).join(',')
                         
                         await game.settings.set(SCRIPT_ID, id, setting)

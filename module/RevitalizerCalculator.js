@@ -175,6 +175,7 @@ export default class RevitalizerCalculator {
         const selectorToArray = /"selector":"([^\"]*)"/gm;
         const typeUntyped = '"type":"untyped"';
         const typeToArray = /"type":"([^\"]*)"/gm;
+        const hrSlash = /<hr\s?\/?>/gm;
 
         const postFix = "{,";
         const postFix2 = ",}";
@@ -199,6 +200,7 @@ export default class RevitalizerCalculator {
                 .replaceAll(anythingFalse, "")
                 .replaceAll(selectorToArray, '"selector":["$1"]')
                 .replaceAll(typeToArray, '"type":["$1"]')
+                .replaceAll(hrSlash, "")
 
                 
                 .replaceAll(postFix3, ",")
