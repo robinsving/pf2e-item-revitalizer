@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.5.5 (2026-07-07)
+
+- fix: add proper tooltip style (2c9173b)
+
+
 ## v3.5.4 (2026-07-07)
 
 - fix: add compatibility with 14 (a06d618)
