@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.5.4 (2026-07-07)
+
+- fix: add compatibility with 14 (a06d618)
+- fix: handle false positives from hr links (269b386)
+
+
 ## v3.5.3 (2026-04-24)
 
 - fix: updated pl.json for 3.5.0 (thanks Lioheart)
